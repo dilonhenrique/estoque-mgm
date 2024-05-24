@@ -103,42 +103,42 @@ export function sanitizeHeaders(headers: RequestHeaders): RequestHeaders {
   return sanitizedHeaders;
 }
 
-export async function fetchOrThrow(
-  input: RequestInfo,
-  init?: RequestInit,
-  logError: boolean = false
-): Promise<Response> {
-  const response = await fetch(input, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-  });
-  if (!response.ok) {
-    const errorMessage = `HTTP error: ${response.status} ${response.statusText}`;
-    if (logError) {
-      logger
-        .log({
-          level: "error",
-          message: errorMessage,
-          metadata: {
-            request: {
-              method: init?.method || "GET",
-              headers: sanitizeHeaders(init?.headers),
-              body: init?.body,
-            },
-            response: {
-              status: response.status,
-              statusText: response.statusText,
-              url: response.url,
-              body: await response.text(),
-            },
-          },
-        })
-        .catch(console.error);
-    }
-    throw new Error(errorMessage);
-  }
-  return response;
-}
+// export async function fetchOrThrow(
+//   input: RequestInfo,
+//   init?: RequestInit,
+//   logError: boolean = false
+// ): Promise<Response> {
+//   const response = await fetch(input, {
+//     ...init,
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...init?.headers,
+//     },
+//   });
+//   if (!response.ok) {
+//     const errorMessage = `HTTP error: ${response.status} ${response.statusText}`;
+//     if (logError) {
+//       logger
+//         .log({
+//           level: "error",
+//           message: errorMessage,
+//           metadata: {
+//             request: {
+//               method: init?.method || "GET",
+//               headers: sanitizeHeaders(init?.headers),
+//               body: init?.body,
+//             },
+//             response: {
+//               status: response.status,
+//               statusText: response.statusText,
+//               url: response.url,
+//               body: await response.text(),
+//             },
+//           },
+//         })
+//         .catch(console.error);
+//     }
+//     throw new Error(errorMessage);
+//   }
+//   return response;
+// }
