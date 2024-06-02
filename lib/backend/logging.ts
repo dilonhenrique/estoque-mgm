@@ -32,7 +32,8 @@ class AppLogger implements Logger {
     try {
       const finalEntry = appendBaseEntry({ ...entry, timestamp });
 
-      // Implementation will go here
+      // Implementation will go here (ex.: bugsnag)
+      console.error(finalEntry);
 
       return Promise.resolve();
     } catch (error) {

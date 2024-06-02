@@ -1,44 +1,26 @@
-import clientPromise from "../lib/mongodb";
+import { productActions } from "@/backend/actions/products";
+import ProductList from "@/components/Product/ProductList";
+import { getSessionUser } from "@/utils/authUtils";
 import { Button } from "@nextui-org/react";
-import GoogleLogin from "@/components/GoogleLogin";
-
-async function getProps() {
-  try {
-    await clientPromise;
-    return {
-      props: { isConnected: true },
-    };
-  } catch (e) {
-    console.error(e);
-    return {
-      props: { isConnected: false },
-    };
-  }
-};
+import Link from "next/link";
 
 export default async function Home() {
-  const isConnected = await getProps();
+  const products = await productActions.search();
+  const user = await getSessionUser();
 
   return (
-    <div className="container">
-      <main>
-        <h1 className="text-3xl font-bold text-purple-600">
-          Hello world!
+    <main className="p-8">
+      <div className="w-full flex gap-4 justify-between">
+        <h1 className="text-2xl font-bold text-primary mb-4">
+          Olá, {user?.name}
         </h1>
 
-        <Button>Teste de butão</Button>
+        <Button color="primary" as={Link} href="/products/new">
+          Novo
+        </Button>
+      </div>
 
-        <GoogleLogin />
-
-        {isConnected ? (
-          <h2 className="subtitle">You are connected to MongoDB</h2>
-        ) : (
-          <h2 className="subtitle">
-            You are NOT connected to MongoDB. Check the <code>README.md</code>{" "}
-            for instructions.
-          </h2>
-        )}
-      </main>
-    </div>
+      <ProductList products={products.data ?? []} />
+    </main>
   );
 }
