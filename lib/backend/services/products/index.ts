@@ -4,6 +4,7 @@ import create from "./create";
 import findById from "./findById";
 import search from "./search";
 import remove from "./remove";
+import updateStock from "./updateStock";
 
 export const productService = {
   upsert,
@@ -12,4 +13,5 @@ export const productService = {
   findById,
   search,
   remove,
+  updateStock
 };

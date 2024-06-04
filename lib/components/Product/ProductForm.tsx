@@ -94,7 +94,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       </Select>
 
       <Input
-        name="min_stock"
+        name="minStock"
         label="Estoque mínimo"
         defaultValue={product?.minStock?.toString()}
         type="number"

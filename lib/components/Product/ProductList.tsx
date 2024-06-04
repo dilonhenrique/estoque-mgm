@@ -10,13 +10,13 @@ import {
 } from "@nextui-org/table";
 import { Product } from "../../../types/schemas";
 import { Button } from "@nextui-org/react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Pencil } from "lucide-react";
 import Link from "next/link";
 import { WithStringId } from "@/utils/parseUtils";
 
-type Props = { products: WithStringId<Product>[] };
+type IProps = { products: WithStringId<Product>[] };
 
-export default function ProductList({ products }: Props) {
+export default function ProductList({ products }: IProps) {
   return (
     <Table
       removeWrapper
@@ -25,15 +25,21 @@ export default function ProductList({ products }: Props) {
     >
       <TableHeader>
         <TableColumn>NOME</TableColumn>
-        <TableColumn width="200">QTD</TableColumn>
-        <TableColumn width="50">VER</TableColumn>
+        <TableColumn width="150">QTD</TableColumn>
+        <TableColumn width="150">MIN</TableColumn>
+        <TableColumn width="50"><></></TableColumn>
       </TableHeader>
       <TableBody emptyContent={<>Nenhum produto encontrado</>}>
         {products?.map((product) => (
           <TableRow key={product._id}>
-            <TableCell>{product.name}</TableCell>
+            <TableCell className="font-semibold">{product.name}</TableCell>
             <TableCell>
               {product.stock} {product.unit}
+            </TableCell>
+            <TableCell>
+              {product.minStock === undefined
+                ? <span className="opacity-50">-</span>
+                : `${product.minStock} ${product.unit}`}
             </TableCell>
             <TableCell>
               {/* <Dropdown>
@@ -42,9 +48,9 @@ export default function ProductList({ products }: Props) {
                 isIconOnly
                 variant="light"
                 as={Link}
-                href={`/products/${product._id}`}
+                href={`/produtos/${product._id}`}
               >
-                <ChevronRight />
+                <Pencil size={16} />
               </Button>
               {/* </DropdownTrigger>
                 <DropdownMenu>

@@ -10,13 +10,13 @@ export default async function Home() {
 
   return (
     <main className="p-8">
-      <div className="w-full flex gap-4 justify-between">
-        <h1 className="text-2xl font-bold text-primary mb-4">
+      <div className="w-full flex gap-4 justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-primary">
           Olá, {user?.name}
         </h1>
 
         <Button color="primary" as={Link} href="/products/new">
-          Novo
+          Adicionar produto
         </Button>
       </div>
 

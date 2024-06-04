@@ -8,9 +8,17 @@ import {
   Skeleton,
   DropdownSection,
 } from "@nextui-org/react";
-import { CirclePlus, LogOut, MoonStar, Package, SunDim } from "lucide-react";
+import {
+  HandCoins,
+  LogOut,
+  MoonStar,
+  Package,
+  PackagePlus,
+  SunDim,
+} from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 export default function AvatarMenu() {
   const { data: session, status } = useSession();
@@ -42,11 +50,26 @@ export default function AvatarMenu() {
 
           <DropdownMenu aria-label="menu principal">
             <DropdownSection showDivider>
-              <DropdownItem startContent={<Package size={16} />}>
-                Estoque
+              <DropdownItem
+                startContent={<Package size={16} />}
+                as={Link}
+                href="/produtos"
+              >
+                Estoque atual
               </DropdownItem>
-              <DropdownItem startContent={<CirclePlus size={16} />}>
-                Novo serviço
+              <DropdownItem
+                startContent={<PackagePlus size={16} />}
+                as={Link}
+                href="/repor-estoque"
+              >
+                Repor Estoque
+              </DropdownItem>
+              <DropdownItem
+                startContent={<HandCoins size={16} />}
+                as={Link}
+                href="/nova-venda"
+              >
+                Nova Venda
               </DropdownItem>
               <DropdownItem
                 startContent={

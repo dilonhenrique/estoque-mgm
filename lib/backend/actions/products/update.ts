@@ -6,16 +6,19 @@ import { productService } from "@/backend/services/products";
 import { getSessionUserOrThrow } from "@/utils/apiUtils";
 import { revalidatePath } from "next/cache";
 import { ActionResult } from "../../../../types/types";
+import { WithStringId } from "@/utils/parseUtils";
+import { Product } from "../../../../types/schemas";
 
 export default async function update(
-  formData: FormData
+  product: FormData | WithStringId<Partial<Product>>
 ): Promise<ActionResult<boolean>> {
   const user = await getSessionUserOrThrow();
 
-  const data = omitBy(Object.fromEntries(formData), isEmpty);
+  const data =
+    product instanceof FormData ? Object.fromEntries(product) : product;
   data.userId = user._id;
 
-  const payload = schema.safeParse(data);
+  const payload = schema.safeParse(omitBy(data, isEmpty));
 
   if (!payload.success) {
     return { success: false, errors: payload.error.errors };
