@@ -18,5 +18,5 @@ export default async function updateStock(
   );
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: [], data: response };
+  return { success: true, errors: {}, data: response };
 }

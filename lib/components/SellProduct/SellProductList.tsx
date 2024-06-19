@@ -21,7 +21,7 @@ export default function SellProductList({ products }: IProps) {
     );
   }, [stock, products]);
 
-  useEffect(addItem, []);
+  useEffect(addItem);
 
   function addItem() {
     setStock([...stock, { product: availableProducts[0], increment: 1 }]);
