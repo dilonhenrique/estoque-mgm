@@ -38,7 +38,7 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
       toast.success("Salvo com sucesso!");
 
       if (!product && response.data?.id) {
-        router.push(`/products/${response.data.id}`);
+        router.push(`/produtos/${response.data.id}`);
       }
     } else {
       toast.error("Confira os campos e tente novamente");

@@ -53,7 +53,7 @@ export default function ProductList({ products }: IProps) {
               </Button>
               {/* </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem href={`/products/${product._id}`}>
+                  <DropdownItem href={`/produtos/${product._id}`}>
                     Ver
                   </DropdownItem>
                 </DropdownMenu>
