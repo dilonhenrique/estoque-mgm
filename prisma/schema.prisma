@@ -1,0 +1,259 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                  String     @id @default(uuid())
+  fullname            String
+  professional_number String
+  document            String
+  document_type       DocType    @default(CPF)
+  address             Address    @relation(fields: [address_id], references: [id])
+  address_id          String
+  users               User[]
+  customers           Customer[]
+  services            Service[]
+  products            Product[]
+  purchases           Purchase[]
+}
+
+model Address {
+  id           String     @id @default(uuid())
+  zip_code     String
+  country      String
+  state        String
+  city         String
+  neighborhood String?
+  street       String
+  number       String
+  complement   String?
+  accounts     Account[]
+  suppliers    Supplier[]
+  customers    Customer[]
+}
+
+model User {
+  id         String      @id @default(uuid())
+  account    Account     @relation(fields: [account_id], references: [id])
+  account_id String
+  role       Role
+  name       String
+  img_url    String?
+  email      String      @unique
+  password   String
+  procedures Procedure[]
+}
+
+model Customer {
+  id         String      @id @default(uuid())
+  account    Account     @relation(fields: [account_id], references: [id])
+  account_id String
+  name       String
+  img_url    String?
+  email      String?
+  phone      String?
+  birthday   String?
+  address    Address?    @relation(fields: [address_id], references: [id])
+  address_id String?
+  procedures Procedure[]
+}
+
+model Service {
+  id                 String             @id @default(uuid())
+  account            Account            @relation(fields: [account_id], references: [id])
+  account_id         String
+  name               String
+  sheet_model_id     String?
+  procedures         Procedure[]
+  productsOnServices ProductOnService[]
+}
+
+model Procedure {
+  id                    String               @id @default(uuid())
+  service               Service              @relation(fields: [service_id], references: [id])
+  service_id            String
+  customer              Customer             @relation(fields: [customer_id], references: [id])
+  customer_id           String
+  created_by            User                 @relation(fields: [created_by_id], references: [id])
+  created_by_id         String
+  created_at            DateTime             @default(now())
+  scheduled_for         DateTime?
+  done_at               DateTime?
+  confirmed_by_customer Boolean              @default(false)
+  sheet_id              String?
+  procedureMedia        ProcedureMedia[]
+  productsOnProcedures  ProductOnProcedure[]
+}
+
+model ProcedureMedia {
+  id           String    @id @default(uuid())
+  procedure    Procedure @relation(fields: [procedure_id], references: [id])
+  procedure_id String
+  legend       String?
+  url          String
+}
+
+model Product {
+  id                   String               @id @default(uuid())
+  account              Account              @relation(fields: [account_id], references: [id])
+  account_id           String
+  category             ProductCategory?     @relation(fields: [category_id], references: [id])
+  category_id          String?
+  name                 String
+  unit                 String               @default("Unidades")
+  minStock             Int?
+  code                 String?
+  img_url              String?
+  stock                Stock[]
+  partialProducts      PartialProduct[]
+  productsOnServices   ProductOnService[]
+  productsOnProcedures ProductOnProcedure[]
+  purchaseItems        PurchaseItem[]
+  variants             Variant[]
+}
+
+model ProductCategory {
+  id       String    @id @default(uuid())
+  name     String
+  products Product[]
+}
+
+model Stock {
+  id         String              @id @default(uuid())
+  product    Product             @relation(fields: [product_id], references: [id])
+  product_id String
+  qty        Int
+  variants   VariantStockValue[]
+}
+
+model PartialProduct {
+  id         String                @id @default(uuid())
+  product    Product               @relation(fields: [product_id], references: [id])
+  product_id String
+  qty        Int
+  unit       String                @default("Unidades")
+  variants   VariantPartialValue[]
+}
+
+model VariantPartialValue {
+  id         String         @id @default(uuid())
+  partial    PartialProduct @relation(fields: [partial_id], references: [id])
+  partial_id String
+  option     VariantOption  @relation(fields: [option_id], references: [id])
+  option_id  String
+}
+
+model ProductOnService {
+  id         String  @id @default(uuid())
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id String
+  service    Service @relation(fields: [service_id], references: [id])
+  service_id String
+  qty        Int
+}
+
+model ProductOnProcedure {
+  id           String    @id @default(uuid())
+  product      Product   @relation(fields: [product_id], references: [id])
+  product_id   String
+  procedure    Procedure @relation(fields: [procedure_id], references: [id])
+  procedure_id String
+  qty          Int
+}
+
+model Purchase {
+  id            String         @id @default(uuid())
+  supplier      Supplier?      @relation(fields: [supplier_id], references: [id])
+  supplier_id   String?
+  account       Account        @relation(fields: [account_id], references: [id])
+  account_id    String
+  status        PurchaseStatus
+  purchaseItems PurchaseItem[]
+}
+
+model PurchaseItem {
+  id          String                 @id @default(uuid())
+  product     Product                @relation(fields: [product_id], references: [id])
+  product_id  String
+  purchase    Purchase               @relation(fields: [purchase_id], references: [id])
+  purchase_id String
+  qty         Int
+  cost        Float?
+  variants    VariantPurchaseValue[]
+}
+
+model Supplier {
+  id         String     @id @default(uuid())
+  cnpj       String
+  name       String
+  email      String
+  phone      String
+  address    Address    @relation(fields: [address_id], references: [id])
+  address_id String
+  purchases  Purchase[]
+}
+
+model Variant {
+  id         String          @id @default(uuid())
+  name       String
+  product    Product         @relation(fields: [product_id], references: [id])
+  product_id String
+  options    VariantOption[]
+}
+
+model VariantOption {
+  id                String                 @id @default(uuid())
+  name              String
+  variant           Variant                @relation(fields: [variant_id], references: [id])
+  variant_id        String
+  used_on_stock     VariantStockValue[]
+  used_on_purchases VariantPurchaseValue[]
+  used_on_partial   VariantPartialValue[]
+}
+
+model VariantStockValue {
+  id        String        @id @default(uuid())
+  stock     Stock         @relation(fields: [stock_id], references: [id])
+  stock_id  String
+  option    VariantOption @relation(fields: [option_id], references: [id])
+  option_id String
+}
+
+model VariantPurchaseValue {
+  id                  String        @id @default(uuid())
+  productPurchase     PurchaseItem  @relation(fields: [product_purchase_id], references: [id])
+  product_purchase_id String
+  option              VariantOption @relation(fields: [option_id], references: [id])
+  option_id           String
+}
+
+enum DocType {
+  CPF
+  CNPJ
+}
+
+enum Role {
+  owner
+  admin
+  operator
+}
+
+enum PurchaseStatus {
+  waiting_budget
+  budget_received
+  waiting_deliver
+  completed
+  canceled
+}

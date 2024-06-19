@@ -15,12 +15,12 @@ export default async function Home() {
           Olá, {user?.name}
         </h1>
 
-        <Button color="primary" as={Link} href="/products/new">
+        <Button color="primary" as={Link} href="/produtos/novo">
           Adicionar produto
         </Button>
       </div>
 
-      <ProductList products={products.data ?? []} />
+      <ProductList products={products.data?.items ?? []} />
     </main>
   );
 }

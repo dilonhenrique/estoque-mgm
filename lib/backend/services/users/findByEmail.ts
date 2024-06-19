@@ -1,12 +1,11 @@
 "use server";
 
-import db from "@/backend/database/database";
-import { User } from "../../../../types/schemas";
-import { idToStringSingle } from "@/utils/parseUtils";
+import postgres from "prisma/postgres.db";
 
 export default async function findByEmail(email: string) {
-  const user = await (await db()).collection<User>("users").findOne({ email });
+  const user = await postgres.user.findFirst({
+    where:{email}
+  })
 
-  if (!user) return null;
-  return idToStringSingle(user);
+  return user;
 }

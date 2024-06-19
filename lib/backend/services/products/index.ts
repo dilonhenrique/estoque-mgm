@@ -1,4 +1,3 @@
-import upsert from "./upsert";
 import update from "./update";
 import create from "./create";
 import findById from "./findById";
@@ -7,7 +6,6 @@ import remove from "./remove";
 import updateStock from "./updateStock";
 
 export const productService = {
-  upsert,
   update,
   create,
   findById,

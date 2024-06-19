@@ -5,7 +5,7 @@ import NextAuth, {
 } from "next-auth";
 
 export interface ExtendedUser extends NextAuthUser {
-  _id: string;
+  account_id: string;
 }
 
 declare module "next-auth" {

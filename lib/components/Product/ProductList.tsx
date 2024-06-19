@@ -8,13 +8,12 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Product } from "../../../types/schemas";
 import { Button } from "@nextui-org/react";
 import { ChevronRight, Pencil } from "lucide-react";
 import Link from "next/link";
-import { WithStringId } from "@/utils/parseUtils";
+import { Product } from "../../../types/schemas";
 
-type IProps = { products: WithStringId<Product>[] };
+type IProps = { products: Product[] };
 
 export default function ProductList({ products }: IProps) {
   return (
@@ -31,10 +30,10 @@ export default function ProductList({ products }: IProps) {
       </TableHeader>
       <TableBody emptyContent={<>Nenhum produto encontrado</>}>
         {products?.map((product) => (
-          <TableRow key={product._id}>
+          <TableRow key={product.id}>
             <TableCell className="font-semibold">{product.name}</TableCell>
             <TableCell>
-              {product.stock} {product.unit}
+              {/*product.stock*/} {product.unit}
             </TableCell>
             <TableCell>
               {product.minStock === undefined
@@ -48,7 +47,7 @@ export default function ProductList({ products }: IProps) {
                 isIconOnly
                 variant="light"
                 as={Link}
-                href={`/produtos/${product._id}`}
+                href={`/produtos/${product.id}`}
               >
                 <Pencil size={16} />
               </Button>

@@ -16,11 +16,15 @@
     "jsx": "preserve",
     "paths": {
       "app/*": ["./lib/app/*"],
-      "@/*": ["./lib/*"]
+      "@/*": ["./lib/*"],
+      "prisma/*": ["./prisma/*"]
     },
     "plugins": [
       {
         "name": "estoque mgm"
+      },
+      {
+        "name": "next"
       }
     ]
   },

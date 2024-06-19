@@ -1,6 +1,5 @@
 "use client";
 
-import { WithStringId } from "@/utils/parseUtils";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -8,17 +7,17 @@ import {
   Input,
 } from "@nextui-org/react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Product } from "../../../types/schemas";
 import { Plus, Trash } from "lucide-react";
 import { productActions } from "@/backend/actions/products";
 import { useRouter } from "next/navigation";
+import { Product } from "../../../types/schemas";
 
 export default function RenewStockList({ products }: IProps) {
   const router = useRouter();
   const [stock, setStock] = useState<StockItem[]>([]);
   const availableProducts = useMemo(() => {
     return products.filter(
-      (prod) => !stock.some((item) => item.product._id === prod._id)
+      (prod) => !stock.some((item) => item.product.id === prod.id)
     );
   }, [stock, products]);
 
@@ -29,12 +28,12 @@ export default function RenewStockList({ products }: IProps) {
   }
 
   function removeItem(id: string) {
-    const newStock = stock.filter((item) => item.product._id !== id);
+    const newStock = stock.filter((item) => item.product.id !== id);
     setStock(newStock);
   }
 
   function changeItemProduct(index: number, productId: string) {
-    const newProd = availableProducts.find((p) => p._id === productId);
+    const newProd = availableProducts.find((p) => p.id === productId);
 
     if (newProd) {
       setStock(
@@ -63,7 +62,7 @@ export default function RenewStockList({ products }: IProps) {
     ev.preventDefault();
     await Promise.all(
       stock.map(async (item) =>
-        productActions.updateStock(item.product._id, item.increment)
+        productActions.updateStock(item.product.id, item.increment)
       )
     );
 
@@ -76,7 +75,7 @@ export default function RenewStockList({ products }: IProps) {
         {stock.map((item, index) => (
           <div
             className="grid grid-cols-[30px,_1fr,_1fr,_100px] gap-4 items-center"
-            key={item.product._id}
+            key={item.product.id}
           >
             <Button
               size="sm"
@@ -84,18 +83,18 @@ export default function RenewStockList({ products }: IProps) {
               variant="light"
               isIconOnly
               startContent={<Trash size={16} />}
-              onClick={() => removeItem(item.product._id)}
+              onClick={() => removeItem(item.product.id)}
             />
 
             <Autocomplete
               label="Produto"
-              selectedKey={item.product._id}
+              selectedKey={item.product.id}
               onSelectionChange={(val) => changeItemProduct(index, String(val))}
             >
               {availableProducts.concat(item.product).map((product) => (
                 <AutocompleteItem
-                  value={product._id}
-                  key={product._id}
+                  value={product.id}
+                  key={product.id}
                   title={product.name}
                 />
               ))}
@@ -116,7 +115,7 @@ export default function RenewStockList({ products }: IProps) {
             <div>
               <p className="text-sm opacity-50">Qtd atual:</p>
               <p className="text-sm">
-                {item.product.stock} {item.product.unit}
+                {/*item.product.stock*/} {item.product.unit}
               </p>
             </div>
           </div>
@@ -140,7 +139,7 @@ export default function RenewStockList({ products }: IProps) {
 }
 
 type IProps = {
-  products: WithStringId<Product>[];
+  products: Product[];
 };
 
-type StockItem = { product: WithStringId<Product>; increment: number };
+type StockItem = { product: Product; increment: number };

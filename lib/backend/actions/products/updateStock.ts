@@ -3,17 +3,17 @@
 import { productService } from "@/backend/services/products";
 import { getSessionUserOrThrow } from "@/utils/apiUtils";
 import { revalidatePath } from "next/cache";
-import { ActionResult } from "../../../../types/types";
+import { MutationResult } from "../../../../types/types";
 
 export default async function updateStock(
   productId: string,
   increment: number
-): Promise<ActionResult<boolean>> {
+): Promise<MutationResult<boolean>> {
   const user = await getSessionUserOrThrow();
 
   const response = await productService.updateStock(
     productId,
-    user._id,
+    user.account_id,
     increment
   );
 

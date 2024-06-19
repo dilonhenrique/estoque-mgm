@@ -5,7 +5,6 @@ import {
 } from "next-auth";
 import { validatePresent } from "@/utils/errorUtils";
 import { userService } from "../../services/users";
-import { UserInput } from "../../../../types/schemas";
 
 export default async function handleSignIn(
   user: NextAuthUser,
@@ -14,5 +13,9 @@ export default async function handleSignIn(
 ) {
   validatePresent(user.email, "No email found in user object");
 
-  await userService.upsert(user as UserInput);
+  await userService.upsert({
+    name: user.name as string,
+    email: user.email as string,
+    img_url: user.image as string | undefined,
+  });
 }

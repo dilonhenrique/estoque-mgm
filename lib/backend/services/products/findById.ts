@@ -1,15 +1,18 @@
 "use server";
 
-import db from "@/backend/database/database";
-import { Product } from "../../../../types/schemas";
-import { ObjectId } from "mongodb";
-import { idToStringSingle } from "@/utils/parseUtils";
+import postgres from "prisma/postgres.db";
+import { parseProduct } from "./parse";
 
 export default async function findById(id: string) {
-  const product = await (await db())
-    .collection<Product>("products")
-    .findOne({ _id: new ObjectId(id) });
+  const response = await postgres.product.findFirst({
+    where: { id },
+    include: {
+      category: true,
+      stock: { include: { variants: true } },
+      variants: { include: { options: true } },
+    },
+  });
 
-  if (!product) return null;
-  return idToStringSingle(product);
+  if (!response) return null;
+  return parseProduct(response);
 }

@@ -1,10 +1,21 @@
 import { Sort } from "mongodb";
-import { ZodIssue } from "zod";
 
-export type ActionResult<T = any> = {
-  success: boolean;
-  errors: ZodIssue[];
-  data?: T;
+export type MutationResult<T = any> = { errors: ZodErrorObject } & (
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      data?: T;
+    }
+);
+
+export type ZodErrorObject = { [k: string]: string };
+
+export type SearchList<T = any> = {
+  total: number;
+  items: T[];
 };
 
 export type Query = {

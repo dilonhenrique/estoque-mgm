@@ -20,13 +20,13 @@ export default async function Home() {
           >
             Repor estoque
           </Button>
-          <Button color="primary" as={Link} href="/products/new">
+          <Button color="primary" as={Link} href="/produtos/novo">
             Novo produto
           </Button>
         </div>
       </div>
 
-      <ProductList products={products.data ?? []} />
+      <ProductList products={products.data?.items ?? []} />
     </main>
   );
 }

@@ -1,15 +1,9 @@
 "use server";
 
-import db from "@/backend/database/database";
-import { Product } from "../../../../types/schemas";
-import { ObjectId } from "mongodb";
+import postgres from "prisma/postgres.db";
 
 export default async function remove(id: string) {
-  const response = await (await db())
-    .collection<Product>("products")
-    .deleteOne({
-      _id: new ObjectId(id),
-    });
+  const response = await postgres.product.delete({ where: { id } });
 
-  return response.deletedCount > 0;
+  return !!response.id;
 }

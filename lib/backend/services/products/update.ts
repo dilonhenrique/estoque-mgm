@@ -1,17 +1,28 @@
 "use server";
 
-import db from "@/backend/database/database";
-import { Product } from "../../../../types/schemas";
-import { ObjectId } from "mongodb";
+import postgres from "prisma/postgres.db";
+import { parseProduct } from "./parse";
 
-export default async function update(id: string, product: Partial<Product>) {
-  const response = await (await db()).collection<Product>("products").updateOne(
-    {
-      _id: new ObjectId(id),
-      userId: product.userId,
+export default async function update(id: string, payload: Payload) {
+  const response = await postgres.product.update({
+    where: { id },
+    data: payload,
+    include: {
+      category: true,
+      stock: { include: { variants: true } },
+      variants: { include: { options: true } },
     },
-    { $set: { ...product } }
-  );
+  });
 
-  return response.matchedCount > 0;
+  if (!response) return null;
+  return parseProduct(response);
 }
+
+type Payload = {
+  name?: string;
+  unit?: string;
+  minStock?: number;
+  code?: string;
+  category_id?: string;
+  img_url?: string;
+};

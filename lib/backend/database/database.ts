@@ -1,13 +1,10 @@
 import clientPromise from "./mongodb";
-import { logger } from "../logging";
 
 export default async function db() {
   const client = await clientPromise;
 
   client.on("error", (event) => {
-    logger
-      .log({ level: "error", message: event.message })
-      .catch((e) => console.error("Logging failed", e));
+    console.error(event.message)
   });
 
   return client.db("stock");

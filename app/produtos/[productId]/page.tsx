@@ -16,7 +16,7 @@ export default async function SingleProductPage({
     <main className="p-8">
       <div className="w-full flex flex-col gap-4 justify-between">
         <h1 className="text-xl font-bold">Edite seu produto</h1>
-        <ProductForm product={product.data} />
+        <ProductForm product={product.data} actionFn={productActions.update} />
       </div>
     </main>
   );

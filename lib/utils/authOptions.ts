@@ -19,17 +19,19 @@ export const authOptions: NextAuthOptions = {
 
       if (!existingUser) return token;
 
-      token._id = existingUser._id.toString();
+      token.id = existingUser.id;
       token.name = existingUser.name;
       token.email = existingUser.email;
+      token.account_id = existingUser.account_id;
 
       return token;
     },
     async session({ session, token }) {
-      if (token._id && session.user) {
-        session.user._id = token._id as string;
+      if (token.id && session.user) {
+        session.user.id = token.id as string;
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.account_id = token.account_id as string;
       }
 
       return session;

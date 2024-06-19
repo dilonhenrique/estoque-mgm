@@ -5,40 +5,41 @@ import { z } from "zod";
 import { productService } from "@/backend/services/products";
 import { getSessionUserOrThrow } from "@/utils/apiUtils";
 import { revalidatePath } from "next/cache";
-import { ActionResult } from "../../../../types/types";
-import { WithStringId } from "@/utils/parseUtils";
+import { MutationResult } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
+import { mapZodErrors } from "@/utils/mapZodErrors";
 
 export default async function update(
-  product: FormData | WithStringId<Partial<Product>>
-): Promise<ActionResult<boolean>> {
+  product: FormData
+): Promise<MutationResult<Product | null>> {
   const user = await getSessionUserOrThrow();
 
-  const data =
-    product instanceof FormData ? Object.fromEntries(product) : product;
-  data.userId = user._id;
+  const data = {
+    ...(product instanceof FormData ? Object.fromEntries(product) : product),
+    account_id: user.account_id,
+  };
 
   const payload = schema.safeParse(omitBy(data, isEmpty));
 
   if (!payload.success) {
-    return { success: false, errors: payload.error.errors };
+    return { success: false, errors: mapZodErrors(payload.error.errors) };
   }
 
-  const id = payload.data?._id;
+  const id = payload.data?.id;
 
-  const response = await productService.update(id, omit(payload.data, "_id"));
+  const response = await productService.update(id, omit(payload.data, "id"));
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: [], data: response };
+  return { success: true, errors: {}, data: response };
 }
 
 const schema = z.object({
-  _id: z.string(),
+  id: z.string(),
+  account_id: z.string().uuid(),
   name: z.string().optional(),
   unit: z.string().optional(),
   stock: z.coerce.number().optional(),
   minStock: z.coerce.number().optional(),
-  userId: z.string(),
   code: z.string().optional(),
   categoryId: z.string().optional(),
   image: z.string().optional(),

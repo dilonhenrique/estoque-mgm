@@ -9,10 +9,10 @@ export default async function RenewStock() {
       <div className="w-full flex gap-4 justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-primary">Nova venda:</h1>
       </div>
-      {!products.data?.length ? (
+      {!products.data?.items.length ? (
         <>Você não possui produtos cadastrados</>
       ) : (
-        <SellProductList products={products.data} />
+        <SellProductList products={products.data.items} />
       )}
     </main>
   );

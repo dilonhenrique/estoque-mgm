@@ -1,6 +1,7 @@
 import Navbar from "@/components/ui/Navbar/Navbar";
 import "./globals.css";
-import { Providers } from "./providers";
+import { Providers } from "@/components/ui/providers";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Estoque | Bianca Assis",
@@ -18,6 +19,8 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
+
+          <Toaster position="bottom-right" richColors />
         </Providers>
       </body>
     </html>

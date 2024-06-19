@@ -1,13 +1,22 @@
 "use server";
 
-import db from "@/backend/database/database";
-import { User, UserInput } from "../../../../types/schemas";
-import { ObjectId } from "mongodb";
+import postgres from "prisma/postgres.db";
 
-export default async function update(id: string, user: Partial<UserInput>) {
-  const response = await (await db())
-    .collection<User>("users")
-    .updateOne({ _id: new ObjectId(id) }, { $set: { ...user } });
+export default async function update(id: string, user: Payload) {
+  const response = await postgres.user.update({
+    where: { email: user.email },
+    data: {
+      email: user.email,
+      name: user.name,
+      img_url: user.img_url,
+    },
+  });
 
-  return response.matchedCount > 0;
+  return response;
 }
+
+type Payload = {
+  name?: string;
+  email?: string;
+  img_url?: string;
+};

@@ -2,11 +2,11 @@
 
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { Product } from "../../../types/schemas";
-import { WithStringId } from "@/utils/parseUtils";
 import { useFormState } from "react-dom";
-import { ActionResult } from "../../../types/types";
+import { MutationResult } from "../../../types/types";
 import { productActions } from "@/backend/actions/products";
+import { Product } from "../../../types/schemas";
+import { toast } from "sonner";
 
 const units = [
   "Unidades",
@@ -20,26 +20,31 @@ const units = [
 ];
 
 type ProductFormProps = {
-  product?: WithStringId<Partial<Product>>;
+  product?: Product;
+  actionFn: (product: FormData) => Promise<MutationResult<Product | null>>;
 };
 
-export default function ProductForm({ product }: ProductFormProps) {
+export default function ProductForm({ product, actionFn }: ProductFormProps) {
   const router = useRouter();
   const [state, formAction] = useFormState(submitAction, {
     success: true,
-    errors: [],
-  } as ActionResult);
+    errors: {},
+  } as MutationResult);
 
-  async function submitAction(status: ActionResult, formData: FormData) {
-    if (product) {
-      const response = await productActions.update(formData);
-      if (response.success) alert("Alterado com sucesso!");
-      return response;
+  async function submitAction(status: MutationResult, formData: FormData) {
+    const response = await actionFn(formData);
+
+    if (response.success) {
+      toast.success("Salvo com sucesso!");
+
+      if (!product && response.data?.id) {
+        router.push(`/products/${response.data.id}`);
+      }
     } else {
-      const response = await productActions.create(formData);
-      if (response.success) router.push(`/products/${response.data}`);
-      return response;
+      toast.error("Confira os campos e tente novamente");
     }
+
+    return response;
   }
 
   return (
@@ -48,7 +53,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
       noValidate
     >
-      <Input name="_id" defaultValue={product?._id} className="hidden" />
+      <Input name="id" defaultValue={product?.id} className="hidden" />
 
       <Input
         name="name"
@@ -56,37 +61,29 @@ export default function ProductForm({ product }: ProductFormProps) {
         defaultValue={product?.name}
         isRequired
         className="w-full"
-        isInvalid={!!state.errors.find((error) => error.path.includes("name"))}
-        errorMessage={
-          state.errors.find((error) => error.path.includes("name"))?.message
-        }
+        isInvalid={!!state.errors.name}
+        errorMessage={state.errors.name}
       />
 
       <Input
         name="stock"
         label="Quantidade atual"
-        defaultValue={product?.stock?.toString()}
+        // defaultValue={product?.stock?.toString()}
         type="number"
         isRequired
         className="w-60 grow"
-        isInvalid={!!state.errors.find((error) => error.path.includes("stock"))}
-        errorMessage={
-          state.errors.find((error) => error.path.includes("stock"))?.message
-        }
+        isInvalid={!!state.errors.stock}
+        errorMessage={state.errors.stock}
       />
 
       <Select
         name="unit"
         label="Unidade de medida"
-        defaultSelectedKeys={
-          product?.unit ? [product?.unit?.toString()] : [units[0]]
-        }
+        defaultSelectedKeys={product?.unit ? [product?.unit] : [units[0]]}
         isRequired
         className="w-60 grow"
-        isInvalid={!!state.errors.find((error) => error.path.includes("unit"))}
-        errorMessage={
-          state.errors.find((error) => error.path.includes("unit"))?.message
-        }
+        isInvalid={!!state.errors.unit}
+        errorMessage={state.errors.unit}
       >
         {units.map((unit) => (
           <SelectItem value={unit} key={unit} title={unit}></SelectItem>
@@ -99,13 +96,8 @@ export default function ProductForm({ product }: ProductFormProps) {
         defaultValue={product?.minStock?.toString()}
         type="number"
         className="w-60 grow"
-        isInvalid={
-          !!state.errors.find((error) => error.path.includes("min_stock"))
-        }
-        errorMessage={
-          state.errors.find((error) => error.path.includes("min_stock"))
-            ?.message
-        }
+        isInvalid={!!state.errors.minStock}
+        errorMessage={state.errors.minStock}
       />
 
       <Input
@@ -113,21 +105,8 @@ export default function ProductForm({ product }: ProductFormProps) {
         label="Código do produto"
         defaultValue={product?.code}
         className="w-60 grow"
-        isInvalid={!!state.errors.find((error) => error.path.includes("code"))}
-        errorMessage={
-          state.errors.find((error) => error.path.includes("code"))?.message
-        }
-      />
-
-      <Input
-        name="brand"
-        label="Marca do produto"
-        defaultValue={product?.brand}
-        className="w-60 grow"
-        isInvalid={!!state.errors.find((error) => error.path.includes("brand"))}
-        errorMessage={
-          state.errors.find((error) => error.path.includes("brand"))?.message
-        }
+        isInvalid={!!state.errors.code}
+        errorMessage={state.errors.code}
       />
 
       <div className="w-full flex gap-4">
@@ -136,8 +115,8 @@ export default function ProductForm({ product }: ProductFormProps) {
             color="danger"
             variant="light"
             onClick={async () => {
-              const deleted = await productActions.remove(product._id);
-              if (deleted) router.push("/");
+              const deleted = await productActions.remove(product.id);
+              if (deleted.data) router.push("/");
             }}
           >
             Deletar produto
