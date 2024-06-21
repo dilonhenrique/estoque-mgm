@@ -1,3 +1,64 @@
 @tailwind base;
+
+.lucide {
+  @apply w-[1em] h-[1em] text-base text-inherit shrink-0;
+}
+
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-content1-foreground;
+  }
+
+  ::selection {
+    @apply bg-primary text-white;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-content1-foreground;
+  }
+
+  h1 {
+    @apply text-2xl font-bold text-primary;
+  }
+
+  h2 {
+    @apply text-xl font-bold;
+  }
+
+  h3 {
+    @apply text-lg font-bold;
+  }
+
+  h4 {
+    @apply text-medium font-bold;
+  }
+
+  h5 {
+    @apply text-small font-bold;
+  }
+
+  h6 {
+    @apply text-tiny font-bold;
+  }
+
+  /* Works on Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-width: 8px;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+}

@@ -26,19 +26,23 @@ export default function ProductList({ products }: IProps) {
         <TableColumn>NOME</TableColumn>
         <TableColumn width="150">QTD</TableColumn>
         <TableColumn width="150">MIN</TableColumn>
-        <TableColumn width="50"><></></TableColumn>
+        <TableColumn width="50">
+          <></>
+        </TableColumn>
       </TableHeader>
       <TableBody emptyContent={<>Nenhum produto encontrado</>}>
         {products?.map((product) => (
           <TableRow key={product.id}>
             <TableCell className="font-semibold">{product.name}</TableCell>
             <TableCell>
-              {/*product.stock*/} {product.unit}
+              {product.stock} {product.unit}
             </TableCell>
             <TableCell>
-              {product.minStock === undefined
-                ? <span className="opacity-50">-</span>
-                : `${product.minStock} ${product.unit}`}
+              {product.minStock === undefined ? (
+                <span className="opacity-50">-</span>
+              ) : (
+                `${product.minStock} ${product.unit}`
+              )}
             </TableCell>
             <TableCell>
               {/* <Dropdown>

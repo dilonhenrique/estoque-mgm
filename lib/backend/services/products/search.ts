@@ -1,30 +1,16 @@
 "use server";
 
-import postgres from "prisma/postgres.db";
+import { productRepo } from "@/backend/repositories/products";
+import { MutationResult, SearchList } from "../../../../types/types";
 import { Prisma } from "@prisma/client";
-import { parseProduct } from "./parse";
-import { SearchList } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
 
 export default async function search(
   query?: Query
-): Promise<SearchList<Product>> {
-  const [items, total] = await postgres.$transaction([
-    postgres.product.findMany({
-      ...query,
-      include: {
-        category: true,
-        stock: { include: { variants: true } },
-        variants: { include: { options: true } },
-      },
-    }),
-    postgres.product.count(),
-  ]);
+): Promise<MutationResult<SearchList<Product>>> {
+  const response = await productRepo.search(query);
 
-  return {
-    items: items.map((item) => parseProduct(item)),
-    total,
-  };
+  return { success: true, errors: {}, data: response };
 }
 
 type Query = {

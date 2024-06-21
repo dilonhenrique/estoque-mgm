@@ -4,20 +4,10 @@ import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
-import { productActions } from "@/backend/actions/products";
+import { productService } from "@/backend/services/products";
 import { Product } from "../../../types/schemas";
 import { toast } from "sonner";
-
-const units = [
-  "Unidades",
-  "Kilos",
-  "Gramas",
-  "Litros",
-  "Mililitros",
-  "Metros",
-  "Centímetros",
-  "Caixas",
-];
+import FormButton, { SubmitButton } from "../ui/FormButton";
 
 type ProductFormProps = {
   product?: Product;
@@ -37,8 +27,8 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
     if (response.success) {
       toast.success("Salvo com sucesso!");
 
-      if (!product && response.data?.id) {
-        router.push(`/produtos/${response.data.id}`);
+      if (!product) {
+        router.push("/produtos");
       }
     } else {
       toast.error("Confira os campos e tente novamente");
@@ -68,7 +58,7 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
       <Input
         name="stock"
         label="Quantidade atual"
-        // defaultValue={product?.stock?.toString()}
+        defaultValue={product?.stock.toString()}
         type="number"
         isRequired
         className="w-60 grow"
@@ -76,7 +66,7 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
         errorMessage={state.errors.stock}
       />
 
-      <Select
+      {/* <Select
         name="unit"
         label="Unidade de medida"
         defaultSelectedKeys={product?.unit ? [product?.unit] : [units[0]]}
@@ -88,7 +78,17 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
         {units.map((unit) => (
           <SelectItem value={unit} key={unit} title={unit}></SelectItem>
         ))}
-      </Select>
+      </Select> */}
+
+      <Input
+        name="unit"
+        label="Unidade de medida"
+        defaultValue={product?.unit}
+        isRequired
+        className="w-60 grow"
+        isInvalid={!!state.errors.unit}
+        errorMessage={state.errors.unit}
+      />
 
       <Input
         name="minStock"
@@ -109,23 +109,37 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
         errorMessage={state.errors.code}
       />
 
-      <div className="w-full flex gap-4">
+      <div className="w-full flex justify-end gap-4">
         {product && (
-          <Button
+          <FormButton
             color="danger"
             variant="light"
             onClick={async () => {
-              const deleted = await productActions.remove(product.id);
-              if (deleted.data) router.push("/");
+              if (confirm("Tem certeza que deseja excluir este produto?")) {
+                const deleted = await productService.remove(product.id);
+                if (deleted.data) router.push("/");
+              }
             }}
           >
             Deletar produto
-          </Button>
+          </FormButton>
         )}
-        <Button type="submit" color="primary">
+
+        <SubmitButton type="submit" color="primary">
           {product ? "Atualizar" : "Cadastrar"}
-        </Button>
+        </SubmitButton>
       </div>
     </form>
   );
 }
+
+// const units = [
+//   "Unidades",
+//   "Kilos",
+//   "Gramas",
+//   "Litros",
+//   "Mililitros",
+//   "Metros",
+//   "Centímetros",
+//   "Caixas",
+// ];

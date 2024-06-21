@@ -1,9 +1,14 @@
 "use server";
 
-import postgres from "prisma/postgres.db";
+import { productRepo } from "@/backend/repositories/products";
+import { revalidatePath } from "next/cache";
+import { MutationResult } from "../../../../types/types";
 
-export default async function remove(id: string) {
-  const response = await postgres.product.delete({ where: { id } });
+export default async function remove(
+  productId: string
+): Promise<MutationResult<boolean>> {
+  const deleted = await productRepo.remove(productId);
 
-  return !!response.id;
+  if (deleted) revalidatePath("/", "layout");
+  return { success: true, errors: {}, data: deleted };
 }

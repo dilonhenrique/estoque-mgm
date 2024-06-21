@@ -40,7 +40,7 @@ export default function AvatarMenu() {
       {status === "authenticated" && (
         <Dropdown>
           <DropdownTrigger>
-            <Button isIconOnly variant="light" radius="full">
+            <Button isIconOnly variant="bordered" radius="full">
               <Avatar
                 src={session.user.image ?? undefined}
                 name={session.user.name ?? undefined}
@@ -88,6 +88,8 @@ export default function AvatarMenu() {
             <DropdownItem
               startContent={<LogOut size={16} />}
               onClick={() => signOut()}
+              color="danger"
+              variant="flat"
             >
               Sair
             </DropdownItem>

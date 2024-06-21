@@ -18,12 +18,16 @@ module.exports = {
       themes: {
         light: {
           colors: {
-            primary: { ...colors.purple, DEFAULT: colors.purple[600] },
+            primary: { ...colors.emerald, DEFAULT: colors.emerald[500] },
+            secondary: { ...colors.blue, DEFAULT: colors.blue[500] },
+            focus: colors.emerald[500],
           },
         },
         dark: {
           colors: {
-            primary: { ...colors.purple, DEFAULT: colors.purple[600] },
+            primary: { ...colors.emerald, DEFAULT: colors.emerald[500] },
+            secondary: { ...colors.blue, DEFAULT: colors.blue[500] },
+            focus: colors.emerald[500],
           },
         },
       },

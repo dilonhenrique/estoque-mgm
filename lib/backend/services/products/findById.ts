@@ -1,18 +1,13 @@
 "use server";
 
-import postgres from "prisma/postgres.db";
-import { parseProduct } from "./parse";
+import { productRepo } from "@/backend/repositories/products";
+import { MutationResult } from "../../../../types/types";
+import { Product } from "../../../../types/schemas";
 
-export default async function findById(id: string) {
-  const response = await postgres.product.findFirst({
-    where: { id },
-    include: {
-      category: true,
-      stock: { include: { variants: true } },
-      variants: { include: { options: true } },
-    },
-  });
+export default async function findById(
+  productId: string
+): Promise<MutationResult<Product | null>> {
+  const response = await productRepo.findById(productId);
 
-  if (!response) return null;
-  return parseProduct(response);
+  return { success: true, errors: {}, data: response };
 }

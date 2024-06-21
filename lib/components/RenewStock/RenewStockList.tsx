@@ -8,20 +8,23 @@ import {
 } from "@nextui-org/react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Plus, Trash } from "lucide-react";
-import { productActions } from "@/backend/actions/products";
 import { useRouter } from "next/navigation";
 import { Product } from "../../../types/schemas";
+import { SubmitButton } from "../ui/FormButton";
+import { toast } from "sonner";
+import { stockService } from "@/backend/services/stock";
 
 export default function RenewStockList({ products }: IProps) {
   const router = useRouter();
   const [stock, setStock] = useState<StockItem[]>([]);
+
   const availableProducts = useMemo(() => {
     return products.filter(
       (prod) => !stock.some((item) => item.product.id === prod.id)
     );
   }, [stock, products]);
 
-  useEffect(addItem);
+  useEffect(addItem, []);
 
   function addItem() {
     setStock([...stock, { product: availableProducts[0], increment: 0 }]);
@@ -62,10 +65,11 @@ export default function RenewStockList({ products }: IProps) {
     ev.preventDefault();
     await Promise.all(
       stock.map(async (item) =>
-        productActions.updateStock(item.product.id, item.increment)
+        stockService.increment(item.product.id, item.increment)
       )
     );
 
+    toast.success("Reposição realizada com sucesso!");
     router.push("/produtos");
   }
 
@@ -88,6 +92,7 @@ export default function RenewStockList({ products }: IProps) {
 
             <Autocomplete
               label="Produto"
+              isClearable={false}
               selectedKey={item.product.id}
               onSelectionChange={(val) => changeItemProduct(index, String(val))}
             >
@@ -115,7 +120,7 @@ export default function RenewStockList({ products }: IProps) {
             <div>
               <p className="text-sm opacity-50">Qtd atual:</p>
               <p className="text-sm">
-                {/*item.product.stock*/} {item.product.unit}
+                {item.product.stock} {item.product.unit}
               </p>
             </div>
           </div>
@@ -131,9 +136,7 @@ export default function RenewStockList({ products }: IProps) {
         )}
       </div>
 
-      <Button color="primary" type="submit">
-        Repor estoque
-      </Button>
+      <SubmitButton color="primary">Repor estoque</SubmitButton>
     </form>
   );
 }

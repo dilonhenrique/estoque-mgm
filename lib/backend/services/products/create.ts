@@ -1,39 +1,43 @@
 "use server";
 
-import postgres from "prisma/postgres.db";
+import { z } from "zod";
+import { productRepo } from "@/backend/repositories/products";
+import { getSessionUserOrThrow } from "@/utils/apiUtils";
+import { revalidatePath } from "next/cache";
+import { MutationResult } from "../../../../types/types";
+import { isEmpty, omitBy } from "lodash";
 import { Product } from "../../../../types/schemas";
-import { parseProduct } from "./parse";
+import { mapZodErrors } from "@/utils/mapZodErrors";
 
 export default async function create(
-  payload: Payload
-): Promise<Product | null> {
-  const response = await postgres.product.create({
-    data: {
-      account_id: payload.account_id,
-      name: payload.name,
-      minStock: payload.minStock,
-      unit: payload.unit,
-      code: payload.code,
-      category_id: payload.category_id,
-      img_url: payload.img_url,
-    },
-    include: {
-      category: true,
-      stock: { include: { variants: true } },
-      variants: { include: { options: true } },
-    },
-  });
+  product: FormData
+): Promise<MutationResult<Product | null>> {
+  const user = await getSessionUserOrThrow();
 
-  if (!response) return null;
-  return parseProduct(response);
+  const data = {
+    ...(product instanceof FormData ? Object.fromEntries(product) : product),
+    account_id: user.account_id,
+  };
+
+  const payload = schema.safeParse(omitBy(data, isEmpty));
+
+  if (!payload.success) {
+    return { success: false, errors: mapZodErrors(payload.error.errors) };
+  }
+
+  const response = await productRepo.create(payload.data);
+
+  if (response) revalidatePath("/", "layout");
+  return { success: true, errors: {}, data: response };
 }
 
-type Payload = {
-  account_id: string;
-  name: string;
-  unit?: string;
-  minStock?: number;
-  code?: string;
-  category_id?: string;
-  img_url?: string;
-};
+const schema = z.object({
+  account_id: z.string().uuid(),
+  name: z.string(),
+  unit: z.string(),
+  stock: z.coerce.number({ message: "Required" }),
+  minStock: z.coerce.number().optional(),
+  code: z.string().optional(),
+  category_id: z.string().optional(),
+  img_url: z.string().optional(),
+});

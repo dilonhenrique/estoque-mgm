@@ -13,26 +13,25 @@ export type Product = {
   minStock?: number;
   code?: string;
   img_url?: string;
-  stock: ProductStock[];
-  variants?: ProductVariant[];
+  stock: number;
   category?: {
     id: string;
     name: string;
   };
 };
 
-export type ProductStock = {
-  id: string;
-  qty: number;
-};
+// export type ProductStock = {
+//   id: string;
+//   qty: number;
+// };
 
-export type ProductVariant = {
-  id: string;
-  name: string;
-  options: ProductVariantOption[];
-};
+// export type ProductVariant = {
+//   id: string;
+//   name: string;
+//   options: ProductVariantOption[];
+// };
 
-export type ProductVariantOption = {
-  id: string;
-  name: string;
-};
+// export type ProductVariantOption = {
+//   id: string;
+//   name: string;
+// };

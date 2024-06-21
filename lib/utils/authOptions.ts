@@ -1,5 +1,5 @@
-import { authActions } from "@/backend/actions/auth";
-import { userService } from "@/backend/services/users";
+import { authService } from "@/backend/services/auth";
+import { userRepo } from "@/backend/repositories/users";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token }) {
       if (!token.email) return token;
 
-      const existingUser = await userService.findByEmail(token.email);
+      const existingUser = await userRepo.findByEmail(token.email);
 
       if (!existingUser) return token;
 
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
         console.log("No email found in user object");
         return false;
       }
-      await authActions.handleSignIn(user, account, profile);
+      await authService.handleSignIn(user, account, profile);
       return true;
     },
   },

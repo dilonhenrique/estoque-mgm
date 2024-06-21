@@ -7,8 +7,8 @@ import { ThemeProvider } from "next-themes";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ThemeProvider>
-        <NextUIProvider>{children}</NextUIProvider>
+      <ThemeProvider storageKey="bf-theme">
+        <NextUIProvider locale="pt-BR">{children}</NextUIProvider>
       </ThemeProvider>
     </SessionProvider>
   );
