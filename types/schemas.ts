@@ -14,10 +14,12 @@ export type Product = {
   code?: string;
   img_url?: string;
   stock: number;
-  category?: {
-    id: string;
-    name: string;
-  };
+  category?: ProductCategory;
+};
+
+export type ProductCategory = {
+  id: string;
+  name: string;
 };
 
 // export type ProductStock = {

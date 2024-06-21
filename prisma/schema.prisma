@@ -15,18 +15,19 @@ datasource db {
 }
 
 model Account {
-  id                  String     @id @default(uuid())
+  id                  String            @id @default(uuid())
   fullname            String
   professional_number String
   document            String
-  document_type       DocType    @default(CPF)
-  address             Address    @relation(fields: [address_id], references: [id])
+  document_type       DocType           @default(CPF)
+  address             Address           @relation(fields: [address_id], references: [id])
   address_id          String
   users               User[]
   customers           Customer[]
   services            Service[]
   products            Product[]
   purchases           Purchase[]
+  ProductCategory     ProductCategory[]
 }
 
 model Address {
@@ -126,9 +127,11 @@ model Product {
 }
 
 model ProductCategory {
-  id       String    @id @default(uuid())
-  name     String
-  products Product[]
+  id         String    @id @default(uuid())
+  account    Account   @relation(fields: [account_id], references: [id])
+  account_id String
+  name       String
+  products   Product[]
 }
 
 // model Stock {

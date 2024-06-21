@@ -1,18 +1,19 @@
 "use server";
 
-import { omit, isEmpty, omitBy } from "lodash";
+import { isEmpty, omitBy } from "lodash";
 import { z } from "zod";
 import { productRepo } from "@/backend/repositories/products";
-import { getSessionUserOrThrow } from "@/utils/apiUtils";
+import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { MutationResult } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
 import { mapZodErrors } from "@/utils/mapZodErrors";
+import { resolveCategoryId } from "@/utils/resolveCategoryId";
 
 export default async function update(
   product: FormData
 ): Promise<MutationResult<Product | null>> {
-  const user = await getSessionUserOrThrow();
+  const user = await getSessionUserOrLogout();
 
   const data = {
     ...(product instanceof FormData ? Object.fromEntries(product) : product),
@@ -26,10 +27,11 @@ export default async function update(
   }
 
   const id = payload.data?.id;
+  const category_id = await resolveCategoryId(payload.data.category);
 
   const response = await productRepo.update(id, {
     name: payload.data.name,
-    category_id: payload.data.category_id,
+    category_id,
     code: payload.data.code,
     img_url: payload.data.img_url,
     minStock: payload.data.minStock,
@@ -49,6 +51,6 @@ const schema = z.object({
   stock: z.coerce.number().optional(),
   minStock: z.coerce.number().optional(),
   code: z.string().optional(),
-  category_id: z.string().uuid().optional(),
+  category: z.string().optional(),
   img_url: z.string().optional(),
 });

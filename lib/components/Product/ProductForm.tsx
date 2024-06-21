@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
@@ -8,6 +8,7 @@ import { productService } from "@/backend/services/products";
 import { Product } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
+import CategoryAutocomplete from "../ui/CategoryAutocomplete/CategoryAutocomplete";
 
 type ProductFormProps = {
   product?: Product;
@@ -98,6 +99,17 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
         className="w-60 grow"
         isInvalid={!!state.errors.minStock}
         errorMessage={state.errors.minStock}
+      />
+
+      <CategoryAutocomplete
+        name="category"
+        label="Categoria"
+        placeholder="Escolha ou digite uma categoria"
+        allowsCustomValue
+        defaultSelectedKey={product?.category?.id}
+        className="w-60 grow"
+        isInvalid={!!state.errors.category_id}
+        errorMessage={state.errors.category_id}
       />
 
       <Input

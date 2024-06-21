@@ -5,6 +5,14 @@ import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   // secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    // signIn: '/login',
+    // signOut: '/auth/signout',
+    // error: '/auth/error', // Error code passed in query string as ?error=
+    // verifyRequest: '/auth/verify-request', // (used for check email message)
+    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
+  session: { strategy: "jwt" },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
@@ -16,7 +24,6 @@ export const authOptions: NextAuthOptions = {
       if (!token.email) return token;
 
       const existingUser = await userRepo.findByEmail(token.email);
-
       if (!existingUser) return token;
 
       token.id = existingUser.id;

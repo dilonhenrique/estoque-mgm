@@ -1,6 +1,6 @@
 "use server";
 
-import { getSessionUserOrThrow } from "@/utils/apiUtils";
+import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { MutationResult } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
@@ -10,7 +10,7 @@ export default async function increment(
   id: string,
   increment: number
 ): Promise<MutationResult<Product | null>> {
-  await getSessionUserOrThrow();
+  await getSessionUserOrLogout();
 
   const response = await stockRepo.increment(id, increment);
 
