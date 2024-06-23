@@ -1,4 +1,5 @@
 import { UserRole } from "@/lib/models/types";
+import { Role } from "@prisma/client";
 import NextAuth, {
   type DefaultSession,
   type User as NextAuthUser,
@@ -6,6 +7,8 @@ import NextAuth, {
 
 export interface ExtendedUser extends NextAuthUser {
   account_id: string;
+  img_url?: string | null;
+  role: Role;
 }
 
 declare module "next-auth" {

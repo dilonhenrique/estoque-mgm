@@ -3,7 +3,6 @@ import {
   Account as NextAuthAccount,
   Profile as NextAuthProfile,
 } from "next-auth";
-import { validatePresent } from "@/utils/errorUtils";
 import { userRepo } from "../../repositories/users";
 
 export default async function handleSignIn(
@@ -11,8 +10,6 @@ export default async function handleSignIn(
   account: NextAuthAccount | null,
   profile: NextAuthProfile | undefined
 ) {
-  validatePresent(user.email, "No email found in user object");
-
   await userRepo.upsert({
     name: user.name as string,
     email: user.email as string,

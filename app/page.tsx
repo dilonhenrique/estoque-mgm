@@ -1,8 +1,4 @@
-import { productService } from "@/backend/services/products";
-import ProductList from "@/components/Product/ProductList";
 import { getSessionUser } from "@/utils/authUtils";
-import { Button } from "@nextui-org/react";
-import Link from "next/link";
 
 export default async function Home() {
   // const products = await productService.search();

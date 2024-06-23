@@ -1,5 +1,4 @@
-import { authOptions } from "./authOptions";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export async function getSessionUserOrLogout() {
@@ -8,7 +7,7 @@ export async function getSessionUserOrLogout() {
 }
 
 export async function getSessionUser() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session?.user?.email) {
     return session.user;
   }
