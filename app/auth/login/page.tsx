@@ -12,7 +12,7 @@ export default async function Home({
 
   return (
     <main className="p-8">
-      <div className="w-full flex gap-4 justify-between items-center mb-4">
+      <div className="w-full flex flex-col gap-4 justify-start items-start mb-4">
         <h1>Faça seu login acima</h1>
       </div>
     </main>

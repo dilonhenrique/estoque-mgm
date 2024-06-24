@@ -40,8 +40,8 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
 
   return (
     <form
-      action={formAction}
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
+      action={formAction}
       noValidate
     >
       <Input name="id" defaultValue={product?.id} className="hidden" />

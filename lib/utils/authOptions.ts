@@ -8,7 +8,7 @@ import { PrismaAdapter } from "./PrismaAdapter";
 
 export const pages = {
   signIn: "/auth/login",
-  newUser: "/auth/new-user",
+  newUser: "/auth/cadastro",
   // signOut: '/auth/signout',
   // error: '/auth/error', // Error code passed in query string as ?error=
   // verifyRequest: '/auth/verify-request', // (used for check email message)

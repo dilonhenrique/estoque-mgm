@@ -42,7 +42,7 @@ export default function AvatarMenu() {
           <DropdownTrigger>
             <Button isIconOnly variant="bordered" radius="full">
               <Avatar
-                src={session.user.image ?? undefined}
+                src={session.user.img_url ?? undefined}
                 name={session.user.name ?? undefined}
               />
             </Button>
