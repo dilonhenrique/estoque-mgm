@@ -16,12 +16,12 @@ import {
   PackagePlus,
   SunDim,
 } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { signIn, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-export default function AvatarMenu() {
-  const { data: session, status } = useSession();
+export default function AvatarMenu({ session }: { session: Session | null }) {
   const { theme, setTheme } = useTheme();
 
   function toggleTheme() {
@@ -31,13 +31,13 @@ export default function AvatarMenu() {
 
   return (
     <>
-      {status === "loading" && (
+      {/* {status === "loading" && (
         <Skeleton className="rounded-full">
           <Avatar />
         </Skeleton>
-      )}
+      )} */}
 
-      {status === "authenticated" && (
+      {session && (
         <Dropdown>
           <DropdownTrigger>
             <Button isIconOnly variant="bordered" radius="full">
@@ -97,9 +97,7 @@ export default function AvatarMenu() {
         </Dropdown>
       )}
 
-      {status === "unauthenticated" && (
-        <Button onClick={() => signIn("google")}>Entrar com Google</Button>
-      )}
+      {!session && <Button onClick={() => signIn()}>Login</Button>}
     </>
   );
 }

@@ -1,5 +1,6 @@
+
 import { auth } from "@/auth";
-import SignUpForm from "@/components/SignUp/SignUpForm";
+import LoginForm from "@/components/Login/LoginForm";
 import { redirect } from "next/navigation";
 
 export default async function Home({
@@ -11,10 +12,10 @@ export default async function Home({
   if (session) redirect(searchParams.callbackUrl ?? "/");
 
   return (
-    <main className="p-8">
+    <main className="p-8 w-full max-w-lg">
       <div className="w-full flex flex-col gap-4 justify-start items-start mb-4">
-        <h1>Faça seu cadastro</h1>
-        <SignUpForm />
+        <h1>Faça seu login</h1>
+        <LoginForm />
       </div>
     </main>
   );

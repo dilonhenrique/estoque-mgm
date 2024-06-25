@@ -1,6 +1,9 @@
 import { Sort } from "mongodb";
 
-export type MutationResult<T = any> = { errors: ZodErrorObject } & (
+export type MutationResult<T = any> = {
+  errors: ZodErrorObject;
+  status?: number;
+} & (
   | {
       success: true;
       data: T;

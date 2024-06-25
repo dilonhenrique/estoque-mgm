@@ -12,6 +12,7 @@ export default function PasswordInput(props: InputProps) {
     <Input
       endContent={
         <button
+          tabIndex={-1}
           className="focus:outline-none"
           type="button"
           onClick={toggleVisibility}

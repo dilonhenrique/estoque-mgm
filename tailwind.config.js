@@ -19,14 +19,14 @@ module.exports = {
         light: {
           colors: {
             primary: { ...colors.emerald, DEFAULT: colors.emerald[500] },
-            secondary: { ...colors.blue, DEFAULT: colors.blue[500] },
+            secondary: { ...colors.violet, DEFAULT: colors.violet[500] },
             focus: colors.emerald[500],
           },
         },
         dark: {
           colors: {
             primary: { ...colors.emerald, DEFAULT: colors.emerald[500] },
-            secondary: { ...colors.blue, DEFAULT: colors.blue[500] },
+            secondary: { ...colors.violet, DEFAULT: colors.violet[500] },
             focus: colors.emerald[500],
           },
         },

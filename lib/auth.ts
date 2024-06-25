@@ -1,9 +1,18 @@
 import { PrismaAdapter } from "@/utils/PrismaAdapter";
-import NextAuth, { Account } from "next-auth";
+import NextAuth, { Account, AuthError } from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
 import postgres from "prisma/postgres.db";
+import { authService } from "./backend/services/auth";
+
+export class CredentialError extends AuthError {
+  constructor(message?: string) {
+    super(message);
+    this.name = "CredentialError";
+  }
+}
 
 export const pages = {
   signIn: "/auth/login",
@@ -15,6 +24,23 @@ const adapter = PrismaAdapter(postgres) as Adapter;
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter,
   providers: [
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Senha", type: "password" },
+      },
+      async authorize({ email, password }) {
+        const user = await authService.checkPassword({
+          email: email as string,
+          password: password as string,
+        });
+
+        if (user) return user;
+
+        throw new CredentialError("Não autorizado");
+      },
+    }),
     Google({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
@@ -43,7 +69,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return session;
     },
-    async signIn({ user, account }) {
+    async signIn({ user, account, credentials }) {
+      if (credentials) return true;
+
       if (!account?.providerAccountId && !account?.provider) {
         return false;
       }

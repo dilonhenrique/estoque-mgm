@@ -94,6 +94,7 @@ export default function SignUpForm() {
           <Input
             name="zip_code"
             label="CEP"
+            // TODO: auto fill address on input
             className="max-w-md col-span-12"
             isInvalid={!!state.errors.zip_code}
             errorMessage={state.errors.zip_code}

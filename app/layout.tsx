@@ -1,4 +1,4 @@
-import Navbar from "@/components/ui/Navbar/Navbar";
+import { auth } from "@/auth";
 import "./globals.css";
 import { Providers } from "@/components/ui/providers";
 import { Toaster } from "sonner";
@@ -8,19 +8,19 @@ export const metadata = {
   description: "gestão de estoque",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <Providers>
-          <Navbar />
+        <Providers session={session}>
           {children}
-
-          <Toaster position="bottom-right" richColors />
+          <Toaster position="bottom-right" />
         </Providers>
       </body>
     </html>

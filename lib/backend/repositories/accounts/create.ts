@@ -2,11 +2,12 @@
 
 import { DocType, Role } from "@prisma/client";
 import postgres from "prisma/postgres.db";
+import { hashSync } from "bcrypt-ts";
 
 export default async function create({
   account,
   address,
-  user,
+  user: { password, ...user },
   social_account,
 }: Payload) {
   const social_accounts = social_account
@@ -17,7 +18,14 @@ export default async function create({
     data: {
       ...account,
       address: { create: address },
-      users: { create: { ...user, role: Role.owner, social_accounts } },
+      users: {
+        create: {
+          ...user,
+          password: hashSync(password, 10),
+          role: Role.owner,
+          social_accounts,
+        },
+      },
     },
   });
 

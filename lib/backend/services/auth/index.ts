@@ -1,3 +1,4 @@
-import handleSignIn from "./handleSignIn";
+import checkPassword from "./checkPassword";
+import login from "./login";
 
-export const authService = { handleSignIn };
+export const authService = { checkPassword, login };
