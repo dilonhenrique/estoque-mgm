@@ -1,7 +1,6 @@
 "use server";
 
 import { mapZodErrors } from "@/utils/mapZodErrors";
-import { isEmpty, omitBy } from "lodash";
 import { object, string } from "zod";
 import { MutationResult } from "../../../../types/types";
 import { CredentialError, signIn } from "@/auth";
@@ -9,13 +8,25 @@ import { CredentialError, signIn } from "@/auth";
 export default async function login(
   formData: FormData
 ): Promise<MutationResult<string | undefined | null>> {
-  const data = omitBy(Object.fromEntries(formData), isEmpty);
-  const payload = schema.safeParse(data);
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  const payload = schema.safeParse({ email, password });
 
   if (!payload.success) {
+    const email = payload.error.errors.find((item) =>
+      item.path.includes("email")
+    )?.message;
+    const password = payload.error.errors.find((item) =>
+      item.path.includes("password")
+    )?.message;
+
     return {
       success: false,
-      errors: mapZodErrors(payload.error.errors),
+      errors: {
+        ...(email ? { email } : {}),
+        ...(password ? { password } : {}),
+      },
       status: 400,
     };
   }
