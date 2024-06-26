@@ -1,28 +1,23 @@
 "use client";
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
-import { DocType } from "@prisma/client";
+import { Button, Tab, Tabs } from "@nextui-org/react";
 import { SubmitButton } from "../ui/FormButton";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
 import { accountService } from "@/backend/services/accounts";
 import { toast } from "sonner";
-import PasswordInput from "../PasswordInput/PasswordInput";
+import _ from "lodash";
+import AddressForm from "./AddressForm";
+import AccountForm from "./AccountForm";
+import UserForm from "./UserForm";
+import { useState } from "react";
 
 export default function SignUpForm() {
-  const searchParams = useSearchParams();
-  const params = Object.fromEntries(searchParams);
+  const [active, setActive] = useState("account");
 
   const router = useRouter();
-  const [state, formAction] = useFormState(submitAction, {
+  const [formState, formAction] = useFormState(submitAction, {
     success: true,
     errors: {},
   } as MutationResult);
@@ -40,167 +35,48 @@ export default function SignUpForm() {
     return response;
   }
 
+  function nextTab() {
+    if (active === "account") setActive("address");
+    if (active === "address") setActive("user");
+  }
+
+  function prevTab() {
+    if (active === "user") setActive("address");
+    if (active === "address") setActive("account");
+  }
+
   return (
-    <form
-      className="w-full gap-4 flex flex-col max-w-5xl"
-      action={formAction}
-      noValidate
-    >
-      <Card>
-        <CardHeader>
-          <h2>Dados profissionais</h2>
-        </CardHeader>
-        <CardBody className="gap-4 grid md:grid-cols-12 grid-cols-1">
-          <Input
-            name="fullname"
-            label="Nome completo"
-            className="col-span-6"
-            isInvalid={!!state.errors.fullname}
-            errorMessage={state.errors.fullname}
-          />
-          <Input
-            name="professional_number"
-            label="Número CRBM"
-            className="col-span-6"
-            isInvalid={!!state.errors.professional_number}
-            errorMessage={state.errors.professional_number}
-          />
-          <Select
-            name="document_type"
-            label="Tipo de documento"
-            items={Object.values(DocType).map((value) => ({ value }))}
-            defaultSelectedKeys={[DocType.CPF]}
-            className="col-span-4"
-            isInvalid={!!state.errors.document_type}
-            errorMessage={state.errors.document_type}
-          >
-            {(item) => <SelectItem key={item.value}>{item.value}</SelectItem>}
-          </Select>
-          <Input
-            name="document"
-            label="CPF/CNPJ"
-            className="col-span-8"
-            isInvalid={!!state.errors.document}
-            errorMessage={state.errors.document}
-          />
-        </CardBody>
-      </Card>
+    <form className="w-full gap-4 flex flex-col" action={formAction} noValidate>
+      <Tabs
+        destroyInactiveTabPanel={false}
+        color="primary"
+        radius="full"
+        selectedKey={active}
+        onSelectionChange={(val) => typeof val === "string" && setActive(val)}
+      >
+        <Tab key="account" title="1. Dados profissionais">
+          <AccountForm title="1. Dados profissionais" formState={formState} />
+        </Tab>
 
-      <Card>
-        <CardHeader>
-          <h2>Endereço profissional</h2>
-        </CardHeader>
-        <CardBody className="gap-4 grid md:grid-cols-12 grid-cols-2">
-          <Input
-            name="zip_code"
-            label="CEP"
-            // TODO: auto fill address on input
-            className="max-w-md col-span-12"
-            isInvalid={!!state.errors.zip_code}
-            errorMessage={state.errors.zip_code}
-          />
-          <Input
-            name="country"
-            label="País"
-            className="col-span-4"
-            isInvalid={!!state.errors.country}
-            errorMessage={state.errors.country}
-          />
-          <Input
-            name="state"
-            label="Estado"
-            className="col-span-2"
-            isInvalid={!!state.errors.state}
-            errorMessage={state.errors.state}
-          />
-          <Input
-            name="city"
-            label="Cidade"
-            className="col-span-6"
-            isInvalid={!!state.errors.city}
-            errorMessage={state.errors.city}
-          />
-          <Input
-            name="neighborhood"
-            label="Bairro"
-            className="col-span-6"
-            isInvalid={!!state.errors.neighborhood}
-            errorMessage={state.errors.neighborhood}
-          />
-          <Input
-            name="street"
-            label="Endereço"
-            className="col-span-6"
-            isInvalid={!!state.errors.street}
-            errorMessage={state.errors.street}
-          />
-          <Input
-            name="number"
-            label="Número"
-            className="col-span-6"
-            isInvalid={!!state.errors.number}
-            errorMessage={state.errors.number}
-          />
-          <Input
-            name="complement"
-            label="Complemento"
-            className="col-span-6"
-            isInvalid={!!state.errors.complement}
-            errorMessage={state.errors.complement}
-          />
-        </CardBody>
-      </Card>
+        <Tab key="address" title="2. Endereço comercial">
+          <AddressForm title="2. Endereço comercial" formState={formState} />
+        </Tab>
 
-      <Card>
-        <CardHeader>
-          <h2>Usuário</h2>
-        </CardHeader>
-        <CardBody className="gap-4 grid md:grid-cols-12 grid-cols-2">
-          <Input
-            name="img_url"
-            label="Avatar"
-            defaultValue={params.img_url}
-            className="col-span-6 hidden"
-            isInvalid={!!state.errors.img_url}
-            errorMessage={state.errors.img_url}
-          />
-          <Input
-            name="name"
-            label="Nome"
-            defaultValue={params.name}
-            className="col-span-6"
-            isInvalid={!!state.errors.name}
-            errorMessage={state.errors.name}
-          />
-          <Input
-            name="email"
-            label="Email"
-            defaultValue={params.email}
-            className="col-span-6"
-            isInvalid={!!state.errors.email}
-            errorMessage={state.errors.email}
-          />
-          <PasswordInput
-            name="password"
-            label="Senha"
-            className="col-span-6"
-            isInvalid={!!state.errors.password}
-            errorMessage={state.errors.password}
-          />
-          <PasswordInput
-            name="confirm_password"
-            label="Confirme sua senha"
-            className="col-span-6"
-            isInvalid={!!state.errors.confirm_password}
-            errorMessage={state.errors.confirm_password}
-          />
-        </CardBody>
-      </Card>
+        <Tab key="user" title="3. Usuário">
+          <UserForm title="3. Usuário" formState={formState} />
+        </Tab>
+      </Tabs>
 
       <div className="flex gap-4 justify-end col-span-full">
-        <SubmitButton color="primary" variant="shadow">
-          Cadastrar
-        </SubmitButton>
+        {active !== "account" && <Button onPress={prevTab}>Voltar</Button>}
+
+        {active === "user" ? (
+          <SubmitButton color="primary" variant="shadow">
+            Cadastrar
+          </SubmitButton>
+        ) : (
+          <Button onPress={nextTab}>Próxima</Button>
+        )}
       </div>
     </form>
   );

@@ -13,7 +13,7 @@ export default async function Home({
   if (session) redirect(searchParams.callbackUrl ?? "/");
 
   return (
-    <main className="p-8">
+    <main className="p-8 w-full max-w-4xl min-h-screen">
       <div className="w-full flex flex-col gap-4 justify-start items-start mb-4">
         <div className="flex justify-between gap-4 w-full">
           <h1>Faça seu cadastro</h1>
