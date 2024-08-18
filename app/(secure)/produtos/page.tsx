@@ -3,7 +3,7 @@ import ProductList from "@/components/Product/ProductList";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function ProductsPage() {
   const products = await productService.search();
 
   return (

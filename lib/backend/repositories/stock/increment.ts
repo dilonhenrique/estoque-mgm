@@ -1,7 +1,7 @@
 "use server";
 
 import postgres from "prisma/postgres.db";
-import { parseProduct } from "../products/parse";
+import { parseProduct } from "../../../utils/parser/product";
 
 export default async function increment(id: string, increment: number) {
   const product = await postgres.product.update({

@@ -29,6 +29,7 @@ model User {
   sessions        Session[]
   created_at      DateTime        @default(now())
   updated_at      DateTime        @updatedAt
+  deleted_at      DateTime?
 }
 
 model SocialAccount {
@@ -106,10 +107,13 @@ model Customer {
   img_url    String?
   email      String?
   phone      String?
-  birthday   String?
+  birthday   DateTime?
   address    Address?    @relation(fields: [address_id], references: [id])
   address_id String?
   procedures Procedure[]
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  deleted_at DateTime?
 }
 
 model Service {
@@ -124,10 +128,10 @@ model Service {
 
 model Procedure {
   id                    String               @id @default(uuid())
-  service               Service              @relation(fields: [service_id], references: [id])
-  service_id            String
-  customer              Customer             @relation(fields: [customer_id], references: [id])
-  customer_id           String
+  service               Service?             @relation(fields: [service_id], references: [id])
+  service_id            String?
+  customer              Customer?            @relation(fields: [customer_id], references: [id])
+  customer_id           String?
   created_by            User                 @relation(fields: [created_by_id], references: [id])
   created_by_id         String
   created_at            DateTime             @default(now())
@@ -137,6 +141,7 @@ model Procedure {
   sheet_id              String?
   procedureMedia        ProcedureMedia[]
   productsOnProcedures  ProductOnProcedure[]
+  ProductLog            ProductLog[]
 }
 
 model ProcedureMedia {
@@ -165,6 +170,31 @@ model Product {
   productsOnProcedures ProductOnProcedure[]
   purchaseItems        PurchaseItem[]
   // variants             Variant[]
+  created_at           DateTime             @default(now())
+  updated_at           DateTime             @updatedAt
+  deleted_at           DateTime?
+  ProductLog           ProductLog[]
+}
+
+model ProductLog {
+  id           String     @id @default(uuid())
+  created_at   DateTime   @default(now())
+  product      Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id   String
+  qty          Int
+  cause        LogCause
+  procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: Cascade)
+  procedure_id String?
+  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: Cascade)
+  purchase_id  String?
+}
+
+enum LogCause {
+  procedure
+  purchase
+  personal
+  lost
+  other
 }
 
 model ProductCategory {
@@ -226,6 +256,7 @@ model Purchase {
   account_id    String
   status        PurchaseStatus
   purchaseItems PurchaseItem[]
+  ProductLog    ProductLog[]
 }
 
 model PurchaseItem {
@@ -241,13 +272,16 @@ model PurchaseItem {
 
 model Supplier {
   id         String     @id @default(uuid())
-  cnpj       String
+  cnpj       String?
   name       String
-  email      String
-  phone      String
-  address    Address    @relation(fields: [address_id], references: [id])
-  address_id String
+  email      String?
+  phone      String?
+  address    Address?   @relation(fields: [address_id], references: [id])
+  address_id String?
   purchases  Purchase[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?
 }
 
 // model Variant {

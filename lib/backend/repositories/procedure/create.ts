@@ -1,7 +1,7 @@
 "use server";
 
 import postgres from "prisma/postgres.db";
-import { parseProduct } from "../products/parse";
+import { parseProduct } from "../../../utils/parser/product";
 
 export default async function create(payload: Payload) {
   // const response = await postgres.procedure.create({

@@ -1,7 +1,7 @@
 "use server";
 
 import postgres from "prisma/postgres.db";
-import { parseProduct } from "./parse";
+import { parseProduct } from "../../../utils/parser/product";
 
 export default async function update(id: string, payload: Payload) {
   const product = await postgres.product.update({

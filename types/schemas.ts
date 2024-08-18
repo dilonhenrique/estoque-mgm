@@ -22,6 +22,28 @@ export type ProductCategory = {
   name: string;
 };
 
+export type Customer = {
+  id: string;
+  name: string;
+  img_url?: string;
+  email?: string;
+  phone?: string;
+  birthday?: Date;
+  address?: Address;
+};
+
+export type Address = {
+  id: string;
+  zip_code: string;
+  country: string;
+  state: string;
+  city: string;
+  neighborhood?: string;
+  street: string;
+  number: string;
+  complement?: string;
+};
+
 // export type ProductStock = {
 //   id: string;
 //   qty: number;

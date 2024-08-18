@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   Button,
@@ -5,7 +7,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Skeleton,
   DropdownSection,
 } from "@nextui-org/react";
 import {

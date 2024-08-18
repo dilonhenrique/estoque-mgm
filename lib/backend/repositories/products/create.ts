@@ -2,7 +2,7 @@
 
 import postgres from "prisma/postgres.db";
 import { Product } from "../../../../types/schemas";
-import { parseProduct } from "./parse";
+import { parseProduct } from "../../../utils/parser/product";
 
 export default async function create(
   payload: Payload

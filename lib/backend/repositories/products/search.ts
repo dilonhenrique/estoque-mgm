@@ -2,7 +2,7 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { parseProduct } from "./parse";
+import { parseProduct } from "../../../utils/parser/product";
 import { SearchList } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
 
