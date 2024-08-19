@@ -16,6 +16,7 @@ import {
   Package,
   PackagePlus,
   SunDim,
+  User,
 } from "lucide-react";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
@@ -59,6 +60,13 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
                 Estoque atual
               </DropdownItem>
               <DropdownItem
+                startContent={<User size={16} />}
+                as={Link}
+                href="/clientes"
+              >
+                Clientes
+              </DropdownItem>
+              <DropdownItem
                 startContent={<PackagePlus size={16} />}
                 as={Link}
                 href="/repor-estoque"
@@ -72,6 +80,9 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
               >
                 Nova Venda
               </DropdownItem>
+            </DropdownSection>
+
+            <DropdownSection showDivider>
               <DropdownItem
                 startContent={
                   theme === "dark" ? (

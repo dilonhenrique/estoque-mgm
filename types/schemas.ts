@@ -44,6 +44,16 @@ export type Address = {
   complement?: string;
 };
 
+export type Service = {
+  id: string;
+  name: string;
+  products: ProductWithQty[];
+};
+
+export type ProductWithQty = Product & {
+  qty: number;
+};
+
 // export type ProductStock = {
 //   id: string;
 //   qty: number;

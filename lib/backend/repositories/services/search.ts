@@ -2,39 +2,38 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { parseCustomer } from "@/utils/parser/customer";
 import { includer } from "@/utils/includer";
-import { Customer } from "../../../../types/schemas";
+import { Service } from "../../../../types/schemas";
+import { parseService } from "@/utils/parser/service";
 
 export default async function search(
   account_id: string,
   query?: Query
 ): Promise<{
-  items: Customer[];
+  items: Service[];
   total: number;
 }> {
   const [items, total] = await postgres.$transaction([
-    postgres.customer.findMany({
+    postgres.service.findMany({
       ...query,
       where: {
         account_id,
-        deleted_at: null,
         ...query?.where,
       },
-      include: includer.customer,
+      include: includer.service,
     }),
-    postgres.customer.count({ where: { account_id, deleted_at: null } }),
+    postgres.service.count({ where: { account_id } }),
   ]);
 
   return {
-    items: items?.map((item) => parseCustomer(item)),
+    items: items?.map((item) => parseService(item)),
     total,
   };
 }
 
 type Query = {
-  where?: Prisma.CustomerWhereInput;
-  orderBy?: Prisma.CustomerOrderByWithRelationInput[];
+  where?: Prisma.ServiceWhereInput;
+  orderBy?: Prisma.ServiceOrderByWithRelationInput[];
   skip?: number;
   take?: number;
 };

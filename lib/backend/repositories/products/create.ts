@@ -3,6 +3,7 @@
 import postgres from "prisma/postgres.db";
 import { Product } from "../../../../types/schemas";
 import { parseProduct } from "../../../utils/parser/product";
+import { includer } from "@/utils/includer";
 
 export default async function create(
   payload: Payload
@@ -18,9 +19,7 @@ export default async function create(
       img_url: payload.img_url,
       stock: payload.stock,
     },
-    include: {
-      category: true,
-    },
+    include: includer.product,
   });
 
   if (!response) return null;

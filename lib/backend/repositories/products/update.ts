@@ -2,6 +2,7 @@
 
 import postgres from "prisma/postgres.db";
 import { parseProduct } from "../../../utils/parser/product";
+import { includer } from "@/utils/includer";
 
 export default async function update(id: string, payload: Payload) {
   const product = await postgres.product.update({
@@ -15,9 +16,7 @@ export default async function update(id: string, payload: Payload) {
       img_url: payload.img_url,
       stock: payload.stock
     },
-    include: {
-      category: true,
-    },
+    include: includer.product,
   });
 
   if (!product) return null;

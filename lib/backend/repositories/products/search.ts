@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { parseProduct } from "../../../utils/parser/product";
 import { SearchList } from "../../../../types/types";
 import { Product } from "../../../../types/schemas";
+import { includer } from "@/utils/includer";
 
 export default async function search(
   query?: Query
@@ -12,9 +13,7 @@ export default async function search(
   const [items, total] = await postgres.$transaction([
     postgres.product.findMany({
       ...query,
-      include: {
-        category: true,
-      },
+      include: includer.product,
     }),
     postgres.product.count(),
   ]);

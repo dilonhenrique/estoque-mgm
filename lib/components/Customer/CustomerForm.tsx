@@ -19,7 +19,7 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
   const [state, formAction] = useFormState(submitAction, {
     success: true,
     errors: {},
-  } as MutationResult);
+  } as MutationResult<Customer>);
 
   async function submitAction(status: MutationResult, formData: FormData) {
     const response = customer

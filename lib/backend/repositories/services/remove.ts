@@ -4,12 +4,9 @@ import { includer } from "@/utils/includer";
 import postgres from "prisma/postgres.db";
 
 export default async function remove(id: string) {
-  const response = await postgres.customer.update({
+  const response = await postgres.service.delete({
     where: { id },
-    data: {
-      deleted_at: new Date(),
-    },
-    include: includer.customer,
+    include: includer.service,
   });
 
   return !!response.id;
