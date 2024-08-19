@@ -11,7 +11,7 @@ import { serviceRepo } from "@/backend/repositories/services";
 
 export default async function update(
   id: string,
-  product: FormData
+  product: FormData | { [k: string]: any }
 ): Promise<MutationResult<Service | null>> {
   await getSessionUserOrLogout();
 
@@ -34,7 +34,7 @@ export default async function update(
 }
 
 const schema = z.object({
-  account_id: z.string().uuid(),
+  // account_id: z.string().uuid(),
   name: z.string(),
   products: z
     .array(

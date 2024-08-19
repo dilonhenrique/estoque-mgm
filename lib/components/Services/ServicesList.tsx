@@ -29,7 +29,7 @@ export default function ServicesList({ services }: IProps) {
           <></>
         </TableColumn>
       </TableHeader>
-      <TableBody emptyContent={<>Nenhum cliente encontrado</>}>
+      <TableBody emptyContent={<>Nenhum serviço encontrado</>}>
         {services?.map((service) => (
           <TableRow key={service.id}>
             <TableCell className="font-semibold">{service.name}</TableCell>

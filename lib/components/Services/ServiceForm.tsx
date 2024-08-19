@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@nextui-org/react";
+import { Card, CardBody, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
@@ -8,6 +8,8 @@ import { Service } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { serviceService } from "@/backend/services/services";
+import ProductManager from "../ProductManager/ProductManager";
+import { useState } from "react";
 
 type ServiceFormProps = {
   service?: Service;
@@ -15,15 +17,21 @@ type ServiceFormProps = {
 
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
+  const [products, setProducts] = useState(service?.products);
   const [state, formAction] = useFormState(submitAction, {
     success: true,
     errors: {},
   } as MutationResult<Service>);
 
   async function submitAction(status: MutationResult, formData: FormData) {
+    const payload = {
+      ...Object.fromEntries(formData),
+      products: products?.map((item) => ({ id: item.id, qty: item.qty })) ?? [],
+    };
+
     const response = service
-      ? await serviceService.update(service.id, formData)
-      : await serviceService.create(formData);
+      ? await serviceService.update(service.id, payload)
+      : await serviceService.create(payload);
 
     if (response.success) {
       toast.success("Salvo com sucesso!");
@@ -53,6 +61,13 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         isInvalid={!!state.errors.name}
         errorMessage={state.errors.name}
       />
+
+      <Card classNames={{ base: "bg-transparent border border-content1 w-full px-2" }}>
+        <CardBody>
+          <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
+          <ProductManager value={products} onValueChange={setProducts} />
+        </CardBody>
+      </Card>
 
       <div className="w-full flex justify-end gap-4">
         {service && (
