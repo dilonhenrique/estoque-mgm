@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import {
   HandCoins,
+  HandHelping,
   LogOut,
   MoonStar,
   Package,
@@ -67,6 +68,13 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
                 Clientes
               </DropdownItem>
               <DropdownItem
+                startContent={<HandHelping size={16} />}
+                as={Link}
+                href="/servicos"
+              >
+                Serviços
+              </DropdownItem>
+              {/* <DropdownItem
                 startContent={<PackagePlus size={16} />}
                 as={Link}
                 href="/repor-estoque"
@@ -79,7 +87,7 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
                 href="/nova-venda"
               >
                 Nova Venda
-              </DropdownItem>
+              </DropdownItem> */}
             </DropdownSection>
 
             <DropdownSection showDivider>

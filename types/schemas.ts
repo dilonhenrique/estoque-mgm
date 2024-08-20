@@ -2,7 +2,7 @@ export type User = {
   name: string;
   email: string;
   image?: string;
-  lastLoginAt: Date;
+  lastLoginAt?: Date;
 };
 
 export type Product = {
@@ -52,6 +52,24 @@ export type Service = {
 
 export type ProductWithQty = Product & {
   qty: number;
+};
+
+export type Procedure = {
+  id: string;
+  service?: {
+    id: string;
+    name: string;
+  };
+  customer?: Customer;
+  created_by: User;
+  created_at: Date;
+  scheduled_for?: Date;
+  done: boolean;
+  confirmed_by_customer: boolean;
+  products: ProductWithQty[];
+  // sheet_id
+  // procedureMedia
+  // log
 };
 
 // export type ProductStock = {

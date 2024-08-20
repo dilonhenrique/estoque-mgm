@@ -8,7 +8,7 @@ import { Service } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { serviceService } from "@/backend/services/services";
-import ProductManager from "../ProductManager/ProductManager";
+import ProductSelector from "../ProductSelector/ProductSelector";
 import { useState } from "react";
 
 type ServiceFormProps = {
@@ -65,7 +65,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       <Card classNames={{ base: "bg-transparent border border-content1 w-full px-2" }}>
         <CardBody>
           <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
-          <ProductManager value={products} onValueChange={setProducts} />
+          <ProductSelector value={products} onValueChange={setProducts} />
         </CardBody>
       </Card>
 

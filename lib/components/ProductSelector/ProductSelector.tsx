@@ -15,15 +15,15 @@ type Props = {
   onValueChange?: (products: ProductWithQty[]) => void;
 };
 
-export default function ProductManager({
-  defaultValue = [],
+export default function ProductSelector({
+  defaultValue,
   value,
   onValueChange = () => {},
 }: Props) {
   const [initialLoad, setInitialLoad] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<ProductWithQty[]>(
-    value ?? defaultValue
+    value ?? defaultValue ?? []
   );
 
   const availableProducts = useMemo(() => {
@@ -41,15 +41,21 @@ export default function ProductManager({
   }, []);
 
   useEffect(() => {
-    if (initialLoad && availableProducts.length > 0) {
-      addItem();
+    if (initialLoad) {
       setInitialLoad(false);
+      if (!(value ?? defaultValue) && availableProducts.length > 0) {
+        addItem();
+      }
     }
   }, [availableProducts, initialLoad]);
 
   useEffect(() => {
     onValueChange(selectedProducts);
   }, [selectedProducts]);
+
+  useEffect(() => {
+    setSelectedProducts(value ?? []);
+  }, [value]);
 
   function addItem() {
     setSelectedProducts([

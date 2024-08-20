@@ -82,6 +82,7 @@ model Account {
   products            Product[]
   purchases           Purchase[]
   ProductCategory     ProductCategory[]
+  procedures          Procedure[]
 }
 
 model Address {
@@ -128,6 +129,8 @@ model Service {
 
 model Procedure {
   id                    String               @id @default(uuid())
+  account               Account              @relation(fields: [account_id], references: [id])
+  account_id            String
   service               Service?             @relation(fields: [service_id], references: [id])
   service_id            String?
   customer              Customer?            @relation(fields: [customer_id], references: [id])
@@ -136,7 +139,7 @@ model Procedure {
   created_by_id         String
   created_at            DateTime             @default(now())
   scheduled_for         DateTime?
-  done_at               DateTime?
+  done                  Boolean              @default(false)
   confirmed_by_customer Boolean              @default(false)
   sheet_id              String?
   procedureMedia        ProcedureMedia[]

@@ -10,7 +10,7 @@ import { mapZodErrors } from "@/utils/mapZodErrors";
 import { customerRepo } from "@/backend/repositories/customers";
 
 export default async function create(
-  product: FormData
+  product: FormData | { [k: string]: any }
 ): Promise<MutationResult<Customer | null>> {
   const user = await getSessionUserOrLogout();
 

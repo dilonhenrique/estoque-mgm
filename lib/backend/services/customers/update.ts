@@ -11,7 +11,7 @@ import { customerRepo } from "@/backend/repositories/customers";
 
 export default async function update(
   id: string,
-  product: FormData
+  product: FormData | { [k: string]: any }
 ): Promise<MutationResult<Customer | null>> {
   await getSessionUserOrLogout();
 

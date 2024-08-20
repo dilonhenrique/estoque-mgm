@@ -6,7 +6,7 @@ import { Product, ProductWithQty } from "../../../types/schemas";
 import { SubmitButton } from "../ui/FormButton";
 import { toast } from "sonner";
 import { stockService } from "@/backend/services/stock";
-import ProductManager from "../ProductManager/ProductManager";
+import ProductSelector from "../ProductSelector/ProductSelector";
 
 export default function RenewStockList({ products }: IProps) {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function RenewStockList({ products }: IProps) {
 
   return (
     <form onSubmit={submitStock}>
-      <ProductManager value={stock} onValueChange={setStock} />
+      <ProductSelector value={stock} onValueChange={setStock} />
 
       <SubmitButton color="primary">Repor estoque</SubmitButton>
     </form>
