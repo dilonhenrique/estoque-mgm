@@ -1,24 +1,23 @@
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Button,
-  Input,
-} from "@nextui-org/react";
-import { Plus, Trash } from "lucide-react";
+import { Button } from "@nextui-org/react";
+import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Product, ProductWithQty } from "../../../types/schemas";
 import { productService } from "@/backend/services/products";
+import ProductEditor from "./ProductEditor";
+import ProductTable from "./ProductTable";
 
 type Props = {
   defaultValue?: ProductWithQty[];
   value?: ProductWithQty[];
   onValueChange?: (products: ProductWithQty[]) => void;
+  isViewOnly?: boolean;
 };
 
 export default function ProductSelector({
   defaultValue,
   value,
   onValueChange = () => {},
+  isViewOnly,
 }: Props) {
   const [initialLoad, setInitialLoad] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -38,7 +37,7 @@ export default function ProductSelector({
         setAllProducts(res.data.items);
       }
     });
-  }, []);
+  }, [isViewOnly]);
 
   useEffect(() => {
     if (initialLoad) {
@@ -48,14 +47,6 @@ export default function ProductSelector({
       }
     }
   }, [availableProducts, initialLoad]);
-
-  useEffect(() => {
-    onValueChange(selectedProducts);
-  }, [selectedProducts]);
-
-  useEffect(() => {
-    setSelectedProducts(value ?? []);
-  }, [value]);
 
   function addItem() {
     setSelectedProducts([
@@ -99,61 +90,42 @@ export default function ProductSelector({
     );
   }
 
+  useEffect(() => {
+    onValueChange(selectedProducts);
+  }, [selectedProducts]);
+
+  useEffect(() => {
+    setSelectedProducts(value ?? []);
+  }, [value]);
+
+  useEffect(() => {
+    setSelectedProducts(
+      selectedProducts.map((selected) => {
+        const prod =
+          allProducts.find((prod) => prod.id === selected.id) ?? selected;
+        return { ...prod, qty: selected.qty };
+      })
+    );
+  }, [allProducts]);
+
   return (
     <div className="flex flex-col gap-4 mb-4">
-      {selectedProducts.map((item, index) => (
-        <div
-          className="grid grid-cols-[30px,_1fr,_1fr,_100px] gap-4 items-center"
-          key={item.id}
-        >
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            isIconOnly
-            startContent={<Trash size={16} />}
-            onClick={() => removeItem(item.id)}
+      {isViewOnly ? (
+        <ProductTable products={selectedProducts} />
+      ) : (
+        selectedProducts.map((item, index) => (
+          <ProductEditor
+            key={item.id}
+            product={item}
+            availableProducts={availableProducts}
+            removeItem={() => removeItem(item.id)}
+            changeProduct={(id) => changeItemProduct(index, String(id))}
+            changeIncrement={(inc) => changeItemIncrement(index, inc)}
           />
+        ))
+      )}
 
-          <Autocomplete
-            label="Produto"
-            isClearable={false}
-            selectedKey={item.id}
-            onSelectionChange={(val) => changeItemProduct(index, String(val))}
-          >
-            {availableProducts.concat(item).map((product) => (
-              <AutocompleteItem
-                value={product.id}
-                key={product.id}
-                title={product.name}
-              />
-            ))}
-          </Autocomplete>
-
-          <Input
-            type="number"
-            min="1"
-            // max={item.product.stock}
-            label="Qtd usado"
-            value={item.qty.toString()}
-            onValueChange={(val) => changeItemIncrement(index, val)}
-            endContent={
-              <span className="flex h-full items-center text-sm opacity-50">
-                {item.unit}
-              </span>
-            }
-          />
-
-          <div>
-            <p className="text-sm opacity-50">Qtd atual:</p>
-            <p className="text-sm">
-              {item.stock} {item.unit}
-            </p>
-          </div>
-        </div>
-      ))}
-
-      {availableProducts.length > 0 && (
+      {!isViewOnly && availableProducts.length > 0 && (
         <Button
           onClick={addItem}
           isIconOnly

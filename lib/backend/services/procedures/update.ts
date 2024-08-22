@@ -38,9 +38,8 @@ export default async function update(
     service_id: payload.data.service_id,
     customer_id: payload.data.customer_id,
     scheduled_for: payload.data.scheduled_for,
-    done: payload.data.done,
     confirmed_by_customer: payload.data.confirmed_by_customer,
-    products: payload.data.products,
+    products: payload.data.products ?? [],
   });
 
   if (response) revalidatePath("/", "layout");
@@ -52,18 +51,16 @@ const schema = z.object({
   customer_id: z.string().uuid().optional(),
   labeled_customer_id: z.string().optional(),
   scheduled_for: z.coerce.date().optional(),
-  done: z
-    .literal("done")
-    .optional()
-    .transform((val) => val === "done"),
   confirmed_by_customer: z
     .literal("confirmed")
     .optional()
     .transform((val) => val === "confirmed"),
-  products: z.array(
-    z.object({
-      qty: z.coerce.number(),
-      id: z.string().uuid(),
-    })
-  ),
+  products: z
+    .array(
+      z.object({
+        qty: z.coerce.number(),
+        id: z.string().uuid(),
+      })
+    )
+    .optional(),
 });

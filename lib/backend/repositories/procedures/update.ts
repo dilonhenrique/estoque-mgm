@@ -5,6 +5,10 @@ import { parseProcedure } from "@/utils/parser/procedure";
 import postgres from "prisma/postgres.db";
 
 export default async function update(id: string, payload: Payload) {
+  const procedure = await postgres.procedure.findUnique({ where: { id } });
+
+  if (procedure?.done === true) return null;
+
   const response = await postgres.procedure.update({
     where: { id },
     data: {
@@ -15,7 +19,6 @@ export default async function update(id: string, payload: Payload) {
         ? { connect: { id: payload.customer_id } }
         : { disconnect: {} },
       scheduled_for: payload.scheduled_for ?? null,
-      done: payload.done,
       confirmed_by_customer: payload.confirmed_by_customer,
       productsOnProcedures: {
         deleteMany: {},
@@ -27,7 +30,7 @@ export default async function update(id: string, payload: Payload) {
         },
       },
     },
-    include: includer.procedure,
+    include: includer.procedureWithLog,
   });
 
   return parseProcedure(response);
@@ -37,7 +40,6 @@ type Payload = {
   service_id?: string;
   customer_id?: string;
   scheduled_for?: Date;
-  done?: boolean;
   confirmed_by_customer?: boolean;
   products: ProductPayload[];
 };

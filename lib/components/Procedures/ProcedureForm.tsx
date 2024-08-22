@@ -1,14 +1,13 @@
 "use client";
 
-import { Card, CardBody, DatePicker, Input, Switch } from "@nextui-org/react";
+import { Card, CardBody, DatePicker, Switch } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
 import { Procedure, Service } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import ProductSelector from "../ProductSelector/ProductSelector";
-import { useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { procedureService } from "@/backend/services/procedures";
 import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";
 import ServiceAutocomplete from "../ui/ServiceAutocomplete/ServiceAutocomplete";
@@ -20,11 +19,13 @@ type ProcedureFormProps = {
 
 export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   const router = useRouter();
+  const form = useRef<HTMLFormElement>(null);
+
   const [products, setProducts] = useState(procedure?.products ?? []);
-  const [state, formAction] = useFormState(submitAction, {
+  const [formState, setFormState] = useState({
     success: true,
     errors: {},
-  } as MutationResult<Procedure>);
+  } as MutationResult<Procedure | null>);
 
   function onServiceChange(service?: Service) {
     if (service?.products) {
@@ -32,10 +33,13 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
     }
   }
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function onSubmit(ev: FormEvent<HTMLFormElement>) {
+    ev.preventDefault();
+
+    const formData = new FormData(form.current ?? ev.currentTarget);
     const payload = {
       ...Object.fromEntries(formData),
-      products: products?.map((item) => ({ id: item.id, qty: item.qty })) ?? [],
+      products,
     };
 
     const response = procedure
@@ -52,13 +56,32 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
       toast.error("Confira os campos e tente novamente");
     }
 
-    return response;
+    setFormState(response);
+  }
+
+  async function handleDone() {
+    if (form.current && procedure && confirm("Tem certeza?")) {
+      if (procedure.done) {
+        await procedureService.unsetDone(procedure.id);
+      } else {
+        const formData = new FormData(form.current);
+        const payload = {
+          ...Object.fromEntries(formData),
+          products,
+        };
+
+        const response = await procedureService.setDone(procedure.id, payload);
+        setFormState(response);
+      }
+      router.refresh();
+    }
   }
 
   return (
     <form
+      ref={form}
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      action={formAction}
+      onSubmit={onSubmit}
       noValidate
     >
       <ServiceAutocomplete
@@ -67,9 +90,10 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         placeholder="Escolha um serviço"
         defaultSelectedKey={procedure?.service?.id}
         className="w-60 grow"
-        isInvalid={!!state.errors.service_id}
-        errorMessage={state.errors.service_id}
+        isInvalid={!!formState.errors.service_id}
+        errorMessage={formState.errors.service_id}
         onServiceChange={onServiceChange}
+        isDisabled={procedure?.done}
       />
 
       <CustomerAutocomplete
@@ -79,8 +103,9 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         allowsCustomValue
         defaultSelectedKey={procedure?.customer?.id}
         className="w-60 grow"
-        isInvalid={!!state.errors.customer_id}
-        errorMessage={state.errors.customer_id}
+        isInvalid={!!formState.errors.customer_id}
+        errorMessage={formState.errors.customer_id}
+        isDisabled={procedure?.done}
       />
 
       <DatePicker
@@ -92,29 +117,21 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
             : undefined
         }
         className="w-60 grow"
-        isInvalid={!!state.errors.scheduled_for}
-        errorMessage={state.errors.scheduled_for}
+        isInvalid={!!formState.errors.scheduled_for}
+        errorMessage={formState.errors.scheduled_for}
+        isDisabled={procedure?.done}
         granularity="minute"
         hideTimeZone
       />
 
-      <div className="col-span-full flex gap-4 flex-wrap">
+      <div className="w-full">
         <Switch
           name="confirmed_by_customer"
           value="confirmed"
           defaultSelected={procedure?.confirmed_by_customer}
-          className="col-span-full"
+          isDisabled={procedure?.done}
         >
           Agendamento confirmado pelo cliente
-        </Switch>
-
-        <Switch
-          name="done"
-          value="done"
-          defaultSelected={procedure?.done}
-          className="col-span-full"
-        >
-          Procedimento realizado
         </Switch>
       </div>
 
@@ -127,31 +144,53 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
           <h4 className="text-content4-foreground mb-2">
             Produtos utilizados:
           </h4>
-          <ProductSelector value={products} onValueChange={setProducts} />
+
+          <ProductSelector
+            value={products}
+            onValueChange={setProducts}
+            isViewOnly={procedure?.done}
+          />
         </CardBody>
       </Card>
 
       <div className="w-full flex justify-end gap-4">
         {procedure && (
-          <FormButton
-            color="danger"
-            variant="light"
-            onClick={async () => {
-              if (
-                confirm("Tem certeza que deseja excluir este procedimento?")
-              ) {
-                const deleted = await procedureService.remove(procedure.id);
-                if (deleted) router.push("/");
-              }
-            }}
-          >
-            Deletar serviço
-          </FormButton>
+          <>
+            {!procedure.done && (
+              <FormButton
+                color="danger"
+                variant="light"
+                onClick={async () => {
+                  if (
+                    confirm("Tem certeza que deseja excluir este procedimento?")
+                  ) {
+                    const deleted = await procedureService.remove(procedure.id);
+                    if (deleted) router.push("/");
+                  }
+                }}
+              >
+                Deletar procedimento
+              </FormButton>
+            )}
+
+            <FormButton
+              // variant="flat"
+              onClick={handleDone}
+            >
+              {procedure.done ? "Desmarcar como Feito" : "Marcar como Feito"}
+            </FormButton>
+          </>
         )}
 
-        <SubmitButton type="submit" color="primary">
-          {procedure ? "Atualizar" : "Cadastrar"}
-        </SubmitButton>
+        {!procedure?.done && (
+          <SubmitButton
+            type="submit"
+            color="primary"
+            isDisabled={procedure?.done}
+          >
+            {procedure ? "Atualizar" : "Cadastrar"}
+          </SubmitButton>
+        )}
       </div>
     </form>
   );

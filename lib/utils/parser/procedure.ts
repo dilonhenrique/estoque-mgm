@@ -7,12 +7,14 @@ import {
 import { Procedure } from "../../../types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { CustomerInput, parseCustomer } from "./customer";
+import { LogInput, parseLog } from "./log";
 
 export type ProcedureInput = PrismaProcedure & {
   service: Service | null;
   created_by: User;
   customer: CustomerInput | null;
   productsOnProcedures: (ProductOnProcedure & { product: ProductInput })[];
+  logs?: LogInput[] | null;
 };
 
 export function parseProcedure(payload: ProcedureInput): Procedure {
@@ -34,5 +36,6 @@ export function parseProcedure(payload: ProcedureInput): Procedure {
       ...parseProduct(productOnProcedure.product),
       qty: productOnProcedure.qty,
     })),
+    logs: payload.logs?.map((item) => parseLog(item)),
   };
 }

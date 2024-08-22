@@ -67,9 +67,15 @@ export type Procedure = {
   done: boolean;
   confirmed_by_customer: boolean;
   products: ProductWithQty[];
+  logs?: ProductLog[];
   // sheet_id
   // procedureMedia
-  // log
+};
+
+export type ProductLog = {
+  id: string;
+  qty: number;
+  product: Product;
 };
 
 // export type ProductStock = {

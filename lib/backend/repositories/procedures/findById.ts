@@ -8,7 +8,7 @@ import postgres from "prisma/postgres.db";
 export default async function findById(id: string) {
   const response = await postgres.procedure.findUnique({
     where: { id },
-    include: includer.procedure,
+    include: includer.procedureWithLog,
   });
 
   if (!response) notFound();

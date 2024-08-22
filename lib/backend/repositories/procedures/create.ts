@@ -16,7 +16,6 @@ export default async function create(payload: Payload) {
         ? { connect: { id: payload.customer_id } }
         : undefined,
       scheduled_for: payload.scheduled_for,
-      done: payload.done,
       confirmed_by_customer: payload.confirmed_by_customer,
       productsOnProcedures: {
         createMany: {
@@ -27,7 +26,7 @@ export default async function create(payload: Payload) {
         },
       },
     },
-    include: includer.procedure,
+    include: includer.procedureWithLog,
   });
 
   return parseProcedure(response);
@@ -39,7 +38,6 @@ type Payload = {
   customer_id?: string;
   created_by: string;
   scheduled_for?: Date;
-  done?: boolean;
   confirmed_by_customer?: boolean;
   products: ProductPayload[];
 };

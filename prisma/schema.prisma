@@ -142,9 +142,9 @@ model Procedure {
   done                  Boolean              @default(false)
   confirmed_by_customer Boolean              @default(false)
   sheet_id              String?
+  logs                  ProductLog[]
   procedureMedia        ProcedureMedia[]
   productsOnProcedures  ProductOnProcedure[]
-  ProductLog            ProductLog[]
 }
 
 model ProcedureMedia {
@@ -176,7 +176,7 @@ model Product {
   created_at           DateTime             @default(now())
   updated_at           DateTime             @updatedAt
   deleted_at           DateTime?
-  ProductLog           ProductLog[]
+  logs                 ProductLog[]
 }
 
 model ProductLog {
@@ -186,10 +186,10 @@ model ProductLog {
   product_id   String
   qty          Int
   cause        LogCause
-  procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: Cascade)
   procedure_id String?
-  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: Cascade)
+  procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: Cascade)
   purchase_id  String?
+  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: Cascade)
 }
 
 enum LogCause {
@@ -235,18 +235,18 @@ model PartialProduct {
 
 model ProductOnService {
   id         String  @id @default(uuid())
-  product    Product @relation(fields: [product_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id String
-  service    Service @relation(fields: [service_id], references: [id])
+  service    Service @relation(fields: [service_id], references: [id], onDelete: Cascade)
   service_id String
   qty        Int
 }
 
 model ProductOnProcedure {
   id           String    @id @default(uuid())
-  product      Product   @relation(fields: [product_id], references: [id])
+  product      Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id   String
-  procedure    Procedure @relation(fields: [procedure_id], references: [id])
+  procedure    Procedure @relation(fields: [procedure_id], references: [id], onDelete: Cascade)
   procedure_id String
   qty          Int
 }
@@ -259,7 +259,7 @@ model Purchase {
   account_id    String
   status        PurchaseStatus
   purchaseItems PurchaseItem[]
-  ProductLog    ProductLog[]
+  logs          ProductLog[]
 }
 
 model PurchaseItem {

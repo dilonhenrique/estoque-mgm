@@ -16,20 +16,30 @@ const customer = {
   address: true,
 };
 
+const procedure = {
+  created_by: true,
+  service: { include: service },
+  customer: { include: customer },
+  productsOnProcedures: {
+    include: {
+      product: {
+        include: product,
+      },
+    },
+  },
+};
+
+const log = { product: { include: product } };
+
 export const includer = {
   customer,
   product,
   service,
-  procedure: {
-    created_by: true,
-    service: { include: service },
-    customer: { include: customer },
-    productsOnProcedures: {
-      include: {
-        product: {
-          include: product,
-        },
-      },
+  procedure,
+  procedureWithLog: {
+    ...procedure,
+    logs: {
+      include: log,
     },
   },
 };
