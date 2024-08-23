@@ -12,7 +12,7 @@ type Props = {
   products: ProductWithQty[];
 };
 
-export default function ProductTable({ products }: Props) {
+export default function ProductTableViewOnly({ products }: Props) {
   return (
     <Table
       fullWidth
@@ -24,7 +24,7 @@ export default function ProductTable({ products }: Props) {
         <TableColumn>NOME</TableColumn>
         <TableColumn>QTD</TableColumn>
       </TableHeader>
-      <TableBody>
+      <TableBody emptyContent="Nenhum produto selecionado">
         {products.map((item) => (
           <TableRow
             key={item.id}

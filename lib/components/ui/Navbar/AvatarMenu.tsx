@@ -74,6 +74,13 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
               >
                 Serviços
               </DropdownItem>
+              <DropdownItem
+                startContent={<HandCoins size={16} />}
+                as={Link}
+                href="/procedimentos"
+              >
+                Procedimentos
+              </DropdownItem>
               {/* <DropdownItem
                 startContent={<PackagePlus size={16} />}
                 as={Link}

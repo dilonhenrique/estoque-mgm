@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
 import "./globals.css";
-import { Providers } from "@/components/ui/providers";
+import { auth } from "@/auth";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Estoque | Bianca Assis",

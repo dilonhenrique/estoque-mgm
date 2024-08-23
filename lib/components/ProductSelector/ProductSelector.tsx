@@ -3,8 +3,8 @@ import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Product, ProductWithQty } from "../../../types/schemas";
 import { productService } from "@/backend/services/products";
-import ProductEditor from "./ProductEditor";
-import ProductTable from "./ProductTable";
+import ProductTableViewOnly from "./ProductTableViewOnly";
+import ProductTableEditor from "./ProductTableEditor";
 
 type Props = {
   defaultValue?: ProductWithQty[];
@@ -46,7 +46,7 @@ export default function ProductSelector({
         addItem();
       }
     }
-  }, [availableProducts, initialLoad]);
+  }, []);
 
   function addItem() {
     setSelectedProducts([
@@ -111,18 +111,15 @@ export default function ProductSelector({
   return (
     <div className="flex flex-col gap-4 mb-4">
       {isViewOnly ? (
-        <ProductTable products={selectedProducts} />
+        <ProductTableViewOnly products={selectedProducts} />
       ) : (
-        selectedProducts.map((item, index) => (
-          <ProductEditor
-            key={item.id}
-            product={item}
-            availableProducts={availableProducts}
-            removeItem={() => removeItem(item.id)}
-            changeProduct={(id) => changeItemProduct(index, String(id))}
-            changeIncrement={(inc) => changeItemIncrement(index, inc)}
-          />
-        ))
+        <ProductTableEditor
+          products={selectedProducts}
+          availableProducts={availableProducts}
+          removeItem={removeItem}
+          changeItemProduct={changeItemProduct}
+          changeItemIncrement={changeItemIncrement}
+        />
       )}
 
       {!isViewOnly && availableProducts.length > 0 && (

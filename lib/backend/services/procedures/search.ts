@@ -12,17 +12,17 @@ export default async function search(
   const user = await getSessionUserOrLogout();
 
   const search = {
-    OR: [
-      { service: { name: { contains: query?.search, mode: "insensitive" } } },
-      { customer: { name: { contains: query?.search, mode: "insensitive" } } },
-    ],
+    // OR: [
+    //   { service: { name: { contains: query?.search, mode: "insensitive" } } },
+    //   { customer: { name: { contains: query?.search, mode: "insensitive" } } },
+    // ],
   } as Prisma.ProcedureWhereInput;
 
   const find = {
     orderBy: query?.orderBy ?? [{ created_at: "asc" }],
     skip: query?.skip,
     take: query?.take,
-    where: { AND: [search] },
+    where: { ...search },
   };
 
   const response = await procedureRepo.search(user.account_id, find);

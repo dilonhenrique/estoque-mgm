@@ -62,12 +62,10 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         errorMessage={state.errors.name}
       />
 
-      <Card classNames={{ base: "bg-transparent border border-content1 w-full px-2" }}>
-        <CardBody>
+      <div className="w-full">
           <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
           <ProductSelector value={products} onValueChange={setProducts} />
-        </CardBody>
-      </Card>
+          </div>
 
       <div className="w-full flex justify-end gap-4">
         {service && (

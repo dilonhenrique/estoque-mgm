@@ -1,3 +1,5 @@
+import { LogCause } from "@prisma/client";
+
 export type User = {
   name: string;
   email: string;
@@ -67,15 +69,23 @@ export type Procedure = {
   done: boolean;
   confirmed_by_customer: boolean;
   products: ProductWithQty[];
-  logs?: ProductLog[];
+  logs?: LogWithProduct[];
   // sheet_id
   // procedureMedia
 };
 
-export type ProductLog = {
+export type LogWithProduct = {
   id: string;
   qty: number;
   product: Product;
+};
+
+export type LogWithAction = {
+  id: string;
+  qty: number;
+  cause: LogCause;
+  procedure?: Procedure;
+  // purchase?: Purchase;
 };
 
 // export type ProductStock = {

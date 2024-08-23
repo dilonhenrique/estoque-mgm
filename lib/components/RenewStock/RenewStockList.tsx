@@ -10,7 +10,9 @@ import ProductSelector from "../ProductSelector/ProductSelector";
 
 export default function RenewStockList({ products }: IProps) {
   const router = useRouter();
-  const [stock, setStock] = useState<ProductWithQty[]>([]);
+  const [stock, setStock] = useState<ProductWithQty[]>([
+    { ...products[0], qty: 1 },
+  ]);
 
   async function submitStock(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault();

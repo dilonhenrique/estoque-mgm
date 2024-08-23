@@ -1,5 +1,5 @@
 import { ProductLog as PrismaLog } from "@prisma/client";
-import { ProductLog } from "../../../types/schemas";
+import { LogWithProduct } from "../../../types/schemas";
 import { parseProduct, ProductInput } from "./product";
 
 export type LogInput = PrismaLog & {
@@ -7,11 +7,11 @@ export type LogInput = PrismaLog & {
 };
 
 export function parseLog(payload: null): undefined;
-export function parseLog(payload: LogInput): ProductLog;
+export function parseLog(payload: LogInput): LogWithProduct;
 export function parseLog(payload: LogInput | null) {
   if (!payload) return undefined;
 
-  const parsed: ProductLog = {
+  const parsed: LogWithProduct = {
     id: payload.id,
     qty: payload.qty,
     product: parseProduct(payload.product),

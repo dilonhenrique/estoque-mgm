@@ -43,7 +43,7 @@ export default async function create(
     customer_id: payload.data.customer_id,
     scheduled_for: payload.data.scheduled_for,
     confirmed_by_customer: payload.data.confirmed_by_customer,
-    products: payload.data.products,
+    products: payload.data.products ?? [],
   });
 
   if (response) revalidatePath("/", "layout");
@@ -66,5 +66,5 @@ const schema = z.object({
       qty: z.coerce.number(),
       id: z.string().uuid(),
     })
-  ),
+  ).optional(),
 });

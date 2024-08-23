@@ -135,23 +135,15 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         </Switch>
       </div>
 
-      <Card
-        classNames={{
-          base: "bg-transparent border border-content1 w-full px-2",
-        }}
-      >
-        <CardBody>
-          <h4 className="text-content4-foreground mb-2">
-            Produtos utilizados:
-          </h4>
+      <div className="w-full">
+        <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
 
-          <ProductSelector
-            value={products}
-            onValueChange={setProducts}
-            isViewOnly={procedure?.done}
-          />
-        </CardBody>
-      </Card>
+        <ProductSelector
+          value={products}
+          onValueChange={setProducts}
+          isViewOnly={procedure?.done}
+        />
+      </div>
 
       <div className="w-full flex justify-end gap-4">
         {procedure && (
