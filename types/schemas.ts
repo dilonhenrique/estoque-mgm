@@ -17,6 +17,7 @@ export type Product = {
   img_url?: string;
   stock: number;
   category?: ProductCategory;
+  logs?: LogWithAction[];
 };
 
 export type ProductCategory = {
@@ -76,12 +77,14 @@ export type Procedure = {
 
 export type LogWithProduct = {
   id: string;
+  date: Date;
   qty: number;
   product: Product;
 };
 
 export type LogWithAction = {
   id: string;
+  date: Date;
   qty: number;
   cause: LogCause;
   procedure?: Procedure;

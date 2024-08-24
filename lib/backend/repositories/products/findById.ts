@@ -7,7 +7,7 @@ import { includer } from "@/utils/includer";
 export default async function findById(id: string) {
   const response = await postgres.product.findFirst({
     where: { id },
-    include: includer.product,
+    include: includer.productWithLogs,
   });
 
   if (!response) return null;

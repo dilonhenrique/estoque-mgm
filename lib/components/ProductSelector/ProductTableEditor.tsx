@@ -82,11 +82,6 @@ export default function ProductTableEditor({
                 // max={item.product.stock}
                 value={item.qty.toString()}
                 onValueChange={(inc) => changeItemIncrement(index, inc)}
-                endContent={
-                  <span className="flex h-full items-center text-sm opacity-50">
-                    {item.unit}
-                  </span>
-                }
               />
             </TableCell>
 

@@ -16,20 +16,11 @@ export default async function setDone(id: string, payload: Payload) {
       where: { id },
       data: {
         done: true,
-        // productsOnProcedures: {
-        //   deleteMany: {},
-        //   createMany: {
-        //     data: payload.products.map((product) => ({
-        //       qty: product.qty,
-        //       product_id: product.id,
-        //     })),
-        //   },
-        // },
         logs: {
           createMany: {
             data: payload.products.map((product) => ({
               product_id: product.id,
-              qty: product.qty,
+              qty: -product.qty,
               cause: LogCause.procedure,
             })),
           },

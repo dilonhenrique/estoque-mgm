@@ -20,7 +20,7 @@ function cpfMask(value?: string) {
 }
 
 function number(value?: string) {
-  return value?.replace(/\D/g, "");
+  return value?.replace(/[^\d-]/g, "");
 }
 
 export const mask = { cnpj: cnpjMask, cpf: cpfMask, number };

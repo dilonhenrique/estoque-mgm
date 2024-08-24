@@ -1,8 +1,10 @@
 import { Product as PrismaProduct, ProductCategory } from "@prisma/client";
 import { Product } from "../../../types/schemas";
+import { LogInputForProduct, parseLogForProduct } from "./log";
 
 export type ProductInput = PrismaProduct & {
   category: ProductCategory | null;
+  logs?: LogInputForProduct[];
 };
 
 export function parseProduct(payload: ProductInput): Product {
@@ -16,5 +18,8 @@ export function parseProduct(payload: ProductInput): Product {
     minStock: payload.minStock ?? undefined,
     stock: payload.stock,
     category: payload.category ?? undefined,
+    logs: payload.logs
+      ? payload.logs.map((log) => parseLogForProduct(log))
+      : undefined,
   };
 }

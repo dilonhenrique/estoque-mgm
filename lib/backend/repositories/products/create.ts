@@ -19,7 +19,7 @@ export default async function create(
       img_url: payload.img_url,
       stock: payload.stock,
     },
-    include: includer.product,
+    include: includer.productWithLogs,
   });
 
   if (!response) return null;

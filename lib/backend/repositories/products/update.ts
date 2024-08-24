@@ -16,7 +16,7 @@ export default async function update(id: string, payload: Payload) {
       img_url: payload.img_url,
       stock: payload.stock
     },
-    include: includer.product,
+    include: includer.productWithLogs,
   });
 
   if (!product) return null;

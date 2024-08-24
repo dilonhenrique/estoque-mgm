@@ -9,7 +9,7 @@ import {
   TableCell,
 } from "@nextui-org/table";
 import { Button } from "@nextui-org/react";
-import { ChevronRight, Pencil } from "lucide-react";
+import { ChevronRight, FileClock, Pencil, ScrollText } from "lucide-react";
 import Link from "next/link";
 import { Product } from "../../../types/schemas";
 
@@ -26,7 +26,7 @@ export default function ProductList({ products }: IProps) {
         <TableColumn>NOME</TableColumn>
         <TableColumn width="150">QTD</TableColumn>
         <TableColumn width="150">MIN</TableColumn>
-        <TableColumn width="50">
+        <TableColumn width="120">
           <></>
         </TableColumn>
       </TableHeader>
@@ -55,6 +55,15 @@ export default function ProductList({ products }: IProps) {
               >
                 <Pencil size={16} />
               </Button>
+
+              {/* <Button
+                isIconOnly
+                variant="light"
+                as={Link}
+                href={`/produtos/${product.id}`}
+              >
+                <ScrollText size={16} />
+              </Button> */}
               {/* </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem href={`/produtos/${product._id}`}>

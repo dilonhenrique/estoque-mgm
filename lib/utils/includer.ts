@@ -29,17 +29,24 @@ const procedure = {
   },
 };
 
-const log = { product: { include: product } };
+const logWithProduct = { product: { include: product } };
+const logWithAction = {
+  procedure: { include: procedure },
+  // purchase: { include: purchase },
+};
+
+const productWithLogs = { ...product, logs: { include: logWithAction } };
 
 export const includer = {
   customer,
   product,
+  productWithLogs,
   service,
   procedure,
   procedureWithLog: {
     ...procedure,
     logs: {
-      include: log,
+      include: logWithProduct,
     },
   },
 };

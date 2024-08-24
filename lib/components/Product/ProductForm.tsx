@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "../../../types/types";
@@ -9,6 +9,8 @@ import { Product } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import CategoryAutocomplete from "../ui/CategoryAutocomplete/CategoryAutocomplete";
+import IncreaserInput from "../ui/IncreaserInput/IncreaserInput";
+import { Pencil } from "lucide-react";
 
 type ProductFormProps = {
   product?: Product;
@@ -56,16 +58,35 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
         errorMessage={state.errors.name}
       />
 
-      <Input
-        name="stock"
-        label="Quantidade atual"
-        defaultValue={product?.stock.toString()}
-        type="number"
-        isRequired
-        className="w-60 grow"
-        isInvalid={!!state.errors.stock}
-        errorMessage={state.errors.stock}
-      />
+      {product ? (
+        <Input
+          label="Quantidade atual"
+          className="w-60 grow"
+          defaultValue={product.stock.toString()}
+          isReadOnly
+          endContent={
+            <Button
+              variant="ghost"
+              isIconOnly
+              radius="full"
+              className="-mb-0.5"
+            >
+              <Pencil className="text-foreground-500" size={16} />
+            </Button>
+          }
+        />
+      ) : (
+        <IncreaserInput
+          name="stock"
+          label="Quantidade atual"
+          min={0}
+          defaultValue="0"
+          isRequired
+          className="w-44 grow"
+          isInvalid={!!state.errors.stock}
+          errorMessage={state.errors.stock}
+        />
+      )}
 
       {/* <Select
         name="unit"
