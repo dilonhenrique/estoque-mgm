@@ -7,6 +7,7 @@ import postgres from "prisma/postgres.db";
 export default async function create(payload: Payload) {
   const response = await postgres.procedure.create({
     data: {
+      name: payload.name,
       account: { connect: { id: payload.account_id } },
       created_by: { connect: { id: payload.created_by } },
       service: payload.service_id
@@ -33,6 +34,7 @@ export default async function create(payload: Payload) {
 }
 
 type Payload = {
+  name: string;
   account_id: string;
   service_id?: string;
   customer_id?: string;

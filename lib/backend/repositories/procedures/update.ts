@@ -12,6 +12,7 @@ export default async function update(id: string, payload: Payload) {
   const response = await postgres.procedure.update({
     where: { id },
     data: {
+      name: payload.name,
       service: payload.service_id
         ? { connect: { id: payload.service_id } }
         : { disconnect: {} },
@@ -37,6 +38,7 @@ export default async function update(id: string, payload: Payload) {
 }
 
 type Payload = {
+  name?: string;
   service_id?: string;
   customer_id?: string;
   scheduled_for?: Date;

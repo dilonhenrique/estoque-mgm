@@ -20,6 +20,7 @@ export type ProcedureInput = PrismaProcedure & {
 export function parseProcedure(payload: ProcedureInput): Procedure {
   return {
     id: payload.id,
+    name: payload.name,
     service: payload.service
       ? {
           id: payload.service.id,

@@ -35,6 +35,7 @@ export default async function update(
   }
 
   const response = await procedureRepo.update(id, {
+    name: payload.data.name,
     service_id: payload.data.service_id,
     customer_id: payload.data.customer_id,
     scheduled_for: payload.data.scheduled_for,
@@ -47,6 +48,7 @@ export default async function update(
 }
 
 const schema = z.object({
+  name: z.string().optional(),
   service_id: z.string().uuid().optional(),
   customer_id: z.string().uuid().optional(),
   labeled_customer_id: z.string().optional(),

@@ -16,10 +16,13 @@ import {
   Pencil,
   SquareCheckBig,
   SquareX,
+  Trash,
 } from "lucide-react";
 import Link from "next/link";
 import { Procedure } from "../../../types/schemas";
 import { dateTimeToString } from "@/utils/dateToString";
+import { procedureService } from "@/backend/services/procedures";
+import { toast } from "sonner";
 
 type IProps = { procedures: Procedure[] };
 
@@ -37,7 +40,7 @@ export default function ProcedureList({ procedures }: IProps) {
         <TableColumn width="180">
           <></>
         </TableColumn>
-        <TableColumn width="50">
+        <TableColumn width="110">
           <></>
         </TableColumn>
       </TableHeader>
@@ -45,7 +48,7 @@ export default function ProcedureList({ procedures }: IProps) {
         {procedures?.map((procedure) => (
           <TableRow key={procedure.id}>
             <TableCell className="font-semibold">
-              {procedure.service?.name ?? "Customizado"}
+              {procedure.name}
             </TableCell>
             <TableCell>{procedure.customer?.name ?? "-"}</TableCell>
             <TableCell>
@@ -109,6 +112,22 @@ export default function ProcedureList({ procedures }: IProps) {
                 href={`/procedimentos/${procedure.id}`}
               >
                 <Pencil size={16} />
+              </Button>
+              <Button
+                isIconOnly
+                variant="light"
+                color="danger"
+                onPress={async () => {
+                  if (confirm("Deseja excluir este procedimento?")) {
+                    const response = await procedureService.remove(
+                      procedure.id
+                    );
+                    if (response.success)
+                      toast.success("Excluído com sucesso!");
+                  }
+                }}
+              >
+                <Trash size={16} />
               </Button>
               {/* </DropdownTrigger>
                 <DropdownMenu>

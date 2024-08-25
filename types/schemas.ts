@@ -59,6 +59,7 @@ export type ProductWithQty = Product & {
 
 export type Procedure = {
   id: string;
+  name: string;
   service?: {
     id: string;
     name: string;

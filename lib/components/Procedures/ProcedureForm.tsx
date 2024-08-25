@@ -1,24 +1,15 @@
 "use client";
 
-import {
-  Card,
-  CardBody,
-  Checkbox,
-  DatePicker,
-  Switch,
-} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { MutationResult } from "../../../types/types";
 import { Procedure, Service } from "../../../types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
-import ProductSelector from "../ProductSelector/ProductSelector";
 import { FormEvent, useRef, useState } from "react";
 import { procedureService } from "@/backend/services/procedures";
-import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";
 import ServiceAutocomplete from "../ui/ServiceAutocomplete/ServiceAutocomplete";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { SquareCheckBig, SquareX } from "lucide-react";
+import ProcedureDetailsForm from "./ProcedureDetailsForm";
 
 type ProcedureFormProps = {
   procedure?: Procedure;
@@ -28,15 +19,27 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   const router = useRouter();
   const form = useRef<HTMLFormElement>(null);
 
+  const [hasDetails, setHasDetails] = useState(!!procedure);
   const [products, setProducts] = useState(procedure?.products ?? []);
+  const [name, setName] = useState(procedure?.name ?? "");
+
   const [formState, setFormState] = useState({
     success: true,
     errors: {},
   } as MutationResult<Procedure | null>);
 
   function onServiceChange(service?: Service) {
-    if (service?.products) {
-      setProducts(service.products);
+    if (service && hasDetails) {
+      setHasDetails(true);
+
+      if (
+        confirm(
+          `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
+        )
+      ) {
+        setName(service.name);
+        setProducts(service.products);
+      }
     }
   }
 
@@ -93,64 +96,25 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
     >
       <ServiceAutocomplete
         name="service_id"
-        label="Serviço"
+        label="Tipo de Serviço"
         placeholder="Escolha um serviço"
+        customService
         defaultSelectedKey={procedure?.service?.id}
-        className="w-60 grow"
+        className="w-full grow"
         isInvalid={!!formState.errors.service_id}
         errorMessage={formState.errors.service_id}
         onServiceChange={onServiceChange}
         isDisabled={procedure?.done}
       />
 
-      <CustomerAutocomplete
-        name="customer_id"
-        label="Cliente"
-        placeholder="Escolha um cliente"
-        allowsCustomValue
-        defaultSelectedKey={procedure?.customer?.id}
-        className="w-60 grow"
-        isInvalid={!!formState.errors.customer_id}
-        errorMessage={formState.errors.customer_id}
-        isDisabled={procedure?.done}
-      />
-
-      <DatePicker
-        name="scheduled_for"
-        label="Data do procedimento"
-        defaultValue={
-          procedure?.scheduled_for
-            ? parseAbsoluteToLocal(procedure.scheduled_for.toISOString())
-            : undefined
-        }
-        className="w-60 grow"
-        isInvalid={!!formState.errors.scheduled_for}
-        errorMessage={formState.errors.scheduled_for}
-        isDisabled={procedure?.done}
-        granularity="minute"
-        hideTimeZone
-      />
-
-      {/* <div className="w-full"> */}
-      <Checkbox
-        name="confirmed_by_customer"
-        value="confirmed"
-        defaultSelected={procedure?.confirmed_by_customer}
-        isDisabled={procedure?.done}
-      >
-        Confirmado
-      </Checkbox>
-      {/* </div> */}
-
-      <div className="w-full">
-        <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
-
-        <ProductSelector
-          value={products}
-          onValueChange={setProducts}
-          isViewOnly={procedure?.done}
+      {hasDetails && (
+        <ProcedureDetailsForm
+          procedure={{ ...procedure, name, products }}
+          formState={formState}
+          productState={[products, setProducts]}
+          nameState={[name, setName]}
         />
-      </div>
+      )}
 
       <div className="w-full flex justify-end gap-4">
         {procedure && (

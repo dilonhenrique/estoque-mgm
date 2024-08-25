@@ -7,19 +7,30 @@ import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import { Service } from "../../../../types/schemas";
 
-export default function ServiceAutocomplete(
-  props: Omit<
-    AutocompleteProps,
-    | "isLoading"
-    | "defaultItems"
-    | "children"
-    | "scrollRef"
-    | "onOpenChange"
-    | "items"
-  > & { onServiceChange?: (service?: Service) => void }
-) {
+type Props = Omit<
+  AutocompleteProps,
+  | "isLoading"
+  | "defaultItems"
+  | "children"
+  | "scrollRef"
+  | "onOpenChange"
+  | "items"
+> & {
+  onServiceChange?: (service?: Service) => void;
+  customService?: boolean;
+};
+
+export default function ServiceAutocomplete({
+  onServiceChange = () => {},
+  onSelectionChange = () => {},
+  customService,
+  ...props
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { services, isLoading, hasMore, onLoadMore } = useServiceList();
+  const custom: Service[] = customService
+    ? [{ id: "CUSTOM", name: "Customizado", products: [] }]
+    : [];
 
   const [, scrollerRef] = useInfiniteScroll({
     hasMore,
@@ -32,13 +43,13 @@ export default function ServiceAutocomplete(
     <Autocomplete
       {...props}
       isLoading={isLoading}
-      defaultItems={services}
+      defaultItems={custom.concat(services)}
       scrollRef={scrollerRef}
       onOpenChange={setIsOpen}
       onSelectionChange={(key) => {
-        if (props.onSelectionChange) props.onSelectionChange(key);
+        onSelectionChange(key);
         const service = services.find((item) => item.id === key);
-        if (props.onServiceChange) props.onServiceChange(service);
+        onServiceChange(service);
       }}
     >
       {(item) => <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>}

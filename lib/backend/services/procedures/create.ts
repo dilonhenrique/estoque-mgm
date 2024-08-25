@@ -37,6 +37,7 @@ export default async function create(
   }
 
   const response = await procedureRepo.create({
+    name: payload.data.name,
     account_id: payload.data.account_id,
     created_by: payload.data.created_by,
     service_id: payload.data.service_id,
@@ -51,6 +52,7 @@ export default async function create(
 }
 
 const schema = z.object({
+  name: z.string(),
   account_id: z.string().uuid(),
   created_by: z.string().uuid(),
   service_id: z.string().uuid().optional(),
@@ -61,10 +63,12 @@ const schema = z.object({
     .literal("confirmed")
     .optional()
     .transform((val) => val === "confirmed"),
-  products: z.array(
-    z.object({
-      qty: z.coerce.number(),
-      id: z.string().uuid(),
-    })
-  ).optional(),
+  products: z
+    .array(
+      z.object({
+        qty: z.coerce.number(),
+        id: z.string().uuid(),
+      })
+    )
+    .optional(),
 });
