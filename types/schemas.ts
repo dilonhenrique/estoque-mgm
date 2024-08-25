@@ -91,6 +91,8 @@ export type LogWithAction = {
   // purchase?: Purchase;
 };
 
+export type LogComplete = LogWithProduct & LogWithAction;
+
 // export type ProductStock = {
 //   id: string;
 //   qty: number;

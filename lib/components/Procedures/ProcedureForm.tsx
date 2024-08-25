@@ -1,6 +1,12 @@
 "use client";
 
-import { Card, CardBody, DatePicker, Switch } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Checkbox,
+  DatePicker,
+  Switch,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { MutationResult } from "../../../types/types";
 import { Procedure, Service } from "../../../types/schemas";
@@ -12,6 +18,7 @@ import { procedureService } from "@/backend/services/procedures";
 import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";
 import ServiceAutocomplete from "../ui/ServiceAutocomplete/ServiceAutocomplete";
 import { parseAbsoluteToLocal } from "@internationalized/date";
+import { SquareCheckBig, SquareX } from "lucide-react";
 
 type ProcedureFormProps = {
   procedure?: Procedure;
@@ -80,7 +87,7 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   return (
     <form
       ref={form}
-      className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
+      className="w-full max-w-2xl flex flex-wrap gap-4 items-end"
       onSubmit={onSubmit}
       noValidate
     >
@@ -124,16 +131,16 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         hideTimeZone
       />
 
-      <div className="w-full">
-        <Switch
-          name="confirmed_by_customer"
-          value="confirmed"
-          defaultSelected={procedure?.confirmed_by_customer}
-          isDisabled={procedure?.done}
-        >
-          Agendamento confirmado pelo cliente
-        </Switch>
-      </div>
+      {/* <div className="w-full"> */}
+      <Checkbox
+        name="confirmed_by_customer"
+        value="confirmed"
+        defaultSelected={procedure?.confirmed_by_customer}
+        isDisabled={procedure?.done}
+      >
+        Confirmado
+      </Checkbox>
+      {/* </div> */}
 
       <div className="w-full">
         <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
@@ -161,15 +168,18 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
                   }
                 }}
               >
-                Deletar procedimento
+                Excluir
               </FormButton>
             )}
 
             <FormButton
               // variant="flat"
+              startContent={procedure.done ? <SquareX /> : <SquareCheckBig />}
               onClick={handleDone}
             >
-              {procedure.done ? "Desmarcar como Feito" : "Marcar como Feito"}
+              {procedure.done
+                ? "Desmarcar como Realizado"
+                : "Marcar como Realizado"}
             </FormButton>
           </>
         )}

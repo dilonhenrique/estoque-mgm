@@ -10,8 +10,10 @@ export const metadata = {
 
 export default async function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   const session = await auth();
 
@@ -20,6 +22,7 @@ export default async function RootLayout({
       <body suppressHydrationWarning>
         <Providers session={session}>
           {children}
+          {modal}
           <Toaster position="bottom-right" />
         </Providers>
       </body>

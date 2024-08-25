@@ -43,12 +43,12 @@ export default function ProductSelector({
     if (initialLoad) {
       setInitialLoad(false);
       if (!(value ?? defaultValue) && availableProducts.length > 0) {
-        addItem();
+        newItem();
       }
     }
   }, []);
 
-  function addItem() {
+  function newItem() {
     setSelectedProducts([
       ...selectedProducts,
       { ...availableProducts[0], qty: 1 },
@@ -119,15 +119,7 @@ export default function ProductSelector({
           removeItem={removeItem}
           changeItemProduct={changeItemProduct}
           changeItemIncrement={changeItemIncrement}
-        />
-      )}
-
-      {!isViewOnly && availableProducts.length > 0 && (
-        <Button
-          onClick={addItem}
-          isIconOnly
-          size="sm"
-          startContent={<Plus size={16} />}
+          newItem={newItem}
         />
       )}
     </div>

@@ -98,7 +98,7 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
               }
             }}
           >
-            Deletar cliente
+            Excluir
           </FormButton>
         )}
 

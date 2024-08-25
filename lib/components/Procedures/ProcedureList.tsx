@@ -8,10 +8,18 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Button } from "@nextui-org/react";
-import { Pencil } from "lucide-react";
+import { Button, Chip, Tooltip } from "@nextui-org/react";
+import {
+  CalendarCheck,
+  CalendarX,
+  Package,
+  Pencil,
+  SquareCheckBig,
+  SquareX,
+} from "lucide-react";
 import Link from "next/link";
 import { Procedure } from "../../../types/schemas";
+import { dateTimeToString } from "@/utils/dateToString";
 
 type IProps = { procedures: Procedure[] };
 
@@ -26,7 +34,9 @@ export default function ProcedureList({ procedures }: IProps) {
         <TableColumn>SERVIÇO</TableColumn>
         <TableColumn width="250">CLIENTE</TableColumn>
         <TableColumn width="250">DATA</TableColumn>
-        <TableColumn width="150">PRODUTOS</TableColumn>
+        <TableColumn width="180">
+          <></>
+        </TableColumn>
         <TableColumn width="50">
           <></>
         </TableColumn>
@@ -39,9 +49,56 @@ export default function ProcedureList({ procedures }: IProps) {
             </TableCell>
             <TableCell>{procedure.customer?.name ?? "-"}</TableCell>
             <TableCell>
-              {procedure.scheduled_for?.toLocaleString() ?? "-"}
+              {dateTimeToString(procedure.scheduled_for) ?? "-"}
             </TableCell>
-            <TableCell>{procedure.products.length}</TableCell>
+            <TableCell>
+              <Tooltip content="Produtos">
+                <Chip
+                  startContent={<Package />}
+                  className="ps-2 pe-0 me-2"
+                  variant="faded"
+                  color="primary"
+                >
+                  {procedure.products.length}
+                </Chip>
+              </Tooltip>
+
+              <Tooltip
+                content={
+                  procedure.confirmed_by_customer
+                    ? "Confirmado"
+                    : "Não confirmado"
+                }
+              >
+                <Chip
+                  className="px-0 me-2"
+                  variant="faded"
+                  color={
+                    procedure.confirmed_by_customer ? "primary" : undefined
+                  }
+                >
+                  {procedure.confirmed_by_customer ? (
+                    <CalendarCheck />
+                  ) : (
+                    <CalendarX className="text-default-500" />
+                  )}
+                </Chip>
+              </Tooltip>
+
+              <Tooltip content={procedure.done ? "Realizado" : "Não realizado"}>
+                <Chip
+                  className="px-0"
+                  variant="faded"
+                  color={procedure.done ? "primary" : undefined}
+                >
+                  {procedure.done ? (
+                    <SquareCheckBig />
+                  ) : (
+                    <SquareX className="text-default-500" />
+                  )}
+                </Chip>
+              </Tooltip>
+            </TableCell>
             <TableCell>
               {/* <Dropdown>
                 <DropdownTrigger> */}

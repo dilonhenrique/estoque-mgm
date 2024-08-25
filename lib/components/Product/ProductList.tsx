@@ -8,8 +8,14 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Button } from "@nextui-org/react";
-import { ChevronRight, FileClock, Pencil, ScrollText } from "lucide-react";
+import { Button, Tooltip } from "@nextui-org/react";
+import {
+  ChevronRight,
+  FileClock,
+  History,
+  Pencil,
+  ScrollText,
+} from "lucide-react";
 import Link from "next/link";
 import { Product } from "../../../types/schemas";
 
@@ -47,23 +53,27 @@ export default function ProductList({ products }: IProps) {
             <TableCell>
               {/* <Dropdown>
                 <DropdownTrigger> */}
-              <Button
-                isIconOnly
-                variant="light"
-                as={Link}
-                href={`/produtos/${product.id}`}
-              >
-                <Pencil size={16} />
-              </Button>
+              <Tooltip content="Histórico">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  as={Link}
+                  href={`/produtos/logs/${product.id}`}
+                >
+                  <History size={16} />
+                </Button>
+              </Tooltip>
 
-              {/* <Button
-                isIconOnly
-                variant="light"
-                as={Link}
-                href={`/produtos/${product.id}`}
-              >
-                <ScrollText size={16} />
-              </Button> */}
+              <Tooltip content="Editar">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  as={Link}
+                  href={`/produtos/${product.id}`}
+                >
+                  <Pencil size={16} />
+                </Button>
+              </Tooltip>
               {/* </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem href={`/produtos/${product._id}`}>

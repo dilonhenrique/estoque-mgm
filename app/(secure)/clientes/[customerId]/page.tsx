@@ -12,7 +12,7 @@ export default async function SingleCustomerPage({
   return (
     <main className="p-8">
       <div className="w-full flex flex-col gap-4 justify-between">
-        <h2>Edite seu cliente</h2>
+        <h2>Editar cliente</h2>
         <CustomerForm customer={customer.data} />
       </div>
     </main>

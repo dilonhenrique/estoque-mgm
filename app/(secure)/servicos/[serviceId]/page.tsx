@@ -15,7 +15,7 @@ export default async function SingleCustomerPage({
   return (
     <main className="p-8">
       <div className="w-full flex flex-col gap-4 justify-between">
-        <h2>Edite seu serviço</h2>
+        <h2>Editar serviço</h2>
         <ServiceForm service={service.data} />
       </div>
     </main>

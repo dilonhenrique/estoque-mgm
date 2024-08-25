@@ -4,7 +4,7 @@ export default async function SingleCustomerPage() {
   return (
     <main className="p-8">
       <div className="w-full flex flex-col gap-4 justify-between">
-        <h2>Cadastre seu cliente</h2>
+        <h2>Cadastrar cliente</h2>
         <CustomerForm />
       </div>
     </main>

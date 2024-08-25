@@ -16,8 +16,7 @@ export default function ProductTableViewOnly({ products }: Props) {
   return (
     <Table
       fullWidth
-      hideHeader
-      classNames={{ wrapper: "p-2" }}
+      classNames={{ wrapper: "p-2 bg-transparent border border-default-100" }}
       aria-label="tabela de produtos"
     >
       <TableHeader>
@@ -31,7 +30,7 @@ export default function ProductTableViewOnly({ products }: Props) {
             className="last:border-0 border-b border-content2"
           >
             <TableCell>
-              <h4>{item.name}</h4>
+              <h5>{item.name}</h5>
             </TableCell>
             <TableCell>
               {item.qty} {item.unit}

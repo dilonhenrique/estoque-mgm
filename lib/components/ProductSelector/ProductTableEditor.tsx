@@ -8,17 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { Trash } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 import { Product, ProductWithQty } from "../../../types/schemas";
 import IncreaserInput from "../ui/IncreaserInput/IncreaserInput";
 import Autocomplete from "../ui/Autocomplete/Autocomplete";
 
 type Props = {
-  products: ProductWithQty[];
+  products: (ProductWithQty | undefined)[];
   availableProducts: Product[];
   removeItem: (id: string) => void;
   changeItemProduct: (index: number, id: string) => void;
   changeItemIncrement: (index: number, inc: string) => void;
+  newItem: () => void;
 };
 
 export default function ProductTableEditor({
@@ -27,15 +28,16 @@ export default function ProductTableEditor({
   removeItem,
   changeItemProduct,
   changeItemIncrement,
+  newItem,
 }: Props) {
   return (
     <Table
       fullWidth
-      classNames={{ wrapper: "p-2" }}
+      classNames={{ wrapper: "p-2 bg-transparent border border-default-100" }}
       aria-label="tabela de produtos"
     >
       <TableHeader>
-        <TableColumn>
+        <TableColumn width={50}>
           <></>
         </TableColumn>
         <TableColumn>NOME</TableColumn>
@@ -43,57 +45,83 @@ export default function ProductTableEditor({
         <TableColumn>ESTOQUE</TableColumn>
       </TableHeader>
       <TableBody emptyContent="Nenhum produto selecionado">
-        {products.map((item, index) => (
-          <TableRow
-            key={item.id}
-            className="last:border-0 border-b border-content2"
-          >
-            <TableCell>
-              <Button
-                size="sm"
-                color="danger"
-                variant="light"
-                isIconOnly
-                startContent={<Trash size={16} />}
-                onPress={() => removeItem(item.id)}
-              />
-            </TableCell>
-
-            <TableCell>
-              <Autocomplete
-                isClearable={false}
-                selectedKey={item.id}
-                onSelectionChange={(id) => changeItemProduct(index, String(id))}
-                aria-label="selecione um produto"
-              >
-                {availableProducts.concat(item).map((product) => (
-                  <AutocompleteItem
-                    value={product.id}
-                    key={product.id}
-                    title={product.name}
+        {products.concat(undefined).map((item, index) => {
+          if (item !== undefined) {
+            return (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    color="danger"
+                    variant="light"
+                    isIconOnly
+                    startContent={<Trash size={16} />}
+                    onPress={() => removeItem(item.id)}
                   />
-                ))}
-              </Autocomplete>
-            </TableCell>
+                </TableCell>
 
-            <TableCell>
-              <IncreaserInput
-                min="1"
-                // max={item.product.stock}
-                value={item.qty.toString()}
-                onValueChange={(inc) => changeItemIncrement(index, inc)}
-              />
-            </TableCell>
+                <TableCell>
+                  <Autocomplete
+                    isClearable={false}
+                    selectedKey={item.id}
+                    onSelectionChange={(id) =>
+                      changeItemProduct(index, String(id))
+                    }
+                    aria-label="selecione um produto"
+                  >
+                    {availableProducts.concat(item).map((product) => (
+                      <AutocompleteItem
+                        value={product.id}
+                        key={product.id}
+                        title={product.name}
+                      />
+                    ))}
+                  </Autocomplete>
+                </TableCell>
 
-            <TableCell>
-              <div className="min-w-20">
-                <p className="text-sm">
-                  {item.stock} {item.unit}
-                </p>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+                <TableCell>
+                  <IncreaserInput
+                    min="1"
+                    // max={item.product.stock}
+                    value={item.qty.toString()}
+                    onValueChange={(inc) => changeItemIncrement(index, inc)}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <div className="min-w-20">
+                    <p className="text-sm">
+                      {item.stock} {item.unit}
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          }
+
+          return (
+            <TableRow key="newItem">
+              <TableCell>
+                <Button
+                  onPress={newItem}
+                  isDisabled={availableProducts.length <= 0}
+                  isIconOnly
+                  size="sm"
+                  startContent={<Plus size={16} />}
+                />
+              </TableCell>
+              <TableCell>
+                <></>
+              </TableCell>
+              <TableCell>
+                <></>
+              </TableCell>
+              <TableCell>
+                <></>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

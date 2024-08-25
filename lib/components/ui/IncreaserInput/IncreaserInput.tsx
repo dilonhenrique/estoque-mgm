@@ -34,13 +34,13 @@ export default function IncreaserInput({
   const decrease = () => {
     const val = sumString(_value, -1);
     if (Number(val) < Number(props.min)) return;
-    _setValue(String(val));
+    onChange(String(val));
   };
 
   const increase = () => {
     const val = sumString(_value, +1);
     if (Number(val) > Number(props.max)) return;
-    _setValue(val);
+    onChange(val);
   };
 
   return (

@@ -1,5 +1,5 @@
 import { ProductLog as PrismaLog } from "@prisma/client";
-import { LogWithAction, LogWithProduct } from "../../../types/schemas";
+import { LogComplete, LogWithAction, LogWithProduct } from "../../../types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { parseProcedure, ProcedureInput } from "./procedure";
 
@@ -36,6 +36,27 @@ export function parseLogForProduct(payload: LogInputForProduct | null) {
     date: payload.created_at,
     qty: payload.qty,
     cause: payload.cause,
+    procedure: payload.procedure
+      ? parseProcedure(payload.procedure)
+      : undefined,
+  };
+
+  return parsed;
+}
+
+export type LogInputComplete = LogInputForAction & LogInputForProduct;
+
+export function parseLogComplete(payload: null): undefined;
+export function parseLogComplete(payload: LogInputComplete): LogComplete;
+export function parseLogComplete(payload: LogInputComplete | null) {
+  if (!payload) return undefined;
+
+  const parsed: LogComplete = {
+    id: payload.id,
+    date: payload.created_at,
+    qty: payload.qty,
+    cause: payload.cause,
+    product: parseProduct(payload.product),
     procedure: payload.procedure
       ? parseProcedure(payload.procedure)
       : undefined,

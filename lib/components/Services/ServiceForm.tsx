@@ -73,13 +73,13 @@ export default function ServiceForm({ service }: ServiceFormProps) {
             color="danger"
             variant="light"
             onClick={async () => {
-              if (confirm("Tem certeza que deseja excluir este cliente?")) {
+              if (confirm("Tem certeza que deseja excluir este serviço?")) {
                 const deleted = await serviceService.remove(service.id);
                 if (deleted) router.push("/");
               }
             }}
           >
-            Deletar serviço
+            Excluir
           </FormButton>
         )}
 

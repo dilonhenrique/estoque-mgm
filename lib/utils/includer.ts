@@ -37,6 +37,8 @@ const logWithAction = {
 
 const productWithLogs = { ...product, logs: { include: logWithAction } };
 
+const logComplete = { ...logWithProduct, ...logWithAction };
+
 export const includer = {
   customer,
   product,
@@ -49,4 +51,5 @@ export const includer = {
       include: logWithProduct,
     },
   },
+  logComplete,
 };
