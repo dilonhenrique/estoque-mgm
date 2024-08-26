@@ -188,9 +188,9 @@ model ProductLog {
   qty          Int
   cause        LogCause
   procedure_id String?
-  procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: Cascade)
+  procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: SetNull)
   purchase_id  String?
-  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: Cascade)
+  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: SetNull)
 }
 
 enum LogCause {

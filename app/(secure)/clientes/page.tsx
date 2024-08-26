@@ -13,7 +13,7 @@ export default async function CustomersPage() {
 
         <div className="flex gap-4 ms-auto">
           <Button color="primary" as={Link} href="/clientes/novo">
-            Novo cliente
+            Novo Cliente
           </Button>
         </div>
       </div>

@@ -16,6 +16,10 @@ const customer = {
   address: true,
 };
 
+const supplier = {
+  address: true,
+};
+
 const procedure = {
   created_by: true,
   service: { include: service },
@@ -41,6 +45,7 @@ const logComplete = { ...logWithProduct, ...logWithAction };
 
 export const includer = {
   customer,
+  supplier,
   product,
   productWithLogs,
   service,

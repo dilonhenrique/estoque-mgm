@@ -1,40 +1,34 @@
 "use server";
 
 import { includer } from "@/utils/includer";
-import { parseCustomer } from "@/utils/parser/customer";
+import { parseSupplier } from "@/utils/parser/supplier";
 import postgres from "prisma/postgres.db";
 
-export default async function update(id: string, payload: Payload) {
-  const response = await postgres.customer.update({
-    where: { id },
+export default async function create(payload: Payload) {
+  const response = await postgres.supplier.create({
     data: {
       name: payload.name,
-      img_url: payload.img_url,
+      cnpj: payload.cnpj,
       email: payload.email,
       phone: payload.phone,
-      birthday: payload.birthday,
       address: payload.address
         ? {
-            upsert: {
-              create: payload.address,
-              update: payload.address,
-            },
+            create: payload.address,
           }
         : undefined,
-      // : { disconnect: {} },
     },
-    include: includer.customer,
+    include: includer.supplier,
   });
 
-  return parseCustomer(response);
+  return parseSupplier(response);
 }
 
 type Payload = {
-  name?: string;
-  img_url?: string;
+  account_id: string;
+  name: string;
   email?: string;
   phone?: string;
-  birthday?: Date;
+  cnpj?: string;
   address?: AddressPayload;
 };
 

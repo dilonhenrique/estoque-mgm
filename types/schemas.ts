@@ -1,4 +1,4 @@
-import { LogCause } from "@prisma/client";
+import { LogCause, PurchaseStatus } from "@prisma/client";
 
 export type User = {
   name: string;
@@ -109,3 +109,24 @@ export type LogComplete = LogWithProduct & LogWithAction;
 //   id: string;
 //   name: string;
 // };
+
+export type Supplier = {
+  id: string;
+  name: string;
+  cnpj?: string;
+  email?: string;
+  phone?: string;
+  address?: Address;
+};
+
+export type Purchase = {
+  id: string;
+  supplier?: Supplier;
+  status: PurchaseStatus;
+  items: PurchaseItem[];
+  logs?: LogWithProduct[];
+};
+
+export type PurchaseItem = ProductWithQty & {
+  cost?: number;
+};
