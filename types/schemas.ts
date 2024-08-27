@@ -1,4 +1,4 @@
-import { LogCause, PurchaseStatus } from "@prisma/client";
+import { LogCause } from "@prisma/client";
 
 export type User = {
   name: string;

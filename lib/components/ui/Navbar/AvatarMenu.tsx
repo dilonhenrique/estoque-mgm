@@ -68,6 +68,13 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
                 Clientes
               </DropdownItem>
               <DropdownItem
+                startContent={<User size={16} />}
+                as={Link}
+                href="/fornecedores"
+              >
+                Fornecedores
+              </DropdownItem>
+              <DropdownItem
                 startContent={<HandHelping size={16} />}
                 as={Link}
                 href="/servicos"

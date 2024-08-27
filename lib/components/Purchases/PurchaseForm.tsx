@@ -71,7 +71,7 @@ export default function PurchaseForm({ purchase }: Props) {
       />
 
       <div className="w-full">
-        <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
+        <h4 className="text-content4-foreground mb-2">Produtos comprados:</h4>
         <ProductSelector value={products} onValueChange={setProducts} />
       </div>
 
