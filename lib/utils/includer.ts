@@ -33,6 +33,11 @@ const procedure = {
   },
 };
 
+const purchase = {
+  supplier: { include: supplier },
+  purchaseItems: { include: { product: { include: product } } },
+};
+
 const logWithProduct = { product: { include: product } };
 const logWithAction = {
   procedure: { include: procedure },
@@ -52,6 +57,13 @@ export const includer = {
   procedure,
   procedureWithLog: {
     ...procedure,
+    logs: {
+      include: logWithProduct,
+    },
+  },
+  purchase,
+  purchaseWithLog: {
+    ...purchase,
     logs: {
       include: logWithProduct,
     },

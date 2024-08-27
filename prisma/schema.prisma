@@ -190,7 +190,7 @@ model ProductLog {
   procedure_id String?
   procedure    Procedure? @relation(fields: [procedure_id], references: [id], onDelete: SetNull)
   purchase_id  String?
-  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: SetNull)
+  purchase     Purchase?  @relation(fields: [purchase_id], references: [id], onDelete: Restrict)
 }
 
 enum LogCause {
@@ -258,16 +258,17 @@ model Purchase {
   supplier_id   String?
   account       Account        @relation(fields: [account_id], references: [id])
   account_id    String
-  status        PurchaseStatus
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
   purchaseItems PurchaseItem[]
   logs          ProductLog[]
 }
 
 model PurchaseItem {
   id          String   @id @default(uuid())
-  product     Product  @relation(fields: [product_id], references: [id])
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id  String
-  purchase    Purchase @relation(fields: [purchase_id], references: [id])
+  purchase    Purchase @relation(fields: [purchase_id], references: [id], onDelete: Cascade)
   purchase_id String
   qty         Int
   cost        Float?

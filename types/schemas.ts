@@ -122,8 +122,8 @@ export type Supplier = {
 export type Purchase = {
   id: string;
   supplier?: Supplier;
-  status: PurchaseStatus;
   items: PurchaseItem[];
+  created_at: Date;
   logs?: LogWithProduct[];
 };
 
