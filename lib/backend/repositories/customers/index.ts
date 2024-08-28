@@ -1,5 +1,5 @@
 import create from "./create";
-import findById from "./findById";
+import findById from "./find";
 import remove from "./remove";
 import search from "./search";
 import update from "./update";
