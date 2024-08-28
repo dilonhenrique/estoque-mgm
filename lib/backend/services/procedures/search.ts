@@ -1,8 +1,8 @@
 "use server";
 
-import { MutationResult, SearchList } from "../../../../types/types";
+import { MutationResult, SearchList } from "@/types/types";
 import { Prisma } from "@prisma/client";
-import { Procedure } from "../../../../types/schemas";
+import { Procedure } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { procedureRepo } from "@/backend/repositories/procedures";
 

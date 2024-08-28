@@ -1,6 +1,6 @@
 "use server";
 
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { supplierRepo } from "@/backend/repositories/suppliers";
 

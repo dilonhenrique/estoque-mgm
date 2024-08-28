@@ -1,7 +1,7 @@
 "use server";
 
 import { customerRepo } from "@/backend/repositories/customers";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 export default async function remove(

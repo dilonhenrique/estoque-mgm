@@ -2,9 +2,9 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { includer } from "@/utils/includer";
-import { Purchase } from "../../../../types/schemas";
-import { parsePurchase } from "@/utils/parser/purchase";
+import { includer } from "@/utils/backend/includer";
+import { Purchase } from "@/types/schemas";
+import { parsePurchase } from "@/utils/parser/schemas/purchase";
 
 export default async function search(
   account_id: string,

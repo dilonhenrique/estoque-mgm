@@ -2,8 +2,8 @@
 
 import { isEmpty, omitBy } from "lodash";
 import { z } from "zod";
-import { MutationResult } from "../../../../types/types";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { MutationResult } from "@/types/types";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { Account, DocType } from "@prisma/client";
 import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";

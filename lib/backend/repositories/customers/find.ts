@@ -1,7 +1,7 @@
 "use server";
 
-import { includer } from "@/utils/includer";
-import { parseCustomer } from "@/utils/parser/customer";
+import { includer } from "@/utils/backend/includer";
+import { parseCustomer } from "@/utils/parser/schemas/customer";
 import { notFound } from "next/navigation";
 import postgres from "prisma/postgres.db";
 

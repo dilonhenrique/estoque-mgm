@@ -2,9 +2,9 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { includer } from "@/utils/includer";
-import { Supplier } from "../../../../types/schemas";
-import { parseSupplier } from "@/utils/parser/supplier";
+import { includer } from "@/utils/backend/includer";
+import { Supplier } from "@/types/schemas";
+import { parseSupplier } from "@/utils/parser/schemas/supplier";
 
 export default async function search(query?: Query): Promise<{
   items: Supplier[];

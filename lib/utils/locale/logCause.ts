@@ -7,3 +7,9 @@ export const logCause = new Map<LogCause, string>([
   [LogCause.lost, "Perda"],
   [LogCause.other, "Outro"],
 ]);
+
+export default function localeLogCause(key?: LogCause) {
+  if (!key) return null;
+
+  return logCause.get(key);
+}

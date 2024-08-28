@@ -1,4 +1,4 @@
-export function dateToString(date?: Date) {
+function toDateString(date?: Date) {
   if (!date) return null;
 
   const day = date.getDate().toString().padStart(2, "0");
@@ -8,7 +8,7 @@ export function dateToString(date?: Date) {
   return `${day}/${month}/${year}`;
 }
 
-export function dateTimeToString(date?: Date) {
+function toDateTimeString(date?: Date) {
   if (!date) return null;
 
   const day = dateToString(date);
@@ -17,4 +17,11 @@ export function dateTimeToString(date?: Date) {
   const minute = date.getMinutes().toString().padStart(2, "0");
 
   return `${day} às ${hour}:${minute}`;
+}
+
+export default function dateToString(date?: Date) {
+  return {
+    date: () => toDateString(date),
+    datetime: () => toDateTimeString(date),
+  };
 }

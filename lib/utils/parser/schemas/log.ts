@@ -1,5 +1,5 @@
 import { ProductLog as PrismaLog } from "@prisma/client";
-import { LogComplete, LogWithAction, LogWithProduct } from "../../../types/schemas";
+import { LogComplete, LogWithAction, LogWithProduct } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { parseProcedure, ProcedureInput } from "./procedure";
 

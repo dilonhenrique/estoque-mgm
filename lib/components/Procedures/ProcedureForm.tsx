@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MutationResult } from "../../../types/types";
-import { Procedure, Service } from "../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Procedure, Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { FormEvent, useRef, useState } from "react";

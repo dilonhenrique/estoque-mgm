@@ -2,10 +2,10 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { parseProduct } from "../../../utils/parser/product";
-import { SearchList } from "../../../../types/types";
-import { Product } from "../../../../types/schemas";
-import { includer } from "@/utils/includer";
+import { parseProduct } from "@/utils/parser/schemas/product";
+import { SearchList } from "@/types/types";
+import { Product } from "@/types/schemas";
+import { includer } from "@/utils/backend/includer";
 
 export default async function search(
   query?: Query

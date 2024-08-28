@@ -1,5 +1,5 @@
 import { Address as PrismaAddress } from "@prisma/client";
-import { Address } from "../../../types/schemas";
+import { Address } from "@/types/schemas";
 
 export type AddressInput = PrismaAddress;
 

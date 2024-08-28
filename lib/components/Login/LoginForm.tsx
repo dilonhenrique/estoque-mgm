@@ -11,7 +11,7 @@ import {
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../types/types";
+import { MutationResult } from "@/types/types";
 import { toast } from "sonner";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { signIn } from "next-auth/react";

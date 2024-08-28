@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { LogWithAction } from "../../../../types/schemas";
-import { logCause } from "@/utils/locale/logCause";
-import { dateTimeToString } from "@/utils/dateToString";
+import { LogWithAction } from "@/types/schemas";
+import { locale } from "@/utils/locale";
+import dateToString from "@/utils/parser/other/dateToString";
 
 type Props = {
   logs: LogWithAction[];
@@ -19,7 +19,7 @@ type Props = {
 export default function ProductLogList({ logs }: Props) {
   function renderLogCause(log: LogWithAction) {
     const path = getLogPath(log);
-    const label = logCause.get(log.cause);
+    const label = locale.logCause(log.cause);
 
     // if (path) {
     //   return <Link href={path}>{label}</Link>;
@@ -48,7 +48,7 @@ export default function ProductLogList({ logs }: Props) {
       <TableBody emptyContent="Nenhum histórico">
         {logs.map((log) => (
           <TableRow key={log.id}>
-            <TableCell>{dateTimeToString(log.date)}</TableCell>
+            <TableCell>{dateToString(log.date).datetime()}</TableCell>
             <TableCell>{renderLogCause(log)}</TableCell>
             <TableCell>{log.qty}</TableCell>
           </TableRow>

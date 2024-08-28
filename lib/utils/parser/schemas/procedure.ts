@@ -4,7 +4,7 @@ import {
   ProductOnProcedure,
   User,
 } from "@prisma/client";
-import { Procedure } from "../../../types/schemas";
+import { Procedure } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { CustomerInput, parseCustomer } from "./customer";
 import { LogInputForAction, parseLogForAction } from "./log";

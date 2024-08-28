@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { Plus, Trash } from "lucide-react";
-import { Product, ProductWithQty } from "../../../types/schemas";
+import { Product, ProductWithQty } from "@/types/schemas";
 import IncreaserInput from "../ui/IncreaserInput/IncreaserInput";
 import Autocomplete from "../ui/Autocomplete/Autocomplete";
 

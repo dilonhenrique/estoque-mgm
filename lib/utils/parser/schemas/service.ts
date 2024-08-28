@@ -1,5 +1,5 @@
 import { Service as PrismaService, ProductOnService } from "@prisma/client";
-import { Service } from "../../../types/schemas";
+import { Service } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 
 export type ServiceInput = PrismaService & {

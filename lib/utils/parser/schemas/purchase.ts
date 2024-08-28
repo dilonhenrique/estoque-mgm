@@ -1,5 +1,5 @@
 import { Purchase as PrismaPurchase, PurchaseItem } from "@prisma/client";
-import { Purchase } from "../../../types/schemas";
+import { Purchase } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { LogInputForAction, parseLogForAction } from "./log";
 import { parseSupplier, SupplierInput } from "./supplier";

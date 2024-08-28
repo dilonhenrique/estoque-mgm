@@ -17,7 +17,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import Link from "next/link";
-import { Product } from "../../../types/schemas";
+import { Product } from "@/types/schemas";
 
 type IProps = { products: Product[] };
 

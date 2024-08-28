@@ -2,7 +2,7 @@
 
 import { categoryService } from "@/backend/services/categories";
 import { useEffect, useState } from "react";
-import { ProductCategory } from "../../../../types/schemas";
+import { ProductCategory } from "@/types/schemas";
 import { toast } from "sonner";
 
 export function useCategoryList() {

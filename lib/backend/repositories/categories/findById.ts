@@ -1,7 +1,7 @@
 "use server";
 
 import postgres from "prisma/postgres.db";
-import { ProductCategory } from "../../../../types/schemas";
+import { ProductCategory } from "@/types/schemas";
 
 export default async function findById(
   id: string

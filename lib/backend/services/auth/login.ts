@@ -1,8 +1,8 @@
 "use server";
 
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { object, string } from "zod";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { CredentialError, signIn } from "@/auth";
 
 export default async function login(

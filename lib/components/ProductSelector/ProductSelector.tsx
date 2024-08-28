@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Product, ProductWithQty } from "../../../types/schemas";
+import { Product, ProductWithQty } from "@/types/schemas";
 import { productService } from "@/backend/services/products";
 import ProductTableViewOnly from "./ProductTableViewOnly";
 import ProductTableEditor from "./ProductTableEditor";

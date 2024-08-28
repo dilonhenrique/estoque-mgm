@@ -1,8 +1,8 @@
 "use server";
 
 import { customerRepo } from "@/backend/repositories/customers";
-import { MutationResult } from "../../../../types/types";
-import { Customer } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Customer } from "@/types/schemas";
 
 export default async function findById(
   id: string

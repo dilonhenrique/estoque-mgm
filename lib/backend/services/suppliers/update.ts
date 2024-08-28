@@ -3,13 +3,13 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { isEmpty, omitBy } from "lodash";
-import { Supplier } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { Supplier } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { supplierRepo } from "@/backend/repositories/suppliers";
-import { cnpjValidation } from "@/utils/cnpjValidation";
-import { sanitizeStringToOnlyNumber } from "@/utils/sanitizeStringToOnlyNumber";
+import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringToOnlyNumber";
+import { validation } from "@/utils/validation";
 
 export default async function update(
   id: string,
@@ -43,7 +43,7 @@ const schema = z.object({
   email: z.string().email().optional(),
   cnpj: z
     .string()
-    .refine(cnpjValidation, "invalid_cnpj")
+    .refine(validation.cnpj, "invalid_cnpj")
     .optional()
     .transform(sanitizeStringToOnlyNumber),
   phone: z.string().optional(),

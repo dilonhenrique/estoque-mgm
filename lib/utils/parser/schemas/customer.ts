@@ -1,5 +1,5 @@
 import { Address, Customer as PrismaCustomer } from "@prisma/client";
-import { Customer } from "../../../types/schemas";
+import { Customer } from "@/types/schemas";
 import { parseAddress } from "./address";
 
 export type CustomerInput = PrismaCustomer & {

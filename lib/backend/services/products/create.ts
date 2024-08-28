@@ -4,11 +4,11 @@ import { z } from "zod";
 import { productRepo } from "@/backend/repositories/products";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { isEmpty, omitBy } from "lodash";
-import { Product } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
-import { resolveCategoryId } from "@/utils/resolveCategoryId";
+import { Product } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
+import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
 
 export default async function create(
   product: FormData

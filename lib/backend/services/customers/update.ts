@@ -3,10 +3,10 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { isEmpty, omitBy } from "lodash";
-import { Customer } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { Customer } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { customerRepo } from "@/backend/repositories/customers";
 
 export default async function update(

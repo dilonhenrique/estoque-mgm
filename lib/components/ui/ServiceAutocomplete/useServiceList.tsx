@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Service } from "../../../../types/schemas";
+import { Service } from "@/types/schemas";
 import { toast } from "sonner";
 import { serviceService } from "@/backend/services/services";
 

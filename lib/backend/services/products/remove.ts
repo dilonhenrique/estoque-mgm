@@ -2,7 +2,7 @@
 
 import { productRepo } from "@/backend/repositories/products";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 
 export default async function remove(
   productId: string

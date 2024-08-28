@@ -1,5 +1,5 @@
 import { Address, Supplier as PrismaSupplier } from "@prisma/client";
-import { Supplier } from "../../../types/schemas";
+import { Supplier } from "@/types/schemas";
 import { parseAddress } from "./address";
 
 export type SupplierInput = PrismaSupplier & {

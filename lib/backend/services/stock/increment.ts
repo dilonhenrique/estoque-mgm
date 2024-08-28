@@ -2,8 +2,8 @@
 
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
-import { Product } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Product } from "@/types/schemas";
 import { stockRepo } from "@/backend/repositories/stock";
 
 export default async function increment(

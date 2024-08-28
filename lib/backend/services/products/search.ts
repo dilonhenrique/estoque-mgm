@@ -1,9 +1,9 @@
 "use server";
 
 import { productRepo } from "@/backend/repositories/products";
-import { MutationResult, SearchList } from "../../../../types/types";
+import { MutationResult, SearchList } from "@/types/types";
 import { Prisma } from "@prisma/client";
-import { Product } from "../../../../types/schemas";
+import { Product } from "@/types/schemas";
 
 export default async function search(
   query?: Query

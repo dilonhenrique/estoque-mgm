@@ -19,10 +19,10 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
-import { Procedure } from "../../../types/schemas";
-import { dateTimeToString } from "@/utils/dateToString";
+import { Procedure } from "@/types/schemas";
 import { procedureService } from "@/backend/services/procedures";
 import { toast } from "sonner";
+import dateToString from "@/utils/parser/other/dateToString";
 
 type IProps = { procedures: Procedure[] };
 
@@ -52,7 +52,7 @@ export default function ProcedureList({ procedures }: IProps) {
             </TableCell>
             <TableCell>{procedure.customer?.name ?? "-"}</TableCell>
             <TableCell>
-              {dateTimeToString(procedure.scheduled_for) ?? "-"}
+              {dateToString(procedure.scheduled_for).datetime() ?? "-"}
             </TableCell>
             <TableCell>
               <Tooltip content="Produtos">

@@ -1,6 +1,6 @@
 // https://solucao.dev
 
-export function cnpjValidation(cnpj: string) {
+export default function cnpjValidation(cnpj: string) {
   cnpj = cnpj.replace(/[^\d]+/g, "");
 
   if (cnpj.length != 14) return false;

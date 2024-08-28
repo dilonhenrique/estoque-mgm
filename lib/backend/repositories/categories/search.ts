@@ -2,8 +2,8 @@
 
 import postgres from "prisma/postgres.db";
 import { Prisma } from "@prisma/client";
-import { SearchList } from "../../../../types/types";
-import { ProductCategory } from "../../../../types/schemas";
+import { SearchList } from "@/types/types";
+import { ProductCategory } from "@/types/schemas";
 
 export default async function search(
   account_id: string,

@@ -1,8 +1,8 @@
 "use client";
 
 import { Checkbox, DatePicker, Input } from "@nextui-org/react";
-import { MutationResult } from "../../../types/types";
-import { Procedure, ProductWithQty } from "../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Procedure, ProductWithQty } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { Dispatch, SetStateAction, useState } from "react";
 import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";

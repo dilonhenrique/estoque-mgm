@@ -8,7 +8,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { MutationResult } from "../../../types/types";
+import { MutationResult } from "@/types/types";
 import { DocType } from "@prisma/client";
 
 type IProps = {

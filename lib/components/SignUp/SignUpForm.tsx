@@ -4,7 +4,7 @@ import { Button, Tab, Tabs } from "@nextui-org/react";
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../types/types";
+import { MutationResult } from "@/types/types";
 import { accountService } from "@/backend/services/accounts";
 import { toast } from "sonner";
 import _ from "lodash";

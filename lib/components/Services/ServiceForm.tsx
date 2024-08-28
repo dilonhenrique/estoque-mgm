@@ -3,8 +3,8 @@
 import { Card, CardBody, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../types/types";
-import { Service } from "../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { serviceService } from "@/backend/services/services";

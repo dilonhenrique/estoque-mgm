@@ -11,7 +11,7 @@ import {
 import { Button } from "@nextui-org/react";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
-import { Service } from "../../../types/schemas";
+import { Service } from "@/types/schemas";
 
 type IProps = { services: Service[] };
 

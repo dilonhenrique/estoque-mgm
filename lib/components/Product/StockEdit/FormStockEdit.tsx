@@ -1,16 +1,15 @@
-import { Button, Chip, Select, SelectItem } from "@nextui-org/react";
-import { Product } from "../../../../types/schemas";
+import { Chip, Select, SelectItem } from "@nextui-org/react";
+import { Product } from "@/types/schemas";
 import { LogCause } from "@prisma/client";
-import { logCause } from "@/utils/locale/logCause";
 import IncreaserInput from "../../ui/IncreaserInput/IncreaserInput";
 import { useState } from "react";
-import { ArrowDownCircle, ArrowUpCircle, MinusCircle } from "lucide-react";
-import { getNumberColor } from "@/utils/getNumberColor";
+import { getNumberColor } from "@/utils/maps/getNumberColor";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { logService } from "@/backend/services/logs";
 import { toast } from "sonner";
 import { SubmitButton } from "@/components/ui/FormButton";
+import { locale } from "@/utils/locale";
 
 type Props = {
   product: Product;
@@ -59,7 +58,7 @@ export default function FormStockEdit({
         errorMessage={state.errors.cause}
         items={Object.values(LogCause).map((item) => ({
           value: item,
-          label: logCause.get(item),
+          label: locale.logCause(item),
         }))}
       >
         {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}

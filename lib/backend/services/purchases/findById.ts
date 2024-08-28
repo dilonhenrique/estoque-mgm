@@ -1,7 +1,7 @@
 "use server";
 
-import { MutationResult } from "../../../../types/types";
-import { Purchase } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Purchase } from "@/types/schemas";
 import { purchaseRepo } from "@/backend/repositories/purchases";
 
 export default async function findById(

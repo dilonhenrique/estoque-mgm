@@ -11,10 +11,10 @@ import {
 import { Button, Chip, Tooltip } from "@nextui-org/react";
 import { Package, Pencil, Trash } from "lucide-react";
 import Link from "next/link";
-import { Purchase } from "../../../types/schemas";
-import { dateToString } from "@/utils/dateToString";
+import { Purchase } from "@/types/schemas";
 import { toast } from "sonner";
 import { purchaseService } from "@/backend/services/purchases";
+import dateToString from "@/utils/parser/other/dateToString";
 
 type IProps = { purchases: Purchase[] };
 
@@ -41,7 +41,7 @@ export default function PurchaseList({ purchases }: IProps) {
             <TableCell className="font-semibold">
               {purchase.supplier?.name ?? "-"}
             </TableCell>
-            <TableCell>{dateToString(purchase.created_at)}</TableCell>
+            <TableCell>{dateToString(purchase.created_at).date()}</TableCell>
             <TableCell>
               <Tooltip content="Produtos">
                 <Chip

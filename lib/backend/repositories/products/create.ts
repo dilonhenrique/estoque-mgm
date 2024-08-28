@@ -1,9 +1,9 @@
 "use server";
 
 import postgres from "prisma/postgres.db";
-import { Product } from "../../../../types/schemas";
-import { parseProduct } from "../../../utils/parser/product";
-import { includer } from "@/utils/includer";
+import { Product } from "@/types/schemas";
+import { parseProduct } from "@/utils/parser/schemas/product";
+import { includer } from "@/utils/backend/includer";
 
 export default async function create(
   payload: Payload

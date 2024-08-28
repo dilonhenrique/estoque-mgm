@@ -5,10 +5,10 @@ import { z } from "zod";
 import { productRepo } from "@/backend/repositories/products";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
-import { Product } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
-import { resolveCategoryId } from "@/utils/resolveCategoryId";
+import { MutationResult } from "@/types/types";
+import { Product } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
+import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
 
 export default async function update(
   product: FormData

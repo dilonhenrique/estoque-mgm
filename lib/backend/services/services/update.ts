@@ -4,9 +4,9 @@ import { isEmpty, omitBy } from "lodash";
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
-import { Service } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { MutationResult } from "@/types/types";
+import { Service } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { serviceRepo } from "@/backend/repositories/services";
 
 export default async function update(

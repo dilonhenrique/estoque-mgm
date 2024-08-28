@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Customer, Supplier } from "../../../../types/schemas";
+import { Customer, Supplier } from "@/types/schemas";
 import { toast } from "sonner";
 import { customerService } from "@/backend/services/customers";
 import { supplierService } from "@/backend/services/suppliers";

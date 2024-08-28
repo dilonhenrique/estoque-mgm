@@ -2,8 +2,8 @@
 
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
-import { Procedure } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
 
 export default async function unsetDone(

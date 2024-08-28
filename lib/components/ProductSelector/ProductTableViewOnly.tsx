@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { ProductWithQty } from "../../../types/schemas";
+import { ProductWithQty } from "@/types/schemas";
 
 type Props = {
   products: ProductWithQty[];

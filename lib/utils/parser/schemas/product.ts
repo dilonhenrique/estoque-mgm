@@ -1,5 +1,5 @@
 import { Product as PrismaProduct, ProductCategory } from "@prisma/client";
-import { Product } from "../../../types/schemas";
+import { Product } from "@/types/schemas";
 import { LogInputForProduct, parseLogForProduct } from "./log";
 
 export type ProductInput = PrismaProduct & {

@@ -3,12 +3,12 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "../../../../types/types";
+import { MutationResult } from "@/types/types";
 import { isEmpty, omitBy } from "lodash";
-import { Procedure } from "../../../../types/schemas";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { Procedure } from "@/types/schemas";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { procedureRepo } from "@/backend/repositories/procedures";
-import { sanitizeDate } from "@/utils/sanitizeDate";
+import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
 
 export default async function update(

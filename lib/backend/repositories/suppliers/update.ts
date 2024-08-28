@@ -1,7 +1,7 @@
 "use server";
 
-import { includer } from "@/utils/includer";
-import { parseSupplier } from "@/utils/parser/supplier";
+import { includer } from "@/utils/backend/includer";
+import { parseSupplier } from "@/utils/parser/schemas/supplier";
 import postgres from "prisma/postgres.db";
 
 export default async function update(id: string, payload: Payload) {

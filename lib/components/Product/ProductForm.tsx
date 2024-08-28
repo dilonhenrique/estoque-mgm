@@ -3,9 +3,9 @@
 import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../types/types";
+import { MutationResult } from "@/types/types";
 import { productService } from "@/backend/services/products";
-import { Product } from "../../../types/schemas";
+import { Product } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import CategoryAutocomplete from "../ui/CategoryAutocomplete/CategoryAutocomplete";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardBody, CardHeader, Input } from "@nextui-org/react";
-import { MutationResult } from "../../../types/types";
+import { MutationResult } from "@/types/types";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { useSearchParams } from "next/navigation";
 

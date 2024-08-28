@@ -3,8 +3,8 @@
 import { DatePicker, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "../../../types/types";
-import { Customer } from "../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Customer } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { customerService } from "@/backend/services/customers";

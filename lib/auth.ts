@@ -1,4 +1,4 @@
-import { PrismaAdapter } from "@/utils/PrismaAdapter";
+import { PrismaAdapter } from "@/utils/adapter/PrismaAdapter";
 import NextAuth, { Account, AuthError } from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import Google from "next-auth/providers/google";

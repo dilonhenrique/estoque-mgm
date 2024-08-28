@@ -1,13 +1,13 @@
 "use server";
 
 import { logRepo } from "@/backend/repositories/logs";
-import { MutationResult } from "../../../../types/types";
-import { LogComplete } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { z } from "zod";
 import { LogCause } from "@prisma/client";
 import { isEmpty, omitBy } from "lodash";
-import { mapZodErrors } from "@/utils/mapZodErrors";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { revalidatePath } from "next/cache";
 
 export default async function createAndUpdateProduct(

@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
-import { Product } from "../../../../types/schemas";
+import { Product } from "@/types/schemas";
 import FormStockEdit from "./FormStockEdit";
 
 type Props = {

@@ -2,7 +2,7 @@
 
 import { useBackDelay } from "@/utils/hooks/useBackDelay";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { Product } from "../../../../types/schemas";
+import { Product } from "@/types/schemas";
 import ProductLogList from "./ProductLogList";
 
 type Props = {

@@ -1,8 +1,8 @@
 "use server";
 
 import { productRepo } from "@/backend/repositories/products";
-import { MutationResult } from "../../../../types/types";
-import { Product } from "../../../../types/schemas";
+import { MutationResult } from "@/types/types";
+import { Product } from "@/types/schemas";
 
 export default async function findById(
   productId: string
