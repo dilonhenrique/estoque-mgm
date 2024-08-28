@@ -8,7 +8,7 @@ type Color =
   | "secondary"
   | "warning";
 
-export const getNumberColor = {
+export const numberColor = {
   color(num: number, fallback: Color = "default"): Color {
     if (num === 0) return fallback;
     if (num > 0) return "success";

@@ -9,7 +9,7 @@ export default async function ProductsPage() {
   return (
     <main className="p-8">
       <div className="w-full flex gap-4 items-center mb-4">
-        <h1>Estoque:</h1>
+        <h1>Produtos:</h1>
 
         <div className="flex gap-4 ms-auto">
           <Button

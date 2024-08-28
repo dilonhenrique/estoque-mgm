@@ -3,7 +3,7 @@ import { Product } from "@/types/schemas";
 import { LogCause } from "@prisma/client";
 import IncreaserInput from "../../ui/IncreaserInput/IncreaserInput";
 import { useState } from "react";
-import { getNumberColor } from "@/utils/maps/getNumberColor";
+import { numberColor } from "@/utils/maps/numberColor";
 import { useFormState } from "react-dom";
 import { MutationResult } from "@/types/types";
 import { logService } from "@/backend/services/logs";
@@ -22,7 +22,7 @@ export default function FormStockEdit({
 }: Props) {
   const [stock, setStock] = useState(product.stock);
   const qty = stock - product.stock;
-  const QtyIcon = getNumberColor.icon(qty);
+  const QtyIcon = numberColor.icon(qty);
 
   const [state, formAction] = useFormState(submitAction, {
     success: true,
@@ -76,7 +76,7 @@ export default function FormStockEdit({
 
         <Chip
           variant="flat"
-          color={getNumberColor.color(qty)}
+          color={numberColor.color(qty)}
           startContent={<QtyIcon className="text-lg" />}
           isDisabled={qty === 0}
         >

@@ -23,12 +23,13 @@ import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import Icon from "../Icon/Icon";
 
 export default function AvatarMenu({ session }: { session: Session | null }) {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
   function toggleTheme() {
-    if (theme === "light") setTheme("dark");
+    if (resolvedTheme === "light") setTheme("dark");
     else setTheme("light");
   }
 
@@ -54,42 +55,42 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
           <DropdownMenu aria-label="menu principal">
             <DropdownSection showDivider>
               <DropdownItem
-                startContent={<Package size={16} />}
+                startContent={<Icon value="product" size={16} />}
                 as={Link}
                 href="/produtos"
               >
-                Estoque atual
+                Produtos
               </DropdownItem>
               <DropdownItem
-                startContent={<User size={16} />}
+                startContent={<Icon value="customer" size={16} />}
                 as={Link}
                 href="/clientes"
               >
                 Clientes
               </DropdownItem>
               <DropdownItem
-                startContent={<User size={16} />}
+                startContent={<Icon value="supplier" size={16} />}
                 as={Link}
                 href="/fornecedores"
               >
                 Fornecedores
               </DropdownItem>
               <DropdownItem
-                startContent={<HandHelping size={16} />}
+                startContent={<Icon value="service" size={16} />}
                 as={Link}
                 href="/servicos"
               >
                 Serviços
               </DropdownItem>
               <DropdownItem
-                startContent={<HandCoins size={16} />}
+                startContent={<Icon value="procedure" size={16} />}
                 as={Link}
                 href="/procedimentos"
               >
                 Procedimentos
               </DropdownItem>
               <DropdownItem
-                startContent={<HandCoins size={16} />}
+                startContent={<Icon value="purchase" size={16} />}
                 as={Link}
                 href="/compras"
               >
@@ -114,7 +115,7 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
             <DropdownSection showDivider>
               <DropdownItem
                 startContent={
-                  theme === "dark" ? (
+                  resolvedTheme === "dark" ? (
                     <SunDim size={16} />
                   ) : (
                     <MoonStar size={16} />
@@ -122,7 +123,7 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
                 }
                 onClick={toggleTheme}
               >
-                {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+                {resolvedTheme === "dark" ? "Modo Claro" : "Modo Escuro"}
               </DropdownItem>
             </DropdownSection>
 
