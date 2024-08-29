@@ -17,7 +17,7 @@ type ServiceFormProps = {
 
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
-  const [products, setProducts] = useState(service?.products);
+  const [products, setProducts] = useState(service?.products ?? []);
   const [state, formAction] = useFormState(submitAction, {
     success: true,
     errors: {},

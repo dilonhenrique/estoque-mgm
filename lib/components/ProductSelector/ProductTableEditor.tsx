@@ -41,8 +41,8 @@ export default function ProductTableEditor({
           <></>
         </TableColumn>
         <TableColumn>NOME</TableColumn>
-        <TableColumn>QTD</TableColumn>
-        <TableColumn>ESTOQUE</TableColumn>
+        <TableColumn width={150}>QTD</TableColumn>
+        <TableColumn width={100}>ESTOQUE</TableColumn>
       </TableHeader>
       <TableBody emptyContent="Nenhum produto selecionado">
         {products.concat(undefined).map((item, index) => {

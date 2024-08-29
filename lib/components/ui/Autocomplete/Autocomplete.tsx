@@ -30,9 +30,9 @@ export default function Autocomplete<T extends object>({
         name={`labeled_${name}`}
         selectedKey={selectedKey}
         onSelectionChange={onChange}
-        onSelect={(ev) => {
-          console.log(ev.currentTarget.value);
-        }}
+        // onSelect={(ev) => {
+        //   console.log(ev.currentTarget.value);
+        // }}
         // onInputChange={(val) => {
         //   onInputChange(val);
         //   if (props.allowsCustomValue) onChange(val);

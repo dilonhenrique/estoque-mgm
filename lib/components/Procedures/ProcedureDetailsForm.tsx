@@ -4,7 +4,7 @@ import { Checkbox, DatePicker, Input } from "@nextui-org/react";
 import { MutationResult } from "@/types/types";
 import { Procedure, ProductWithQty } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 
@@ -76,7 +76,7 @@ export default function ProcedureDetailsForm({
       </Checkbox>
 
       <div className="w-full">
-        <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
+        <h4 className="text-content4-foreground my-2">Produtos utilizados:</h4>
 
         <ProductSelector
           value={products}

@@ -29,17 +29,18 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   } as MutationResult<Procedure | null>);
 
   function onServiceChange(service?: Service) {
-    if (service && hasDetails) {
-      setHasDetails(true);
+    if (service === undefined) return setHasDetails(false);
 
-      if (
-        confirm(
-          `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
-        )
-      ) {
-        setName(service.name);
-        setProducts(service.products);
-      }
+    setHasDetails(true);
+
+    if (
+      hasDetails &&
+      confirm(
+        `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
+      )
+    ) {
+      setName(service.name);
+      setProducts(service.products);
     }
   }
 

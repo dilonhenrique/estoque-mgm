@@ -9,21 +9,10 @@ import {
   DropdownItem,
   DropdownSection,
 } from "@nextui-org/react";
-import {
-  HandCoins,
-  HandHelping,
-  LogOut,
-  MoonStar,
-  Package,
-  PackagePlus,
-  SunDim,
-  User,
-} from "lucide-react";
+import { LogOut, MoonStar, SunDim } from "lucide-react";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
-import Icon from "../Icon/Icon";
 
 export default function AvatarMenu({ session }: { session: Session | null }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -35,12 +24,6 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
 
   return (
     <>
-      {/* {status === "loading" && (
-        <Skeleton className="rounded-full">
-          <Avatar />
-        </Skeleton>
-      )} */}
-
       {session && (
         <Dropdown>
           <DropdownTrigger>
@@ -53,65 +36,6 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
           </DropdownTrigger>
 
           <DropdownMenu aria-label="menu principal">
-            <DropdownSection showDivider>
-              <DropdownItem
-                startContent={<Icon value="product" size={16} />}
-                as={Link}
-                href="/produtos"
-              >
-                Produtos
-              </DropdownItem>
-              <DropdownItem
-                startContent={<Icon value="customer" size={16} />}
-                as={Link}
-                href="/clientes"
-              >
-                Clientes
-              </DropdownItem>
-              <DropdownItem
-                startContent={<Icon value="supplier" size={16} />}
-                as={Link}
-                href="/fornecedores"
-              >
-                Fornecedores
-              </DropdownItem>
-              <DropdownItem
-                startContent={<Icon value="service" size={16} />}
-                as={Link}
-                href="/servicos"
-              >
-                Serviços
-              </DropdownItem>
-              <DropdownItem
-                startContent={<Icon value="procedure" size={16} />}
-                as={Link}
-                href="/procedimentos"
-              >
-                Procedimentos
-              </DropdownItem>
-              <DropdownItem
-                startContent={<Icon value="purchase" size={16} />}
-                as={Link}
-                href="/compras"
-              >
-                Compras
-              </DropdownItem>
-              {/* <DropdownItem
-                startContent={<PackagePlus size={16} />}
-                as={Link}
-                href="/repor-estoque"
-              >
-                Repor Estoque
-              </DropdownItem>
-              <DropdownItem
-                startContent={<HandCoins size={16} />}
-                as={Link}
-                href="/nova-venda"
-              >
-                Nova Venda
-              </DropdownItem> */}
-            </DropdownSection>
-
             <DropdownSection showDivider>
               <DropdownItem
                 startContent={
@@ -139,7 +63,11 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
         </Dropdown>
       )}
 
-      {!session && <Button onClick={() => signIn()}>Login</Button>}
+      {!session && (
+        <Button variant="shadow" color="primary" onClick={() => signIn()}>
+          Login
+        </Button>
+      )}
     </>
   );
 }

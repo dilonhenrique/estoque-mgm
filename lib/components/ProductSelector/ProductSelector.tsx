@@ -1,5 +1,3 @@
-import { Button } from "@nextui-org/react";
-import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Product, ProductWithQty } from "@/types/schemas";
 import { productService } from "@/backend/services/products";
@@ -42,7 +40,7 @@ export default function ProductSelector({
   useEffect(() => {
     if (initialLoad) {
       setInitialLoad(false);
-      if (!(value ?? defaultValue) && availableProducts.length > 0) {
+      if (selectedProducts.length === 0 && availableProducts.length > 0) {
         newItem();
       }
     }
@@ -95,7 +93,7 @@ export default function ProductSelector({
   }, [selectedProducts]);
 
   useEffect(() => {
-    setSelectedProducts(value ?? []);
+    if (value) setSelectedProducts(value);
   }, [value]);
 
   useEffect(() => {

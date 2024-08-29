@@ -6,6 +6,7 @@ import { useServiceList } from "./useServiceList";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import { Service } from "@/types/schemas";
+import Icon from "../Icon/Icon";
 
 type Props = Omit<
   AutocompleteProps,
@@ -27,10 +28,12 @@ export default function ServiceAutocomplete({
   ...props
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  
   const { services, isLoading, hasMore, onLoadMore } = useServiceList();
   const custom: Service[] = customService
     ? [{ id: "CUSTOM", name: "Customizado", products: [] }]
     : [];
+  const allServices = custom.concat(services);
 
   const [, scrollerRef] = useInfiniteScroll({
     hasMore,
@@ -43,12 +46,12 @@ export default function ServiceAutocomplete({
     <Autocomplete
       {...props}
       isLoading={isLoading}
-      defaultItems={custom.concat(services)}
+      defaultItems={allServices}
       scrollRef={scrollerRef}
       onOpenChange={setIsOpen}
       onSelectionChange={(key) => {
         onSelectionChange(key);
-        const service = services.find((item) => item.id === key);
+        const service = allServices.find((item) => item.id === key);
         onServiceChange(service);
       }}
     >
