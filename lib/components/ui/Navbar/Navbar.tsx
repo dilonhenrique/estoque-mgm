@@ -43,7 +43,7 @@ export default function Navbar({ session }: { session: Session | null }) {
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
-      classNames={{ wrapper: "border-b border-default-100", base:"dark bg-background/90 text-foreground" }}
+      classNames={{ wrapper: "border-b border-default-100 px-8", base:"dark bg-background/90 text-foreground" }}
     >
       <NavbarContent>
         {user && (
@@ -59,13 +59,13 @@ export default function Navbar({ session }: { session: Session | null }) {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem>
+        <NavbarItem className="flex items-center">
           <AvatarMenu session={session} />
         </NavbarItem>
       </NavbarContent>
 
       {user && (
-        <NavbarMenu className="max-w-80 shadow-large bg-content1/80 backdrop-blur-lg pt-6">
+        <NavbarMenu className="!max-w-80 shadow-large bg-content1/80 backdrop-blur-lg pt-6">
           <ScrollShadow hideScrollBar className="h-full flex flex-col gap-2">
             {menuItems.map((item, index) => {
               const isActive = pathname.startsWith(item.url);

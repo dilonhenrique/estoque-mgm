@@ -9,7 +9,7 @@ import {
   DropdownItem,
   DropdownSection,
 } from "@nextui-org/react";
-import { LogOut, MoonStar, SunDim } from "lucide-react";
+import { Cog, LogOut, MoonStar, SunDim, User } from "lucide-react";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
@@ -25,7 +25,7 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
   return (
     <>
       {session && (
-        <Dropdown>
+        <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Button isIconOnly variant="bordered" radius="full">
               <Avatar
@@ -35,9 +35,25 @@ export default function AvatarMenu({ session }: { session: Session | null }) {
             </Button>
           </DropdownTrigger>
 
-          <DropdownMenu aria-label="menu principal">
+          <DropdownMenu
+            aria-label="menu de conta"
+            topContent={
+              <div className="p-2 pt-1">
+                <h5>{session.user.name}</h5>
+                <p className="text-tiny text-content4-foreground">{session.user.email}</p>
+              </div>
+            }
+            disabledKeys={["profile", "account"]}
+          >
             <DropdownSection showDivider>
+              <DropdownItem key="profile" startContent={<User size={16} />}>
+                Meu perfil
+              </DropdownItem>
+              <DropdownItem key="account" startContent={<Cog size={16} />}>
+                Minha conta
+              </DropdownItem>
               <DropdownItem
+                key="theme"
                 startContent={
                   resolvedTheme === "dark" ? (
                     <SunDim size={16} />

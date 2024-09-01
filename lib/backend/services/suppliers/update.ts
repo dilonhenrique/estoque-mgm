@@ -58,5 +58,6 @@ const schema = z.object({
       number: z.string(),
       complement: z.string().optional(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
 });

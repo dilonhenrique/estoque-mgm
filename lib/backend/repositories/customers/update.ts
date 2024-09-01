@@ -5,26 +5,34 @@ import { parseCustomer } from "@/utils/parser/schemas/customer";
 import postgres from "prisma/postgres.db";
 
 export default async function update(id: string, payload: Payload) {
-  const response = await postgres.customer.update({
-    where: { id },
-    data: {
-      name: payload.name,
-      img_url: payload.img_url,
-      email: payload.email,
-      phone: payload.phone,
-      birthday: payload.birthday,
-      address: payload.address
-        ? {
-            upsert: {
-              create: payload.address,
-              update: payload.address,
-            },
-          }
-        : undefined,
-      // : { disconnect: {} },
-    },
-    include: includer.customer,
-  });
+  const [response] = await postgres.$transaction([
+    postgres.customer.update({
+      where: { id },
+      data: {
+        name: payload.name,
+        img_url: payload.img_url,
+        email: payload.email,
+        phone: payload.phone,
+        birthday: payload.birthday,
+        address: payload.address
+          ? {
+              upsert: {
+                create: payload.address,
+                update: payload.address,
+              },
+            }
+          : undefined,
+      },
+      include: includer.customer,
+    }),
+    ...(payload.address === null
+      ? [
+          postgres.address.deleteMany({
+            where: { customers: { id } },
+          }),
+        ]
+      : []),
+  ]);
 
   return parseCustomer(response);
 }
@@ -35,7 +43,7 @@ type Payload = {
   email?: string;
   phone?: string;
   birthday?: Date;
-  address?: AddressPayload;
+  address?: AddressPayload | null;
 };
 
 type AddressPayload = {

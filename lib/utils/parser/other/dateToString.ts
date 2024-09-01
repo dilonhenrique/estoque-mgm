@@ -11,7 +11,7 @@ function toDateString(date?: Date) {
 function toDateTimeString(date?: Date) {
   if (!date) return null;
 
-  const day = dateToString(date);
+  const day = toDateString(date);
 
   const hour = date.getHours().toString().padStart(2, "0");
   const minute = date.getMinutes().toString().padStart(2, "0");

@@ -75,7 +75,7 @@ model Account {
   document            String
   document_type       DocType           @default(CPF)
   address             Address           @relation(fields: [address_id], references: [id])
-  address_id          String
+  address_id          String            @unique
   users               User[]
   customers           Customer[]
   services            Service[]
@@ -86,7 +86,7 @@ model Account {
 }
 
 model Address {
-  id           String     @id @default(uuid())
+  id           String    @id @default(uuid())
   zip_code     String
   country      String
   state        String
@@ -95,9 +95,9 @@ model Address {
   street       String
   number       String
   complement   String?
-  accounts     Account[]
-  suppliers    Supplier[]
-  customers    Customer[]
+  accounts     Account?
+  suppliers    Supplier?
+  customers    Customer?
 }
 
 model Customer {
@@ -110,7 +110,7 @@ model Customer {
   phone      String?
   birthday   DateTime?
   address    Address?    @relation(fields: [address_id], references: [id])
-  address_id String?
+  address_id String?     @unique
   procedures Procedure[]
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
@@ -282,7 +282,7 @@ model Supplier {
   email      String?
   phone      String?
   address    Address?   @relation(fields: [address_id], references: [id])
-  address_id String?
+  address_id String?    @unique
   purchases  Purchase[]
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt

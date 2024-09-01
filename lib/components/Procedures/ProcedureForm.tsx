@@ -34,10 +34,11 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
     setHasDetails(true);
 
     if (
-      hasDetails &&
-      confirm(
-        `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
-      )
+      !hasDetails ||
+      (hasDetails &&
+        confirm(
+          `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
+        ))
     ) {
       setName(service.name);
       setProducts(service.products);
