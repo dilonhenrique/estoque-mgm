@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "@/types/types";
@@ -8,11 +8,12 @@ import { productService } from "@/backend/services/products";
 import { Product } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
-import CategoryAutocomplete from "../ui/CategoryAutocomplete/CategoryAutocomplete";
-import IncreaserInput from "../ui/IncreaserInput/IncreaserInput";
+import CategoryAutocomplete from "../ui/forms/custom/CategoryAutocomplete/CategoryAutocomplete";
+import IncreaserInput from "../ui/forms/atoms/IncreaserInput/IncreaserInput";
 import { Pencil } from "lucide-react";
 import ModalStockEdit from "./StockEdit/ModalStockEdit";
 import { useState } from "react";
+import Input from "../ui/forms/atoms/Input/Input";
 
 type ProductFormProps = {
   product?: Product;

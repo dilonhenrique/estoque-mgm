@@ -1,9 +1,10 @@
 "use client";
 
-import { Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { MutationResult } from "@/types/types";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { useSearchParams } from "next/navigation";
+import Input from "../ui/forms/atoms/Input/Input";
 
 type IProps = {
   title: string;

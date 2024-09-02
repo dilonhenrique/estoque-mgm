@@ -1,12 +1,15 @@
 "use client";
 
-import { AutocompleteItem, AutocompleteProps } from "@nextui-org/react";
+import {
+  AutocompleteItem,
+  AutocompleteProps,
+} from "@nextui-org/react";
 import { useState } from "react";
-import { useCustomerList } from "./useCustomerList";
+import { useCategoryList } from "./useCategoryList";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import Autocomplete from "../Autocomplete/Autocomplete";
+import Autocomplete from "../../atoms/Autocomplete/Autocomplete";
 
-export default function CustomerAutocomplete(
+export default function CategoryAutocomplete(
   props: Omit<
     AutocompleteProps,
     | "isLoading"
@@ -18,7 +21,7 @@ export default function CustomerAutocomplete(
   >
 ) {
   const [isOpen, setIsOpen] = useState(false);
-  const { customers, isLoading, hasMore, onLoadMore } = useCustomerList();
+  const { categories, isLoading, hasMore, onLoadMore } = useCategoryList();
 
   const [, scrollerRef] = useInfiniteScroll({
     hasMore,
@@ -31,7 +34,7 @@ export default function CustomerAutocomplete(
     <Autocomplete
       {...props}
       isLoading={isLoading}
-      defaultItems={customers}
+      defaultItems={categories}
       scrollRef={scrollerRef}
       onOpenChange={setIsOpen}
     >

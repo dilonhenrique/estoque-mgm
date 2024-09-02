@@ -1,7 +1,8 @@
 import { mask } from "@/utils/mask";
-import { Button, ButtonProps, Input, InputProps } from "@nextui-org/react";
+import { Button, ButtonProps, InputProps } from "@nextui-org/react";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import Input from "../Input/Input";
 
 type Props = Omit<InputProps, "endContent" | "startContent"> & {
   buttonProps?: ButtonProps;
@@ -79,8 +80,6 @@ export default function IncreaserInput({
         classNames={{
           base: "w-auto",
           input: !hasLabelInside ? "text-center" : undefined,
-          // inputWrapper: !hasLabelInside ? "w-32" : undefined,
-          // label: hasLabelInside ? "text-center w-full pe-0 ps-2" : undefined,
         }}
         startContent={!hasLabelInside && <DecreaseButton />}
         endContent={

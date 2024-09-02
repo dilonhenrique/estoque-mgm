@@ -1,8 +1,9 @@
 "use client";
 
-import { Input, InputProps } from "@nextui-org/react";
+import { InputProps } from "@nextui-org/react";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import Input from "../ui/forms/atoms/Input/Input";
 
 export default function PasswordInput(props: InputProps) {
   const [isVisible, setIsVisible] = useState(false);

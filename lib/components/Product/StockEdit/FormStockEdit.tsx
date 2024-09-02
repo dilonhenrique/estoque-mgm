@@ -1,7 +1,7 @@
-import { Chip, Select, SelectItem } from "@nextui-org/react";
+import { Chip, SelectItem } from "@nextui-org/react";
 import { Product } from "@/types/schemas";
 import { LogCause } from "@prisma/client";
-import IncreaserInput from "../../ui/IncreaserInput/IncreaserInput";
+import IncreaserInput from "../../ui/forms/atoms/IncreaserInput/IncreaserInput";
 import { useState } from "react";
 import { numberColor } from "@/utils/maps/numberColor";
 import { useFormState } from "react-dom";
@@ -10,6 +10,7 @@ import { logService } from "@/backend/services/logs";
 import { toast } from "sonner";
 import { SubmitButton } from "@/components/ui/FormButton";
 import { locale } from "@/utils/locale";
+import Select from "@/components/ui/forms/atoms/Select/Select";
 
 type Props = {
   product: Product;

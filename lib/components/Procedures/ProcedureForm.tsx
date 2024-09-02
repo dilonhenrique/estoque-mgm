@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { FormEvent, useRef, useState } from "react";
 import { procedureService } from "@/backend/services/procedures";
-import ServiceAutocomplete from "../ui/ServiceAutocomplete/ServiceAutocomplete";
+import ServiceAutocomplete from "../ui/forms/custom/ServiceAutocomplete/ServiceAutocomplete";
 import { SquareCheckBig, SquareX } from "lucide-react";
 import ProcedureDetailsForm from "./ProcedureDetailsForm";
 

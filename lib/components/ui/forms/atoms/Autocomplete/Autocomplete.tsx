@@ -1,5 +1,6 @@
 "use client";
 
+import { globalConfig } from "@/utils/consts/global.config";
 import {
   Autocomplete as NAutocomplete,
   AutocompleteProps,
@@ -7,14 +8,15 @@ import {
 import { useState } from "react";
 
 type Key = string | number;
+type Props<T extends object> = AutocompleteProps<T>;
 
 export default function Autocomplete<T extends object>({
   name,
   selectedKey,
   onSelectionChange = () => {},
-  // onInputChange = () => {},
   ...props
-}: AutocompleteProps<T>) {
+}: Props<T>) {
+  const { variant, labelPlacement } = globalConfig.input;
   const [value, setValue] = useState<Key | null | undefined>(
     selectedKey ?? props.defaultSelectedKey
   );
@@ -30,13 +32,8 @@ export default function Autocomplete<T extends object>({
         name={`labeled_${name}`}
         selectedKey={selectedKey}
         onSelectionChange={onChange}
-        // onSelect={(ev) => {
-        //   console.log(ev.currentTarget.value);
-        // }}
-        // onInputChange={(val) => {
-        //   onInputChange(val);
-        //   if (props.allowsCustomValue) onChange(val);
-        // }}
+        variant={variant}
+        labelPlacement={labelPlacement}
         {...props}
       />
       <input

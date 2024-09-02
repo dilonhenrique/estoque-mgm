@@ -2,11 +2,12 @@
 
 import _ from "lodash";
 import React from "react";
-import { Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { useState } from "react";
 import { MutationResult } from "@/types/types";
 import { cepService } from "@/backend/services/cep";
 import { toast } from "sonner";
+import Input from "../ui/forms/atoms/Input/Input";
 
 type IProps = {
   title: string;

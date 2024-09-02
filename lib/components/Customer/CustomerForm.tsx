@@ -1,6 +1,5 @@
 "use client";
 
-import { DatePicker, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "@/types/types";
@@ -9,6 +8,8 @@ import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { customerService } from "@/backend/services/customers";
 import { parseAbsoluteToLocal } from "@internationalized/date";
+import Input from "../ui/forms/atoms/Input/Input";
+import DatePicker from "../ui/forms/atoms/DatePicker/Input";
 
 type CustomerFormProps = {
   customer?: Customer;

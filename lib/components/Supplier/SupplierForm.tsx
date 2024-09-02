@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "@/types/types";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { supplierService } from "@/backend/services/suppliers";
 import { mask } from "@/utils/mask";
+import Input from "../ui/forms/atoms/Input/Input";
 
 type Props = {
   supplier?: Supplier;

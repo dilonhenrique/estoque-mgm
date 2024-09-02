@@ -4,12 +4,12 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Input,
-  Select,
   SelectItem,
 } from "@nextui-org/react";
 import { MutationResult } from "@/types/types";
 import { DocType } from "@prisma/client";
+import Select from "../ui/forms/atoms/Select/Select";
+import Input from "../ui/forms/atoms/Input/Input";
 
 type IProps = {
   title: string;

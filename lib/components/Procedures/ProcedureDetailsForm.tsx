@@ -1,12 +1,14 @@
 "use client";
 
-import { Checkbox, DatePicker, Input } from "@nextui-org/react";
+import { Checkbox } from "@nextui-org/react";
 import { MutationResult } from "@/types/types";
 import { Procedure, ProductWithQty } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { Dispatch, SetStateAction } from "react";
-import CustomerAutocomplete from "../ui/CustomerAutocomplete/CustomerAutocomplete";
+import CustomerAutocomplete from "../ui/forms/custom/CustomerAutocomplete/CustomerAutocomplete";
 import { parseAbsoluteToLocal } from "@internationalized/date";
+import Input from "../ui/forms/atoms/Input/Input";
+import DatePicker from "../ui/forms/atoms/DatePicker/Input";
 
 type ProcedureFormProps = {
   procedure?: Partial<Procedure>;

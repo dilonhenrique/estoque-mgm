@@ -4,9 +4,8 @@ import { AutocompleteItem, AutocompleteProps } from "@nextui-org/react";
 import { useState } from "react";
 import { useServiceList } from "./useServiceList";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import Autocomplete from "../Autocomplete/Autocomplete";
+import Autocomplete from "../../atoms/Autocomplete/Autocomplete";
 import { Service } from "@/types/schemas";
-import Icon from "../Icon/Icon";
 
 type Props = Omit<
   AutocompleteProps,

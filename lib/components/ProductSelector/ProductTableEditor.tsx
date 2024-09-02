@@ -10,8 +10,8 @@ import {
 } from "@nextui-org/react";
 import { Plus, Trash } from "lucide-react";
 import { Product, ProductWithQty } from "@/types/schemas";
-import IncreaserInput from "../ui/IncreaserInput/IncreaserInput";
-import Autocomplete from "../ui/Autocomplete/Autocomplete";
+import IncreaserInput from "../ui/forms/atoms/IncreaserInput/IncreaserInput";
+import Autocomplete from "../ui/forms/atoms/Autocomplete/Autocomplete";
 
 type Props = {
   products: (ProductWithQty | undefined)[];

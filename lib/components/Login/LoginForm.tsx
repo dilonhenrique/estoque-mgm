@@ -6,7 +6,6 @@ import {
   CardBody,
   CardFooter,
   Divider,
-  Input,
 } from "@nextui-org/react";
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
@@ -17,6 +16,7 @@ import PasswordInput from "../PasswordInput/PasswordInput";
 import { signIn } from "next-auth/react";
 import { authService } from "@/backend/services/auth";
 import Link from "next/link";
+import Input from "../ui/forms/atoms/Input/Input";
 
 export default function LoginForm() {
   const router = useRouter();
