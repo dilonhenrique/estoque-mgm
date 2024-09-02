@@ -3,12 +3,14 @@ import { Product, ProductWithQty } from "@/types/schemas";
 import { productService } from "@/backend/services/products";
 import ProductTableViewOnly from "./ProductTableViewOnly";
 import ProductTableEditor from "./ProductTableEditor";
+import { isEqual } from "lodash";
 
 type Props = {
   defaultValue?: ProductWithQty[];
   value?: ProductWithQty[];
   onValueChange?: (products: ProductWithQty[]) => void;
   isViewOnly?: boolean;
+  refreshItems?: boolean;
 };
 
 export default function ProductSelector({
@@ -16,6 +18,7 @@ export default function ProductSelector({
   value,
   onValueChange = () => {},
   isViewOnly,
+  refreshItems,
 }: Props) {
   const [initialLoad, setInitialLoad] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -35,12 +38,26 @@ export default function ProductSelector({
         setAllProducts(res.data.items);
       }
     });
-  }, [isViewOnly]);
+  }, [isViewOnly, refreshItems]);
+
+  useEffect(() => {
+    setSelectedProducts(
+      selectedProducts.map((selected) => {
+        const prod =
+          allProducts.find((prod) => prod.id === selected.id) ?? selected;
+        return { ...prod, qty: selected.qty };
+      })
+    );
+  }, [allProducts]);
 
   useEffect(() => {
     if (initialLoad) {
       setInitialLoad(false);
-      if (selectedProducts.length === 0 && availableProducts.length > 0) {
+      if (
+        !value &&
+        selectedProducts.length === 0 &&
+        availableProducts.length > 0
+      ) {
         newItem();
       }
     }
@@ -89,22 +106,14 @@ export default function ProductSelector({
   }
 
   useEffect(() => {
-    onValueChange(selectedProducts);
+    if (!isEqual(selectedProducts, value)) {
+      onValueChange(selectedProducts);
+    }
   }, [selectedProducts]);
 
   useEffect(() => {
     if (value) setSelectedProducts(value);
   }, [value]);
-
-  useEffect(() => {
-    setSelectedProducts(
-      selectedProducts.map((selected) => {
-        const prod =
-          allProducts.find((prod) => prod.id === selected.id) ?? selected;
-        return { ...prod, qty: selected.qty };
-      })
-    );
-  }, [allProducts]);
 
   return (
     <div className="flex flex-col gap-4 mb-4">

@@ -14,7 +14,7 @@ export default function ThemeSwitcher() {
   return (
     <DropdownItem
       startContent={<Switch checked={theme === "dark"} />}
-      onClick={() => toggleTheme()}
+      onClick={toggleTheme}
     >
       Ligar Darkmode
     </DropdownItem>

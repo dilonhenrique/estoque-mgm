@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardBody, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { MutationResult } from "@/types/types";
@@ -17,7 +17,7 @@ type ServiceFormProps = {
 
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
-  const [products, setProducts] = useState(service?.products ?? []);
+  const [products, setProducts] = useState(service?.products);
   const [state, formAction] = useFormState(submitAction, {
     success: true,
     errors: {},
@@ -63,9 +63,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       />
 
       <div className="w-full">
-          <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
-          <ProductSelector value={products} onValueChange={setProducts} />
-          </div>
+        <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
+        <ProductSelector value={products} onValueChange={setProducts} />
+      </div>
 
       <div className="w-full flex justify-end gap-4">
         {service && (

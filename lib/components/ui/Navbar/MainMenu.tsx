@@ -35,7 +35,7 @@ export default function MainMenu({ isOpen, closeMenu }: Props) {
       <ModalContent className="fixed top-0 left-0 !m-0 bg-content1/90 backdrop-blur-lg h-screen">
         {(onClose) => (
           <>
-            <ModalHeader className="py-3 px-8 border-b border-content4 items-center gap-4">
+            <ModalHeader className="py-3 px-6 border-b border-content4 items-center gap-2">
               <Button
                 isIconOnly
                 onPress={onClose}
@@ -46,12 +46,12 @@ export default function MainMenu({ isOpen, closeMenu }: Props) {
               </Button>
               <Logo />
             </ModalHeader>
-            <ModalBody>
-              {menuItems.map((item, index) => {
+            <ModalBody className="px-4">
+              {menuItems.map((item) => {
                 const isActive = pathname.startsWith(item.url);
 
                 return (
-                  <ButtonGroup className="w-full">
+                  <ButtonGroup className="w-full" key={`menu-${item.iconKey}`}>
                     <Button
                       onPress={closeMenu}
                       variant={isActive ? "solid" : "light"}

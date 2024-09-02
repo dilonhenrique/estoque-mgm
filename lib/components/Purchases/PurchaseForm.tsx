@@ -23,6 +23,9 @@ export default function PurchaseForm({ purchase }: Props) {
     errors: {},
   } as MutationResult<Purchase>);
 
+  const [refreshItems, setRefreshItems] = useState(true);
+  const refreshProducts = () => setRefreshItems(!refreshItems);
+
   async function submitAction(status: MutationResult, formData: FormData) {
     const payload = {
       ...Object.fromEntries(formData),
@@ -43,6 +46,8 @@ export default function PurchaseForm({ purchase }: Props) {
 
       if (!purchase) {
         router.push("/compras");
+      } else {
+        refreshProducts();
       }
     } else {
       toast.error("Confira os campos e tente novamente");
@@ -70,7 +75,11 @@ export default function PurchaseForm({ purchase }: Props) {
 
       <div className="w-full">
         <h4 className="text-content4-foreground mb-2">Produtos comprados:</h4>
-        <ProductSelector value={products} onValueChange={setProducts} />
+        <ProductSelector
+          value={products}
+          onValueChange={setProducts}
+          refreshItems={refreshItems}
+        />
       </div>
 
       <div className="w-full flex justify-end gap-4">

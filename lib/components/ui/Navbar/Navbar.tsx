@@ -25,11 +25,11 @@ export default function Navbar({ session }: { session: Session | null }) {
       <NextNavbar
         maxWidth="full"
         classNames={{
-          wrapper: "border-b border-default-100 px-8",
+          wrapper: "border-b border-default-100",
           base: "dark bg-background/90 text-foreground",
         }}
       >
-        <NavbarContent>
+        <NavbarContent className="gap-2">
           {user && (
             <Button
               isIconOnly
