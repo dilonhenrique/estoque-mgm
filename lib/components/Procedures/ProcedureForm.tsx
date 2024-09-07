@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { Procedure, Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
@@ -25,8 +25,8 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
 
   const [formState, setFormState] = useState({
     success: true,
-    errors: {},
-  } as MutationResult<Procedure | null>);
+    fieldErrors: {},
+  } as ServiceResult<Procedure | null>);
 
   function onServiceChange(service?: Service) {
     if (service === undefined) return setHasDetails(false);
@@ -103,8 +103,8 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         customService
         defaultSelectedKey={procedure?.service?.id}
         className="w-full grow"
-        isInvalid={!!formState.errors.service_id}
-        errorMessage={formState.errors.service_id}
+        isInvalid={!!formState.fieldErrors.service_id}
+        errorMessage={formState.fieldErrors.service_id}
         onServiceChange={onServiceChange}
         isDisabled={procedure?.done}
       />

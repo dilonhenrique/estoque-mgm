@@ -1,13 +1,13 @@
 "use server";
 
 import { customerRepo } from "@/backend/repositories/customers";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { Customer } from "@/types/schemas";
 
 export default async function findById(
   id: string
-): Promise<MutationResult<Customer>> {
+): Promise<ServiceResult<Customer>> {
   const response = await customerRepo.findById(id);
 
-  return { success: true, errors: {}, data: response };
+  return { success: true, fieldErrors: {}, data: response };
 }

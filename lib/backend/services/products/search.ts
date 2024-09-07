@@ -1,16 +1,16 @@
 "use server";
 
 import { productRepo } from "@/backend/repositories/products";
-import { MutationResult, SearchList } from "@/types/types";
+import { ServiceResult, SearchList } from "@/types/types";
 import { Prisma } from "@prisma/client";
 import { Product } from "@/types/schemas";
 
 export default async function search(
   query?: Query
-): Promise<MutationResult<SearchList<Product>>> {
+): Promise<ServiceResult<SearchList<Product>>> {
   const response = await productRepo.search(query);
 
-  return { success: true, errors: {}, data: response };
+  return { success: true, fieldErrors: {}, data: response };
 }
 
 type Query = {

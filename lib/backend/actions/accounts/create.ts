@@ -1,11 +1,11 @@
 "use server";
 
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Account } from "@prisma/client";
 import { accountService } from "@/backend/services/accounts";
 
 export default async function create(
   account: FormData | AnyObject
-): Promise<MutationResult<Account>> {
+): Promise<ServiceResult<Account>> {
   return await accountService.create(account);
 }

@@ -3,25 +3,25 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Supplier } from "@/types/schemas";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { supplierRepo } from "@/backend/repositories/suppliers";
 import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringToOnlyNumber";
 import { validation } from "@/utils/validation";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function update(
   id: string,
   supplier: FormData | AnyObject
-): Promise<MutationResult<Supplier | null>> {
+): Promise<ServiceResult<Supplier | null>> {
   await getSessionUserOrLogout();
 
   const data = prepareDataForZod(supplier);
   const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    return { success: false, errors: mapZodErrors(payload.error.errors) };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   const response = await supplierRepo.update(id, {
@@ -33,7 +33,7 @@ export default async function update(
   });
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 const schema = z.object({

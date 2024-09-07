@@ -1,4 +1,4 @@
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import {
   FieldValues,
   FormProps as OriginalFormProps,
@@ -7,8 +7,8 @@ import {
 import { z } from "zod";
 
 export type ResponseWithError =
-  | { response: MutationResult; error?: undefined }
-  | { response?: MutationResult; error: unknown };
+  | { response: ServiceResult; error?: undefined }
+  | { response?: ServiceResult; error: unknown };
 
 export type FormProps<
   T extends FieldValues,
@@ -18,9 +18,9 @@ export type FormProps<
   "validateStatus" | "onError" | "onSuccess" | "action"
 > & {
   action?:
-    | ((formData: FormData | T) => MutationResult)
-    | ((formData: FormData | T) => Promise<MutationResult>);
-  validateResponse?: (response: MutationResult) => boolean;
+    | ((formData: FormData | T) => ServiceResult)
+    | ((formData: FormData | T) => Promise<ServiceResult>);
+  validateResponse?: (response: ServiceResult) => boolean;
   onError?: (res: ResponseWithError) => void;
   onSuccess?: (res: ResponseWithError) => void;
   schema?: z.ZodType;

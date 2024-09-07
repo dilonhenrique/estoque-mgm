@@ -4,14 +4,14 @@ import _ from "lodash";
 import React from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { useState } from "react";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { cepService } from "@/backend/services/cep";
 import { toast } from "sonner";
 import Input from "../ui/forms/atoms/Input/Input";
 
 type IProps = {
   title: string;
-  formState: MutationResult;
+  formState: ServiceResult;
 };
 
 export default function AddressForm({ title, formState }: IProps) {
@@ -48,8 +48,8 @@ export default function AddressForm({ title, formState }: IProps) {
           label="CEP"
           className="max-w-md col-span-12"
           onValueChange={zipChange}
-          isInvalid={!!formState.errors.zip_code}
-          errorMessage={formState.errors.zip_code}
+          isInvalid={!!formState.fieldErrors.zip_code}
+          errorMessage={formState.fieldErrors.zip_code}
         />
         <Input
           name="country"
@@ -57,8 +57,8 @@ export default function AddressForm({ title, formState }: IProps) {
           className="col-span-4"
           value={country}
           onValueChange={setCountry}
-          isInvalid={!!formState.errors.country}
-          errorMessage={formState.errors.country}
+          isInvalid={!!formState.fieldErrors.country}
+          errorMessage={formState.fieldErrors.country}
         />
         <Input
           name="state"
@@ -66,8 +66,8 @@ export default function AddressForm({ title, formState }: IProps) {
           className="col-span-2"
           value={state}
           onValueChange={setState}
-          isInvalid={!!formState.errors.state}
-          errorMessage={formState.errors.state}
+          isInvalid={!!formState.fieldErrors.state}
+          errorMessage={formState.fieldErrors.state}
         />
         <Input
           name="city"
@@ -75,8 +75,8 @@ export default function AddressForm({ title, formState }: IProps) {
           className="col-span-6"
           value={city}
           onValueChange={setCity}
-          isInvalid={!!formState.errors.city}
-          errorMessage={formState.errors.city}
+          isInvalid={!!formState.fieldErrors.city}
+          errorMessage={formState.fieldErrors.city}
         />
         <Input
           name="neighborhood"
@@ -84,8 +84,8 @@ export default function AddressForm({ title, formState }: IProps) {
           className="col-span-6"
           value={neighborhood}
           onValueChange={setNeighborhood}
-          isInvalid={!!formState.errors.neighborhood}
-          errorMessage={formState.errors.neighborhood}
+          isInvalid={!!formState.fieldErrors.neighborhood}
+          errorMessage={formState.fieldErrors.neighborhood}
         />
         <Input
           name="street"
@@ -93,22 +93,22 @@ export default function AddressForm({ title, formState }: IProps) {
           className="col-span-6"
           value={street}
           onValueChange={setStreet}
-          isInvalid={!!formState.errors.street}
-          errorMessage={formState.errors.street}
+          isInvalid={!!formState.fieldErrors.street}
+          errorMessage={formState.fieldErrors.street}
         />
         <Input
           name="number"
           label="Número"
           className="col-span-6"
-          isInvalid={!!formState.errors.number}
-          errorMessage={formState.errors.number}
+          isInvalid={!!formState.fieldErrors.number}
+          errorMessage={formState.fieldErrors.number}
         />
         <Input
           name="complement"
           label="Complemento"
           className="col-span-6"
-          isInvalid={!!formState.errors.complement}
-          errorMessage={formState.errors.complement}
+          isInvalid={!!formState.fieldErrors.complement}
+          errorMessage={formState.fieldErrors.complement}
         />
       </CardBody>
     </Card>

@@ -10,7 +10,7 @@ import {
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { toast } from "sonner";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { signIn } from "next-auth/react";
@@ -22,17 +22,17 @@ export default function LoginForm() {
   const router = useRouter();
   const [state, formAction] = useFormState(submitAction, {
     success: true,
-    errors: {},
-  } as MutationResult);
+    fieldErrors: {},
+  } as ServiceResult);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(status: ServiceResult, formData: FormData) {
     const response = await authService.login(formData);
 
     if (!response.success) {
       if (response.status === 400) {
         toast.error("Confira os campos e tente novamente");
       } else {
-        toast.error(response.errors.message ?? "Error");
+        toast.error(response.fieldErrors.message ?? "Error");
       }
     } else {
       toast.success("Logado com sucesso!");
@@ -54,15 +54,15 @@ export default function LoginForm() {
             name="email"
             label="Email"
             className="col-span-6"
-            isInvalid={!!state.errors.email}
-            errorMessage={state.errors.email}
+            isInvalid={!!state.fieldErrors.email}
+            errorMessage={state.fieldErrors.email}
           />
           <PasswordInput
             name="password"
             label="Senha"
             className="col-span-6"
-            isInvalid={!!state.errors.password}
-            errorMessage={state.errors.password}
+            isInvalid={!!state.fieldErrors.password}
+            errorMessage={state.fieldErrors.password}
           />
         </CardBody>
         <CardFooter className="pb-4">

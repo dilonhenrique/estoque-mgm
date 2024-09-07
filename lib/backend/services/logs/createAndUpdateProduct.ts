@@ -1,25 +1,25 @@
 "use server";
 
 import { logRepo } from "@/backend/repositories/logs";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { z } from "zod";
 import { LogCause } from "@prisma/client";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { revalidatePath } from "next/cache";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function createAndUpdateProduct(
   formData: FormData | AnyObject
-): Promise<MutationResult<LogComplete>> {
+): Promise<ServiceResult<LogComplete>> {
   await getSessionUserOrLogout();
 
   const data = prepareDataForZod(formData);
   const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    return { success: false, errors: mapZodErrors(payload.error.errors) };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   const response = await logRepo.createAndUpdateProduct({
@@ -31,7 +31,7 @@ export default async function createAndUpdateProduct(
   });
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 const schema = z.object({

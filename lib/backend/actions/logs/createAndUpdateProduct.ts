@@ -1,11 +1,11 @@
 "use server";
 
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 import { logService } from "@/backend/services/logs";
 
 export default async function createAndUpdateProduct(
   payload: FormData | AnyObject
-): Promise<MutationResult<LogComplete>> {
+): Promise<ServiceResult<LogComplete>> {
   return await logService.createAndUpdateProduct(payload);
 }

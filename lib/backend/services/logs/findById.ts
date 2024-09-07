@@ -1,13 +1,13 @@
 "use server";
 
 import { logRepo } from "@/backend/repositories/logs";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 
 export default async function findById(
   id: string
-): Promise<MutationResult<LogComplete>> {
+): Promise<ServiceResult<LogComplete>> {
   const response = await logRepo.findById(id);
 
-  return { success: true, errors: {}, data: response };
+  return { success: true, fieldErrors: {}, data: response };
 }

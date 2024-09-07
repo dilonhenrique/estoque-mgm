@@ -1,18 +1,18 @@
 "use server";
 
 import { z } from "zod";
-import { AnyObject, MutationResult } from "@/types/types";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Account, DocType } from "@prisma/client";
 import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function create(
   product: FormData | AnyObject
-): Promise<MutationResult<Account>> {
+): Promise<ServiceResult<Account>> {
   const data = prepareDataForZod(product);
 
   const accountPayload = accountSchema.safeParse(data);
@@ -24,14 +24,11 @@ export default async function create(
     !addressPayload.success ||
     !userPayload.success
   ) {
-    return {
-      success: false,
-      errors: mapZodErrors([
-        ...(accountPayload.error?.errors ?? []),
-        ...(addressPayload.error?.errors ?? []),
-        ...(userPayload.error?.errors ?? []),
-      ]),
-    };
+    return serviceResult.fieldErrors([
+      ...(accountPayload.error?.errors ?? []),
+      ...(addressPayload.error?.errors ?? []),
+      ...(userPayload.error?.errors ?? []),
+    ]);
   }
 
   const { data: account } = accountPayload;
@@ -49,10 +46,10 @@ export default async function create(
       social_account,
     });
 
-    return { success: true, errors: {}, data: response };
+    return serviceResult.success(response);
   } catch (e) {
     console.error(e);
-    return { success: false, errors: { system: "error saving" } };
+    return serviceResult.error();
   }
 }
 

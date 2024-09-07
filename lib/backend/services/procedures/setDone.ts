@@ -3,17 +3,17 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Procedure } from "@/types/schemas";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function setDone(
   id: string,
   data: AnyObject
-): Promise<MutationResult<Procedure | null>> {
+): Promise<ServiceResult<Procedure | null>> {
   await getSessionUserOrLogout();
 
   const preparedData = prepareDataForZod(data);
@@ -22,7 +22,7 @@ export default async function setDone(
   const payload = schema.safeParse(preparedData);
 
   if (!payload.success) {
-    return { success: false, errors: mapZodErrors(payload.error.errors) };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   const updatedProcedure = await procedureRepo.update(id, {
@@ -34,7 +34,7 @@ export default async function setDone(
   });
 
   if (!updatedProcedure) {
-    return { success: false, errors: { form: "Erro de servidor" } };
+    return serviceResult.error();
   }
 
   const response = await procedureRepo.setDone(id, {
@@ -42,7 +42,7 @@ export default async function setDone(
   });
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 const schema = z.object({

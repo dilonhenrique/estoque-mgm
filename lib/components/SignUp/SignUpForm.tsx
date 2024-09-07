@@ -4,7 +4,7 @@ import { Button, Tab, Tabs } from "@nextui-org/react";
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { accountService } from "@/backend/services/accounts";
 import { toast } from "sonner";
 import _ from "lodash";
@@ -19,10 +19,10 @@ export default function SignUpForm() {
   const router = useRouter();
   const [formState, formAction] = useFormState(submitAction, {
     success: true,
-    errors: {},
-  } as MutationResult);
+    fieldErrors: {},
+  } as ServiceResult);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(status: ServiceResult, formData: FormData) {
     const response = await accountService.create(formData);
 
     if (response.success) {

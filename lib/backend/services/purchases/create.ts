@@ -3,23 +3,23 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Purchase } from "@/types/schemas";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { purchaseRepo } from "@/backend/repositories/purchases";
 import { supplierService } from "../suppliers";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function create(
   product: FormData | AnyObject
-): Promise<MutationResult<Purchase | null>> {
+): Promise<ServiceResult<Purchase | null>> {
   const user = await getSessionUserOrLogout();
 
   const data = prepareDataForZod(product);
   const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    return { success: false, errors: mapZodErrors(payload.error.errors) };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   if (!payload.data.supplier_id && payload.data.labeled_supplier_id) {
@@ -36,7 +36,7 @@ export default async function create(
   });
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 const schema = z.object({

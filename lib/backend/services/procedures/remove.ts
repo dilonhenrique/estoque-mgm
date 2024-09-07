@@ -1,14 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { procedureRepo } from "@/backend/repositories/procedures";
 
 export default async function remove(
   productId: string
-): Promise<MutationResult<boolean>> {
+): Promise<ServiceResult<boolean>> {
   const deleted = await procedureRepo.remove(productId);
 
   if (deleted) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: deleted };
+  return { success: true, fieldErrors: {}, data: deleted };
 }

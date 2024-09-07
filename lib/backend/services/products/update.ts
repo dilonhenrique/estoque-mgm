@@ -4,23 +4,23 @@ import { z } from "zod";
 import { productRepo } from "@/backend/repositories/products";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { Product } from "@/types/schemas";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function update(
   id: string,
   product: FormData | AnyObject
-): Promise<MutationResult<Product | null>> {
+): Promise<ServiceResult<Product | null>> {
   await getSessionUserOrLogout();
 
   const data = prepareDataForZod(product);
   const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    return { success: false, errors: mapZodErrors(payload.error.errors) };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   const category_id = await resolveCategoryId(payload.data.category);
@@ -36,11 +36,10 @@ export default async function update(
   });
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, errors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 const schema = z.object({
-  id: z.string(),
   name: z.string().optional(),
   unit: z.string().optional(),
   stock: z.coerce.number().optional(),

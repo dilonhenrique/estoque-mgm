@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
@@ -20,10 +20,10 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   const [products, setProducts] = useState(service?.products);
   const [state, formAction] = useFormState(submitAction, {
     success: true,
-    errors: {},
-  } as MutationResult<Service>);
+    fieldErrors: {},
+  } as ServiceResult<Service>);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(status: ServiceResult, formData: FormData) {
     const payload = {
       ...Object.fromEntries(formData),
       products: products?.map((item) => ({ id: item.id, qty: item.qty })) ?? [],
@@ -58,8 +58,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         defaultValue={service?.name}
         isRequired
         className="w-full"
-        isInvalid={!!state.errors.name}
-        errorMessage={state.errors.name}
+        isInvalid={!!state.fieldErrors.name}
+        errorMessage={state.fieldErrors.name}
       />
 
       <div className="w-full">

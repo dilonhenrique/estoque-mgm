@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { Supplier } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
@@ -18,10 +18,10 @@ export default function SupplierForm({ supplier }: Props) {
   const router = useRouter();
   const [state, formAction] = useFormState(submitAction, {
     success: true,
-    errors: {},
-  } as MutationResult<Supplier>);
+    fieldErrors: {},
+  } as ServiceResult<Supplier>);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(status: ServiceResult, formData: FormData) {
     const response = supplier
       ? await supplierService.update(supplier.id, formData)
       : await supplierService.create(formData);
@@ -51,8 +51,8 @@ export default function SupplierForm({ supplier }: Props) {
         defaultValue={supplier?.name}
         isRequired
         className="w-full"
-        isInvalid={!!state.errors.name}
-        errorMessage={state.errors.name}
+        isInvalid={!!state.fieldErrors.name}
+        errorMessage={state.fieldErrors.name}
       />
 
       <Input
@@ -60,8 +60,8 @@ export default function SupplierForm({ supplier }: Props) {
         label="CNPJ do fornecedor"
         defaultValue={mask.cnpj(supplier?.cnpj)}
         className="w-full"
-        isInvalid={!!state.errors.cnpj}
-        errorMessage={state.errors.cnpj}
+        isInvalid={!!state.fieldErrors.cnpj}
+        errorMessage={state.fieldErrors.cnpj}
       />
 
       <Input
@@ -69,8 +69,8 @@ export default function SupplierForm({ supplier }: Props) {
         label="E-mail do fornecedor"
         defaultValue={supplier?.email}
         className="w-full"
-        isInvalid={!!state.errors.email}
-        errorMessage={state.errors.email}
+        isInvalid={!!state.fieldErrors.email}
+        errorMessage={state.fieldErrors.email}
       />
 
       <Input
@@ -78,8 +78,8 @@ export default function SupplierForm({ supplier }: Props) {
         label="Telefone do fornecedor"
         defaultValue={supplier?.phone}
         className="w-full"
-        isInvalid={!!state.errors.phone}
-        errorMessage={state.errors.phone}
+        isInvalid={!!state.fieldErrors.phone}
+        errorMessage={state.fieldErrors.phone}
       />
 
       <div className="w-full flex justify-end gap-4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { Procedure, ProductWithQty } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { Dispatch, SetStateAction } from "react";
@@ -11,7 +11,7 @@ import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
 
 type ProcedureFormProps = {
   procedure?: Partial<Procedure>;
-  formState: MutationResult<Procedure | null>;
+  formState: ServiceResult<Procedure | null>;
   productState: [ProductWithQty[], Dispatch<SetStateAction<ProductWithQty[]>>];
   nameState: [string, Dispatch<SetStateAction<string>>];
 };
@@ -34,8 +34,8 @@ export default function ProcedureDetailsForm({
         className="w-60 grow"
         value={name}
         onValueChange={setName}
-        isInvalid={!!formState.errors.customer_id}
-        errorMessage={formState.errors.customer_id}
+        isInvalid={!!formState.fieldErrors.customer_id}
+        errorMessage={formState.fieldErrors.customer_id}
         isDisabled={procedure?.done}
       />
 
@@ -46,8 +46,8 @@ export default function ProcedureDetailsForm({
         allowsCustomValue
         defaultSelectedKey={procedure?.customer?.id}
         className="w-60 grow"
-        isInvalid={!!formState.errors.customer_id}
-        errorMessage={formState.errors.customer_id}
+        isInvalid={!!formState.fieldErrors.customer_id}
+        errorMessage={formState.fieldErrors.customer_id}
         isDisabled={procedure?.done}
       />
 
@@ -56,8 +56,8 @@ export default function ProcedureDetailsForm({
         label="Data do procedimento"
         defaultValue={procedure?.scheduled_for}
         className="w-60 grow"
-        isInvalid={!!formState.errors.scheduled_for}
-        errorMessage={formState.errors.scheduled_for}
+        isInvalid={!!formState.fieldErrors.scheduled_for}
+        errorMessage={formState.fieldErrors.scheduled_for}
         isDisabled={procedure?.done}
         granularity="minute"
         hideTimeZone

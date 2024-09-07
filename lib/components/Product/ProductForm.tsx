@@ -3,7 +3,7 @@
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { productService } from "@/backend/services/products";
 import { Product } from "@/types/schemas";
 import { toast } from "sonner";

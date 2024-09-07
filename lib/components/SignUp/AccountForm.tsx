@@ -6,14 +6,14 @@ import {
   CardHeader,
   SelectItem,
 } from "@nextui-org/react";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { DocType } from "@prisma/client";
 import Select from "../ui/forms/atoms/Select/Select";
 import Input from "../ui/forms/atoms/Input/Input";
 
 type IProps = {
   title: string;
-  formState: MutationResult;
+  formState: ServiceResult;
 };
 
 export default function AccountForm({ title, formState }: IProps) {
@@ -27,15 +27,15 @@ export default function AccountForm({ title, formState }: IProps) {
           name="fullname"
           label="Nome completo"
           className="col-span-6"
-          isInvalid={!!formState.errors.fullname}
-          errorMessage={formState.errors.fullname}
+          isInvalid={!!formState.fieldErrors.fullname}
+          errorMessage={formState.fieldErrors.fullname}
         />
         <Input
           name="professional_number"
           label="Número CRBM"
           className="col-span-6"
-          isInvalid={!!formState.errors.professional_number}
-          errorMessage={formState.errors.professional_number}
+          isInvalid={!!formState.fieldErrors.professional_number}
+          errorMessage={formState.fieldErrors.professional_number}
         />
         <Select
           name="document_type"
@@ -43,8 +43,8 @@ export default function AccountForm({ title, formState }: IProps) {
           items={Object.values(DocType).map((value) => ({ value }))}
           defaultSelectedKeys={[DocType.CPF]}
           className="col-span-4"
-          isInvalid={!!formState.errors.document_type}
-          errorMessage={formState.errors.document_type}
+          isInvalid={!!formState.fieldErrors.document_type}
+          errorMessage={formState.fieldErrors.document_type}
         >
           {(item) => <SelectItem key={item.value}>{item.value}</SelectItem>}
         </Select>
@@ -52,8 +52,8 @@ export default function AccountForm({ title, formState }: IProps) {
           name="document"
           label="CPF/CNPJ"
           className="col-span-8"
-          isInvalid={!!formState.errors.document}
-          errorMessage={formState.errors.document}
+          isInvalid={!!formState.fieldErrors.document}
+          errorMessage={formState.fieldErrors.document}
         />
       </CardBody>
     </Card>

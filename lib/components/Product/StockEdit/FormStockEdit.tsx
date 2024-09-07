@@ -5,7 +5,7 @@ import IncreaserInput from "../../ui/forms/atoms/IncreaserInput/IncreaserInput";
 import { useState } from "react";
 import { numberColor } from "@/utils/maps/numberColor";
 import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
+import { ServiceResult } from "@/types/types";
 import { logService } from "@/backend/services/logs";
 import { toast } from "sonner";
 import { SubmitButton } from "@/components/ui/FormButton";
@@ -27,10 +27,10 @@ export default function FormStockEdit({
 
   const [state, formAction] = useFormState(submitAction, {
     success: true,
-    errors: {},
-  } as MutationResult);
+    fieldErrors: {},
+  } as ServiceResult);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(status: ServiceResult, formData: FormData) {
     const data = {
       ...Object.fromEntries(formData),
       qty: String(qty),
@@ -55,8 +55,8 @@ export default function FormStockEdit({
         label="Motivo"
         labelPlacement="outside"
         placeholder="Selecione o motivo"
-        isInvalid={!!state.errors.cause}
-        errorMessage={state.errors.cause}
+        isInvalid={!!state.fieldErrors.cause}
+        errorMessage={state.fieldErrors.cause}
         items={Object.values(LogCause).map((item) => ({
           value: item,
           label: locale.logCause(item),

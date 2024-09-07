@@ -1,23 +1,19 @@
 "use server";
 
 import { object, string } from "zod";
-import { AnyObject, MutationResult } from "@/types/types";
+import { AnyObject, ServiceResult } from "@/types/types";
 import { CredentialError, signIn } from "@/auth";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function login(
   formData: FormData | AnyObject
-): Promise<MutationResult<string | undefined | null>> {
+): Promise<ServiceResult<string | undefined | null>> {
   const data = prepareDataForZod(formData);
   const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    return {
-      success: false,
-      errors: mapZodErrors(payload.error.errors),
-      status: 400,
-    };
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
   try {
@@ -29,21 +25,13 @@ export default async function login(
 
     if (response?.error) throw new CredentialError();
 
-    return { success: true, errors: {}, data: response?.url, status: 200 };
+    return serviceResult.success(response.url, "Logado com sucesso!");
   } catch (e) {
     if (e instanceof CredentialError) {
-      return {
-        success: false,
-        errors: { message: "Não autorizado" },
-        status: 401,
-      };
+      return serviceResult.error(401, "Não autorizado");
     }
 
-    return {
-      success: false,
-      errors: { message: "Erro interno" },
-      status: 500,
-    };
+    return serviceResult.error();
   }
 }
 

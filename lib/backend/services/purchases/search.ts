@@ -1,6 +1,6 @@
 "use server";
 
-import { MutationResult, SearchList } from "@/types/types";
+import { ServiceResult, SearchList } from "@/types/types";
 import { Prisma } from "@prisma/client";
 import { Purchase } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
@@ -8,7 +8,7 @@ import { purchaseRepo } from "@/backend/repositories/purchases";
 
 export default async function search(
   query?: Query
-): Promise<MutationResult<SearchList<Purchase>>> {
+): Promise<ServiceResult<SearchList<Purchase>>> {
   const user = await getSessionUserOrLogout();
 
   const search = {
@@ -27,7 +27,7 @@ export default async function search(
 
   const response = await purchaseRepo.search(user.account_id, find);
 
-  return { success: true, errors: {}, data: response };
+  return { success: true, fieldErrors: {}, data: response };
 }
 
 type Query = {
