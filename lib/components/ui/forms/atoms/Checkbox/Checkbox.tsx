@@ -1,5 +1,5 @@
-import { globalConfig } from "@/utils/consts/global.config";
-import { Input as NInput, InputProps } from "@nextui-org/react";
+import React from "react";
+import { Checkbox as NCheckbox, CheckboxProps } from "@nextui-org/react";
 import {
   Controller,
   ControllerProps,
@@ -8,7 +8,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-type NormalProps = InputProps;
+type NormalProps = CheckboxProps;
 
 type ControlledProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -17,7 +17,7 @@ type ControlledProps<
 
 type Props = NormalProps | ControlledProps;
 
-export default function Input(props: Props) {
+export default function Checkbox(props: Props) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -25,35 +25,33 @@ export default function Input(props: Props) {
     const fieldErros = methods.formState.errors[name];
 
     return (
-      <ControlledInput
+      <ControlledCheckbox
         name={name}
         control={methods.control}
         isInvalid={!!fieldErros?.message}
-        errorMessage={fieldErros?.message?.toString()}
+        // errorMessage={fieldErros?.message?.toString()}
         {...rest}
       />
     );
   }
 
-  return <NormalInput {...props} />;
+  return <NormalCheckbox {...props} />;
 }
 
-function ControlledInput({ name, control, ...rest }: ControlledProps) {
+function ControlledCheckbox({ name, control, ...rest }: ControlledProps) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalInput {...rest} {...field} isDisabled={disabled} />
+        <NormalCheckbox {...rest} {...field} isDisabled={disabled} />
       )}
     />
   );
 }
 
-function NormalInput(props: NormalProps) {
-  const { variant, labelPlacement } = globalConfig.input;
+function NormalCheckbox(props: NormalProps) {
+  // const { variant, labelPlacement } = globalConfig.input;
 
-  return (
-    <NInput variant={variant} labelPlacement={labelPlacement} {...props} />
-  );
+  return <NCheckbox {...props} />;
 }

@@ -3,6 +3,7 @@ import { Purchase } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { LogInputForAction, parseLogForAction } from "./log";
 import { parseSupplier, SupplierInput } from "./supplier";
+import { parseDate } from "./dateToLocal";
 
 export type PurchaseInput = PrismaPurchase & {
   supplier: SupplierInput | null;
@@ -19,7 +20,7 @@ export function parsePurchase(payload: PurchaseInput): Purchase {
       qty: purchaseItem.qty,
       cost: purchaseItem.cost ?? undefined,
     })),
-    created_at: payload.created_at,
+    created_at: parseDate(payload.created_at),
     logs: payload.logs?.map((item) => parseLogForAction(item)),
   };
 }

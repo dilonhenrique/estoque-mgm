@@ -5,22 +5,20 @@ import { productRepo } from "@/backend/repositories/products";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { MutationResult } from "@/types/types";
-import { isEmpty, omitBy } from "lodash";
 import { Product } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function create(
-  product: FormData
+  product: FormData | Product
 ): Promise<MutationResult<Product | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = {
-    ...(product instanceof FormData ? Object.fromEntries(product) : product),
-    account_id: user.account_id,
-  };
+  const data =
+    product instanceof FormData ? Object.fromEntries(product) : product;
 
-  const payload = schema.safeParse(omitBy(data, isEmpty));
+  const payload = schema.safeParse(sanitizeEmptyValues(data));
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
@@ -29,7 +27,7 @@ export default async function create(
   const category_id = await resolveCategoryId(payload.data.category);
 
   const response = await productRepo.create({
-    account_id: payload.data.account_id,
+    account_id: user.account_id,
     name: payload.data.name,
     category_id,
     code: payload.data.code,
@@ -44,7 +42,6 @@ export default async function create(
 }
 
 const schema = z.object({
-  account_id: z.string().uuid(),
   name: z.string(),
   unit: z.string(),
   stock: z.coerce.number({ message: "Required" }),

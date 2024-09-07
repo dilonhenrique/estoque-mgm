@@ -6,7 +6,7 @@ export default async function SingleProductPage() {
     <main className="p-8">
       <div className="w-full flex flex-col gap-4 justify-between">
         <h2>Cadastrar produto</h2>
-        <ProductForm actionFn={productService.create} />
+        <ProductForm />
       </div>
     </main>
   );

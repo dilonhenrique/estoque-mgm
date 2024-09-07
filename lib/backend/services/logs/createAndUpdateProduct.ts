@@ -6,9 +6,9 @@ import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { z } from "zod";
 import { LogCause } from "@prisma/client";
-import { isEmpty, omitBy } from "lodash";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { revalidatePath } from "next/cache";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function createAndUpdateProduct(
   formData: FormData | { [k: string]: any }
@@ -18,7 +18,7 @@ export default async function createAndUpdateProduct(
   const data =
     formData instanceof FormData ? Object.fromEntries(formData) : formData;
 
-  const payload = schema.safeParse(omitBy(data, isEmpty));
+  const payload = schema.safeParse(sanitizeEmptyValues(data));
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };

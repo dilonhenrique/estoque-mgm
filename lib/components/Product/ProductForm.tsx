@@ -14,60 +14,60 @@ import { Pencil } from "lucide-react";
 import ModalStockEdit from "./StockEdit/ModalStockEdit";
 import { useState } from "react";
 import Input from "../ui/forms/atoms/Input/Input";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { z } from "zod";
 
-type ProductFormProps = {
+type Props = {
   product?: Product;
-  actionFn: (product: FormData) => Promise<MutationResult<Product | null>>;
 };
 
-export default function ProductForm({ product, actionFn }: ProductFormProps) {
+const schema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  unit: z.string().optional(),
+  stock: z.coerce.number().optional(),
+  minStock: z.coerce.number().optional(),
+  code: z.string().optional(),
+  category: z.string().optional(),
+  img_url: z.string().optional(),
+});
+
+export default function ProductForm({ product }: Props) {
   const router = useRouter();
   const [isStockOpen, setStockOpen] = useState(false);
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    errors: {},
-  } as MutationResult);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
-    const response = await actionFn(formData);
-
-    if (response.success) {
-      toast.success("Salvo com sucesso!");
-
-      if (!product) {
-        router.push("/produtos");
-      }
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
-
-    return response;
+  async function submit(formData: FormData | Product) {
+    return product
+      ? await productService.update(product.id, formData)
+      : await productService.create(formData);
   }
 
   return (
     <>
-      <form
+      <Form
         className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-        action={formAction}
-        noValidate
+        schema={schema}
+        defaultValues={product}
+        action={submit}
+        onSuccess={() => {
+          toast.success("Salvo com sucesso!");
+          if (!product) router.push("/produtos");
+        }}
+        onError={() => {
+          toast.error("Confira os campos e tente novamente");
+        }}
       >
-        <Input name="id" defaultValue={product?.id} className="hidden" />
-
         <Input
           name="name"
           label="Nome do produto"
-          defaultValue={product?.name}
           isRequired
           className="w-full"
-          isInvalid={!!state.errors.name}
-          errorMessage={state.errors.name}
         />
 
         {product ? (
           <Input
             label="Quantidade atual"
             className="w-60 grow"
-            defaultValue={product.stock.toString()}
             isReadOnly
             endContent={
               <Button
@@ -86,46 +86,23 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
             name="stock"
             label="Quantidade atual"
             min={0}
-            defaultValue="0"
             isRequired
-            className="w-44 grow"
-            isInvalid={!!state.errors.stock}
-            errorMessage={state.errors.stock}
+            className="sm:w-48"
           />
         )}
-
-        {/* <Select
-        name="unit"
-        label="Unidade de medida"
-        defaultSelectedKeys={product?.unit ? [product?.unit] : [units[0]]}
-        isRequired
-        className="w-60 grow"
-        isInvalid={!!state.errors.unit}
-        errorMessage={state.errors.unit}
-      >
-        {units.map((unit) => (
-          <SelectItem value={unit} key={unit} title={unit}></SelectItem>
-        ))}
-      </Select> */}
 
         <Input
           name="unit"
           label="Unidade de medida"
-          defaultValue={product?.unit}
           isRequired
           className="w-60 grow"
-          isInvalid={!!state.errors.unit}
-          errorMessage={state.errors.unit}
         />
 
         <Input
           name="minStock"
           label="Estoque mínimo"
-          defaultValue={product?.minStock?.toString()}
           type="number"
           className="w-60 grow"
-          isInvalid={!!state.errors.minStock}
-          errorMessage={state.errors.minStock}
         />
 
         <CategoryAutocomplete
@@ -133,20 +110,10 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
           label="Categoria"
           placeholder="Escolha ou digite uma categoria"
           allowsCustomValue
-          defaultSelectedKey={product?.category?.id}
           className="w-60 grow"
-          isInvalid={!!state.errors.category_id}
-          errorMessage={state.errors.category_id}
         />
 
-        <Input
-          name="code"
-          label="Código do produto"
-          defaultValue={product?.code}
-          className="w-60 grow"
-          isInvalid={!!state.errors.code}
-          errorMessage={state.errors.code}
-        />
+        <Input name="code" label="Código do produto" className="w-60 grow" />
 
         <div className="w-full flex justify-end gap-4">
           {product && (
@@ -168,7 +135,7 @@ export default function ProductForm({ product, actionFn }: ProductFormProps) {
             {product ? "Atualizar" : "Cadastrar"}
           </SubmitButton>
         </div>
-      </form>
+      </Form>
 
       {product && (
         <ModalStockEdit

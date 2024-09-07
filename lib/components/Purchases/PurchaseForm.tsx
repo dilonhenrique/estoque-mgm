@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-import { MutationResult } from "@/types/types";
 import { Purchase } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
@@ -10,25 +8,44 @@ import ProductSelector from "../ProductSelector/ProductSelector";
 import { useState } from "react";
 import { purchaseService } from "@/backend/services/purchases";
 import SupplierAutocomplete from "../ui/forms/custom/SupplierAutocomplete/SupplierAutocomplete";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { z } from "zod";
 
 type Props = {
   purchase?: Purchase;
 };
 
+const schema = z.object({
+  // account_id: z.string().uuid(),
+  supplier: z
+    .object({
+      id: z.string().uuid().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
+  products: z
+    .array(
+      z.object({
+        qty: z.coerce.number(),
+        id: z.string().uuid(),
+        cost: z.coerce.number().optional(),
+      })
+    )
+    .optional(),
+});
+
 export default function PurchaseForm({ purchase }: Props) {
   const router = useRouter();
   const [products, setProducts] = useState(purchase?.items ?? []);
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    errors: {},
-  } as MutationResult<Purchase>);
 
   const [refreshItems, setRefreshItems] = useState(true);
   const refreshProducts = () => setRefreshItems(!refreshItems);
 
-  async function submitAction(status: MutationResult, formData: FormData) {
+  async function submitAction(formData: FormData | Purchase) {
+    const data =
+      formData instanceof FormData ? Object.fromEntries(formData) : formData;
     const payload = {
-      ...Object.fromEntries(formData),
+      ...data,
       products:
         products?.map((item) => ({
           id: item.id,
@@ -37,40 +54,36 @@ export default function PurchaseForm({ purchase }: Props) {
         })) ?? [],
     };
 
-    const response = purchase
+    return purchase
       ? await purchaseService.update(purchase.id, payload)
       : await purchaseService.create(payload);
-
-    if (response.success) {
-      toast.success("Salvo com sucesso!");
-
-      if (!purchase) {
-        router.push("/compras");
-      } else {
-        refreshProducts();
-      }
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
-
-    return response;
   }
 
   return (
-    <form
+    <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      action={formAction}
-      noValidate
+      schema={schema}
+      defaultValues={purchase}
+      action={submitAction}
+      onSuccess={() => {
+        toast.success("Salvo com sucesso!");
+
+        if (!purchase) {
+          router.push("/compras");
+        } else {
+          refreshProducts();
+        }
+      }}
+      onError={() => {
+        toast.error("Confira os campos e tente novamente");
+      }}
     >
       <SupplierAutocomplete
-        name="supplier_id"
+        name="supplier.id"
         label="Fornecedor"
         placeholder="Escolha um fornecedor"
         allowsCustomValue
-        defaultSelectedKey={purchase?.supplier?.id}
         className="w-60 grow"
-        isInvalid={!!state.errors.customer_id}
-        errorMessage={state.errors.customer_id}
       />
 
       <div className="w-full">
@@ -102,6 +115,6 @@ export default function PurchaseForm({ purchase }: Props) {
           {purchase ? "Atualizar" : "Cadastrar"}
         </SubmitButton>
       </div>
-    </form>
+    </Form>
   );
 }

@@ -1,6 +1,5 @@
 "use server";
 
-import { isEmpty, omitBy } from "lodash";
 import { z } from "zod";
 import { productRepo } from "@/backend/repositories/products";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
@@ -9,24 +8,23 @@ import { MutationResult } from "@/types/types";
 import { Product } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function update(
-  product: FormData
+  id: string,
+  product: FormData | Product
 ): Promise<MutationResult<Product | null>> {
-  const user = await getSessionUserOrLogout();
+  await getSessionUserOrLogout();
 
-  const data = {
-    ...(product instanceof FormData ? Object.fromEntries(product) : product),
-    account_id: user.account_id,
-  };
+  const data =
+    product instanceof FormData ? Object.fromEntries(product) : product;
 
-  const payload = schema.safeParse(omitBy(data, isEmpty));
+  const payload = schema.safeParse(sanitizeEmptyValues(data));
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
   }
 
-  const id = payload.data?.id;
   const category_id = await resolveCategoryId(payload.data.category);
 
   const response = await productRepo.update(id, {
@@ -45,7 +43,6 @@ export default async function update(
 
 const schema = z.object({
   id: z.string(),
-  account_id: z.string().uuid(),
   name: z.string().optional(),
   unit: z.string().optional(),
   stock: z.coerce.number().optional(),

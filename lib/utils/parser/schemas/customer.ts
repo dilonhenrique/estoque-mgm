@@ -1,6 +1,7 @@
 import { Address, Customer as PrismaCustomer } from "@prisma/client";
 import { Customer } from "@/types/schemas";
 import { parseAddress } from "./address";
+import { parseDate } from "./dateToLocal";
 
 export type CustomerInput = PrismaCustomer & {
   address: Address | null;
@@ -17,7 +18,7 @@ export function parseCustomer(payload: CustomerInput | null) {
     img_url: payload.img_url ?? undefined,
     email: payload.email ?? undefined,
     phone: payload.phone ?? undefined,
-    birthday: payload.birthday ?? undefined,
+    birthday: parseDate(payload.birthday),
     address: parseAddress(payload.address),
   };
 

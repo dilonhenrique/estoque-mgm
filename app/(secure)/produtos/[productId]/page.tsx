@@ -20,7 +20,7 @@ export default async function SingleProductPage({
           <span className="font-light">editar produto</span>
         </h2>
 
-        <ProductForm product={product.data} actionFn={productService.update} />
+        <ProductForm product={product.data} />
       </div>
     </main>
   );

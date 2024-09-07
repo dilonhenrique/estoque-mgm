@@ -4,12 +4,12 @@ import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { MutationResult } from "@/types/types";
-import { isEmpty, omitBy } from "lodash";
 import { Procedure } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function update(
   id: string,
@@ -21,7 +21,7 @@ export default async function update(
     product instanceof FormData ? Object.fromEntries(product) : product;
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
-  const payload = schema.safeParse(omitBy(data, isEmpty));
+  const payload = schema.safeParse(sanitizeEmptyValues(data));
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };

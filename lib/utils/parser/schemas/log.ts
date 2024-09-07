@@ -2,6 +2,7 @@ import { ProductLog as PrismaLog } from "@prisma/client";
 import { LogComplete, LogWithAction, LogWithProduct } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { parseProcedure, ProcedureInput } from "./procedure";
+import { parseDate } from "./dateToLocal";
 
 export type LogInputForAction = PrismaLog & {
   product: ProductInput;
@@ -14,7 +15,7 @@ export function parseLogForAction(payload: LogInputForAction | null) {
 
   const parsed: LogWithProduct = {
     id: payload.id,
-    date: payload.created_at,
+    date: parseDate(payload.created_at),
     qty: payload.qty,
     product: parseProduct(payload.product),
   };
@@ -33,7 +34,7 @@ export function parseLogForProduct(payload: LogInputForProduct | null) {
 
   const parsed: LogWithAction = {
     id: payload.id,
-    date: payload.created_at,
+    date: parseDate(payload.created_at),
     qty: payload.qty,
     cause: payload.cause,
     procedure: payload.procedure
@@ -53,7 +54,7 @@ export function parseLogComplete(payload: LogInputComplete | null) {
 
   const parsed: LogComplete = {
     id: payload.id,
-    date: payload.created_at,
+    date: parseDate(payload.created_at),
     qty: payload.qty,
     cause: payload.cause,
     product: parseProduct(payload.product),

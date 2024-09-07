@@ -1,39 +1,132 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { globalConfig } from "@/utils/consts/global.config";
 import {
   Autocomplete as NAutocomplete,
   AutocompleteProps,
 } from "@nextui-org/react";
-import { useState } from "react";
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  get,
+  useFormContext,
+  UseFormRegister,
+} from "react-hook-form";
+import { fakeEvent } from "@/utils/form/fakeEvent";
 
 type Key = string | number;
-type Props<T extends object> = AutocompleteProps<T>;
 
-export default function Autocomplete<T extends object>({
+type NormalProps<T extends object> = AutocompleteProps<T>;
+
+type ControlledProps<
+  U extends object,
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = NormalProps<U> &
+  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
+    register: UseFormRegister<FieldValues>;
+  };
+
+type Props<U extends object> = NormalProps<U> | ControlledProps<U>;
+
+export default function Autocomplete<T extends object>(props: Props<T>) {
+  const { name, ...rest } = props;
+  const methods = useFormContext();
+
+  if (methods?.control && name) {
+    const fieldErros = methods.formState.errors[name];
+
+    return (
+      <ControlledAutocomplete
+        name={name}
+        control={methods.control}
+        register={methods.register}
+        isInvalid={!!fieldErros?.message}
+        errorMessage={fieldErros?.message?.toString()}
+        {...rest}
+      />
+    );
+  }
+
+  return <NormalAutocomplete {...props} />;
+}
+
+function ControlledAutocomplete<T extends object>({
+  name,
+  control,
+  register,
+  selectedKey,
+  defaultSelectedKey,
+  onSelectionChange = () => {},
+  ...rest
+}: ControlledProps<T>) {
+  const typedInputName = useMemo(() => generateInputLabelName(name), [name]);
+  const _defaultSelectedKey = useMemo(
+    () => defaultSelectedKey ?? get(control?._defaultValues, name),
+    [name, defaultSelectedKey]
+  );
+  const inputProps = register(name);
+
+  const [value, setValue] = useState<Key | null | undefined>(
+    selectedKey ?? _defaultSelectedKey
+  );
+
+  function syncValues(key: Key | null) {
+    onSelectionChange(key);
+    setValue(key);
+    inputProps.onChange(fakeEvent(name, key));
+  }
+
+  return (
+    <>
+      <Controller
+        name={typedInputName}
+        control={control}
+        render={({ field: { disabled, onChange, ...field } }) => (
+          <RawAutocomplete
+            selectedKey={selectedKey}
+            onSelectionChange={syncValues}
+            isDisabled={disabled}
+            onInputChange={(val) => onChange(fakeEvent(typedInputName, val))}
+            defaultSelectedKey={_defaultSelectedKey}
+            {...rest}
+            {...field}
+          />
+        )}
+      />
+      <input
+        className="hidden"
+        value={value === undefined || value === null ? "" : String(value)}
+        {...inputProps}
+      />
+    </>
+  );
+}
+
+function NormalAutocomplete<T extends object>({
   name,
   selectedKey,
   onSelectionChange = () => {},
   ...props
-}: Props<T>) {
-  const { variant, labelPlacement } = globalConfig.input;
+}: NormalProps<T>) {
   const [value, setValue] = useState<Key | null | undefined>(
     selectedKey ?? props.defaultSelectedKey
   );
 
-  function onChange(key: Key | null) {
+  function syncValues(key: Key | null) {
     onSelectionChange(key);
     setValue(key);
   }
 
   return (
     <>
-      <NAutocomplete
-        name={`labeled_${name}`}
+      <RawAutocomplete
+        name={`${name}_name`}
         selectedKey={selectedKey}
-        onSelectionChange={onChange}
-        variant={variant}
-        labelPlacement={labelPlacement}
+        onSelectionChange={syncValues}
         {...props}
       />
       <input
@@ -44,4 +137,26 @@ export default function Autocomplete<T extends object>({
       />
     </>
   );
+}
+
+function RawAutocomplete<T extends object>(props: AutocompleteProps<T>) {
+  const { variant, labelPlacement } = globalConfig.input;
+
+  return (
+    <>
+      <NAutocomplete
+        variant={variant}
+        labelPlacement={labelPlacement}
+        {...props}
+      />
+    </>
+  );
+}
+
+function generateInputLabelName(name: string) {
+  const lastDotIndex = name.lastIndexOf(".");
+  if (lastDotIndex > 0) {
+    return `${name.slice(0, lastDotIndex)}.name`;
+  }
+  return `${name}_name`;
 }

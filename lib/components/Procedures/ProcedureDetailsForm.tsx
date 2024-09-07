@@ -1,14 +1,13 @@
 "use client";
 
-import { Checkbox } from "@nextui-org/react";
 import { MutationResult } from "@/types/types";
 import { Procedure, ProductWithQty } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { Dispatch, SetStateAction } from "react";
 import CustomerAutocomplete from "../ui/forms/custom/CustomerAutocomplete/CustomerAutocomplete";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import Input from "../ui/forms/atoms/Input/Input";
-import DatePicker from "../ui/forms/atoms/DatePicker/Input";
+import Checkbox from "../ui/forms/atoms/Checkbox/Checkbox";
+import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
 
 type ProcedureFormProps = {
   procedure?: Partial<Procedure>;
@@ -55,11 +54,7 @@ export default function ProcedureDetailsForm({
       <DatePicker
         name="scheduled_for"
         label="Data do procedimento"
-        defaultValue={
-          procedure?.scheduled_for
-            ? parseAbsoluteToLocal(procedure.scheduled_for.toISOString())
-            : undefined
-        }
+        defaultValue={procedure?.scheduled_for}
         className="w-60 grow"
         isInvalid={!!formState.errors.scheduled_for}
         errorMessage={formState.errors.scheduled_for}

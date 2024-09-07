@@ -1,16 +1,22 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
 import { Button, ButtonProps } from "@nextui-org/react";
-import { useFormStatus } from "react-dom";
 
 export default function FormButton(props: ButtonProps) {
-  const { pending } = useFormStatus();
+  const methods = useFormContext();
 
-  return <Button disabled={pending} {...props} />;
+  return <Button isDisabled={methods?.formState.isSubmitting} {...props} />;
 }
 
 export function SubmitButton(props: ButtonProps) {
-  const { pending } = useFormStatus();
+  const methods = useFormContext();
 
-  return <Button isLoading={pending} type="submit" {...props} />;
+  return (
+    <Button
+      isLoading={methods?.formState.isSubmitting}
+      type="submit"
+      {...props}
+    />
+  );
 }

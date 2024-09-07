@@ -1,6 +1,5 @@
 "use server";
 
-import { isEmpty, omitBy } from "lodash";
 import { z } from "zod";
 import { MutationResult } from "@/types/types";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
@@ -9,11 +8,12 @@ import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function create(
   product: FormData
 ): Promise<MutationResult<Account>> {
-  const data = omitBy(Object.fromEntries(product), isEmpty);
+  const data = sanitizeEmptyValues(Object.fromEntries(product))
 
   const accountPayload = accountSchema.safeParse(data);
   const addressPayload = addressSchema.safeParse(data);

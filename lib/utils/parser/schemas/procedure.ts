@@ -8,6 +8,7 @@ import { Procedure } from "@/types/schemas";
 import { parseProduct, ProductInput } from "./product";
 import { CustomerInput, parseCustomer } from "./customer";
 import { LogInputForAction, parseLogForAction } from "./log";
+import { parseDate } from "./dateToLocal";
 
 export type ProcedureInput = PrismaProcedure & {
   service: Service | null;
@@ -29,8 +30,8 @@ export function parseProcedure(payload: ProcedureInput): Procedure {
       : undefined,
     confirmed_by_customer: payload.confirmed_by_customer,
     created_by: payload.created_by ?? undefined,
-    created_at: payload.created_at,
-    scheduled_for: payload.scheduled_for ?? undefined,
+    created_at: parseDate(payload.created_at),
+    scheduled_for: parseDate(payload.scheduled_for),
     done: payload.done,
     customer: payload.customer ? parseCustomer(payload.customer) : undefined,
     products: payload.productsOnProcedures.map((productOnProcedure) => ({

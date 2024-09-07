@@ -4,10 +4,10 @@ import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { MutationResult } from "@/types/types";
-import { isEmpty, omitBy } from "lodash";
 import { Customer } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { customerRepo } from "@/backend/repositories/customers";
+import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
 
 export default async function update(
   id: string,
@@ -18,7 +18,7 @@ export default async function update(
   const data =
     product instanceof FormData ? Object.fromEntries(product) : product;
 
-  const payload = schema.safeParse(omitBy(data, isEmpty));
+  const payload = schema.safeParse(sanitizeEmptyValues(data))
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
