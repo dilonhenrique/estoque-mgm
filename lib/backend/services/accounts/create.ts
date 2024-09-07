@@ -1,19 +1,19 @@
 "use server";
 
 import { z } from "zod";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { Account, DocType } from "@prisma/client";
 import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function create(
-  product: FormData
+  product: FormData | AnyObject
 ): Promise<MutationResult<Account>> {
-  const data = sanitizeEmptyValues(Object.fromEntries(product))
+  const data = prepareDataForZod(product);
 
   const accountPayload = accountSchema.safeParse(data);
   const addressPayload = addressSchema.safeParse(data);

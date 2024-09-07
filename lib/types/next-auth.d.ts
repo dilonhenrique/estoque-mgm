@@ -6,6 +6,7 @@ import NextAuth, {
 } from "next-auth";
 
 export interface ExtendedUser extends NextAuthUser {
+  id: string;
   account_id: string;
   img_url?: string | null;
   role: Role;

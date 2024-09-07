@@ -1,24 +1,22 @@
 "use server";
 
 import { logRepo } from "@/backend/repositories/logs";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { z } from "zod";
 import { LogCause } from "@prisma/client";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { revalidatePath } from "next/cache";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function createAndUpdateProduct(
-  formData: FormData | { [k: string]: any }
+  formData: FormData | AnyObject
 ): Promise<MutationResult<LogComplete>> {
   await getSessionUserOrLogout();
 
-  const data =
-    formData instanceof FormData ? Object.fromEntries(formData) : formData;
-
-  const payload = schema.safeParse(sanitizeEmptyValues(data));
+  const data = prepareDataForZod(formData);
+  const payload = schema.safeParse(data);
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };

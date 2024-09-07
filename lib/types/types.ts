@@ -1,5 +1,7 @@
 import { Sort } from "mongodb";
 
+export type AnyObject<T = any> = { [k: string]: T };
+
 export type MutationResult<T = any> = {
   errors: ZodErrorObject;
   status?: number;
@@ -14,7 +16,7 @@ export type MutationResult<T = any> = {
     }
 );
 
-export type ZodErrorObject = { [k: string]: string };
+export type ZodErrorObject = AnyObject<string>;
 
 export type SearchList<T = any> = {
   total: number;

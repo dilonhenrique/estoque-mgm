@@ -3,24 +3,22 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { Supplier } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { supplierRepo } from "@/backend/repositories/suppliers";
 import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringToOnlyNumber";
 import { validation } from "@/utils/validation";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function update(
   id: string,
-  supplier: FormData | { [k: string]: any }
+  supplier: FormData | AnyObject
 ): Promise<MutationResult<Supplier | null>> {
   await getSessionUserOrLogout();
 
-  const data =
-    supplier instanceof FormData ? Object.fromEntries(supplier) : supplier;
-
-  const payload = schema.safeParse(sanitizeEmptyValues(data));
+  const data = prepareDataForZod(supplier);
+  const payload = schema.safeParse(data);
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };

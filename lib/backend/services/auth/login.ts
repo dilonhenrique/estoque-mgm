@@ -1,32 +1,21 @@
 "use server";
 
-import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { object, string } from "zod";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { CredentialError, signIn } from "@/auth";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 
 export default async function login(
-  formData: FormData
+  formData: FormData | AnyObject
 ): Promise<MutationResult<string | undefined | null>> {
-  const email = formData.get("email");
-  const password = formData.get("password");
-
-  const payload = schema.safeParse({ email, password });
+  const data = prepareDataForZod(formData);
+  const payload = schema.safeParse(data);
 
   if (!payload.success) {
-    const email = payload.error.errors.find((item) =>
-      item.path.includes("email")
-    )?.message;
-    const password = payload.error.errors.find((item) =>
-      item.path.includes("password")
-    )?.message;
-
     return {
       success: false,
-      errors: {
-        ...(email ? { email } : {}),
-        ...(password ? { password } : {}),
-      },
+      errors: mapZodErrors(payload.error.errors),
       status: 400,
     };
   }

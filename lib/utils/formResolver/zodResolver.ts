@@ -2,7 +2,7 @@ import { ZodError, z } from "zod";
 import { Resolver } from "@hookform/resolvers/zod";
 import { toNestErrors, validateFieldsNatively } from "@hookform/resolvers";
 import { FieldError, FieldErrors, appendErrors } from "react-hook-form";
-import { sanitizeEmptyValues } from "../form/sanitizeEmptyValues";
+import { sanitizeEmptyValues } from "../parser/other/sanitizeEmptyValues";
 
 const isZodError = (error: any): error is ZodError =>
   Array.isArray(error?.errors);

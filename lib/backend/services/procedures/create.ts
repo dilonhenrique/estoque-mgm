@@ -3,27 +3,23 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { Procedure } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function create(
-  product: FormData | { [k: string]: any }
+  product: FormData | AnyObject
 ): Promise<MutationResult<Procedure | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data: { [k: string]: any } = {
-    ...(product instanceof FormData ? Object.fromEntries(product) : product),
-    account_id: user.account_id,
-    created_by: user.id,
-  };
+  const data = prepareDataForZod(product);
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
-  const payload = schema.safeParse(sanitizeEmptyValues(data));
+  const payload = schema.safeParse(data);
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
@@ -37,9 +33,9 @@ export default async function create(
   }
 
   const response = await procedureRepo.create({
+    account_id: user.account_id,
+    created_by: user.id,
     name: payload.data.name,
-    account_id: payload.data.account_id,
-    created_by: payload.data.created_by,
     service_id: payload.data.service_id,
     customer_id: payload.data.customer_id,
     scheduled_for: payload.data.scheduled_for,
@@ -53,8 +49,6 @@ export default async function create(
 
 const schema = z.object({
   name: z.string(),
-  account_id: z.string().uuid(),
-  created_by: z.string().uuid(),
   service_id: z.string().uuid().optional(),
   customer_id: z.string().uuid().optional(),
   labeled_customer_id: z.string().optional(),

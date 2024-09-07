@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { fakeEvent } from "@/utils/form/fakeEvent";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { globalConfig } from "@/utils/consts/global.config";
-import { parseDateToDateValue } from "@/utils/form/parseDateToDateValue";
+import { parseDateToDateValue } from "@/utils/parser/other/parseDateToDateValue";
 import {
   DatePicker as NDatePicker,
   DatePickerProps,

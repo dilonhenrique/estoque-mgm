@@ -3,30 +3,26 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { Service } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { serviceRepo } from "@/backend/repositories/services";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function create(
-  product: FormData | { [k: string]: any }
+  product: FormData | AnyObject
 ): Promise<MutationResult<Service | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = {
-    ...(product instanceof FormData ? Object.fromEntries(product) : product),
-    account_id: user.account_id,
-  };
-
-  const payload = schema.safeParse(sanitizeEmptyValues(data));
+  const data = prepareDataForZod(product);
+  const payload = schema.safeParse(data);
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
   }
 
   const response = await serviceRepo.create({
-    account_id: payload.data.account_id,
+    account_id: user.account_id,
     name: payload.data.name,
     products: payload.data.products,
   });
@@ -36,7 +32,6 @@ export default async function create(
 }
 
 const schema = z.object({
-  account_id: z.string().uuid(),
   name: z.string(),
   products: z.array(
     z.object({

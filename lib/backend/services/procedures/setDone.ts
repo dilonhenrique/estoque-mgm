@@ -3,21 +3,23 @@
 import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { MutationResult } from "@/types/types";
+import { AnyObject, MutationResult } from "@/types/types";
 import { Procedure } from "@/types/schemas";
 import { mapZodErrors } from "@/utils/parser/other/mapZodErrors";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
-import { sanitizeEmptyValues } from "@/utils/form/sanitizeEmptyValues";
+import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 
 export default async function setDone(
   id: string,
-  data: { [k: string]: any }
+  data: AnyObject
 ): Promise<MutationResult<Procedure | null>> {
   await getSessionUserOrLogout();
 
-  data.scheduled_for = sanitizeDate(data.scheduled_for);
-  const payload = schema.safeParse(sanitizeEmptyValues(data));
+  const preparedData = prepareDataForZod(data);
+  preparedData.scheduled_for = sanitizeDate(preparedData.scheduled_for);
+  
+  const payload = schema.safeParse(preparedData);
 
   if (!payload.success) {
     return { success: false, errors: mapZodErrors(payload.error.errors) };
