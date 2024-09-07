@@ -10,6 +10,7 @@ import { purchaseService } from "@/backend/services/purchases";
 import SupplierAutocomplete from "../ui/forms/custom/SupplierAutocomplete/SupplierAutocomplete";
 import { Form } from "../ui/forms/atoms/Form/Form";
 import { z } from "zod";
+import { purchaseAction } from "@/backend/actions/purchases";
 
 type Props = {
   purchase?: Purchase;
@@ -55,8 +56,8 @@ export default function PurchaseForm({ purchase }: Props) {
     };
 
     return purchase
-      ? await purchaseService.update(purchase.id, payload)
-      : await purchaseService.create(payload);
+      ? await purchaseAction.update(purchase.id, payload)
+      : await purchaseAction.create(payload);
   }
 
   return (
@@ -65,17 +66,16 @@ export default function PurchaseForm({ purchase }: Props) {
       schema={schema}
       defaultValues={purchase}
       action={submitAction}
-      onSuccess={() => {
-        toast.success("Salvo com sucesso!");
-
+      onSuccess={(res) => {
+        toast.success(res.message);
         if (!purchase) {
           router.push("/compras");
         } else {
           refreshProducts();
         }
       }}
-      onError={() => {
-        toast.error("Confira os campos e tente novamente");
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
       }}
     >
       <SupplierAutocomplete

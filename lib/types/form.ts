@@ -1,4 +1,4 @@
-import { ServiceResult } from "@/types/types";
+import { ActionResult } from "@/types/types";
 import {
   FieldValues,
   FormProps as OriginalFormProps,
@@ -6,9 +6,7 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 
-export type ResponseWithError =
-  | { response: ServiceResult; error?: undefined }
-  | { response?: ServiceResult; error: unknown };
+export type ResponseWithError = { response?: ActionResult; error?: unknown };
 
 export type FormProps<
   T extends FieldValues,
@@ -18,11 +16,11 @@ export type FormProps<
   "validateStatus" | "onError" | "onSuccess" | "action"
 > & {
   action?:
-    | ((formData: FormData | T) => ServiceResult)
-    | ((formData: FormData | T) => Promise<ServiceResult>);
-  validateResponse?: (response: ServiceResult) => boolean;
+    | ((formData: FormData | T) => ActionResult)
+    | ((formData: FormData | T) => Promise<ActionResult>);
+  validateResponse?: (response: ActionResult) => boolean;
+  onSuccess?: (res: ActionResult) => void;
   onError?: (res: ResponseWithError) => void;
-  onSuccess?: (res: ResponseWithError) => void;
   schema?: z.ZodType;
   defaultValues?: UseFormProps<T>["defaultValues"];
   useFormProps?: UseFormProps<T>;

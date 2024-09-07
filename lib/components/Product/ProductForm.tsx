@@ -16,6 +16,7 @@ import { useState } from "react";
 import Input from "../ui/forms/atoms/Input/Input";
 import { Form } from "../ui/forms/atoms/Form/Form";
 import { z } from "zod";
+import { productAction } from "@/backend/actions/products";
 
 type Props = {
   product?: Product;
@@ -38,8 +39,8 @@ export default function ProductForm({ product }: Props) {
 
   async function submit(formData: FormData | Product) {
     return product
-      ? await productService.update(product.id, formData)
-      : await productService.create(formData);
+      ? await productAction.update(product.id, formData)
+      : await productAction.create(formData);
   }
 
   return (
@@ -49,12 +50,12 @@ export default function ProductForm({ product }: Props) {
         schema={schema}
         defaultValues={product}
         action={submit}
-        onSuccess={() => {
-          toast.success("Salvo com sucesso!");
+        onSuccess={(res) => {
+          toast.success(res.message);
           if (!product) router.push("/produtos");
         }}
-        onError={() => {
-          toast.error("Confira os campos e tente novamente");
+        onError={(res) => {
+          if (res.response?.message) toast.error(res.response?.message);
         }}
       >
         <Input

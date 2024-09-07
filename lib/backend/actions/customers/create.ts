@@ -1,11 +1,13 @@
 "use server";
 
-import { AnyObject, ServiceResult } from "@/types/types";
+import { ActionResult, AnyObject } from "@/types/types";
 import { Customer } from "@/types/schemas";
 import { customerService } from "@/backend/services/customers";
+import { actionResult } from "@/utils/backend/actionResult";
 
 export default async function create(
   payload: FormData | AnyObject
-): Promise<ServiceResult<Customer | null>> {
-  return await customerService.create(payload);
+): Promise<ActionResult<Customer | null>> {
+  const response = await customerService.create(payload);
+  return actionResult(response);
 }

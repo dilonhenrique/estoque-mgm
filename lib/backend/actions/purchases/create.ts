@@ -1,11 +1,13 @@
 "use server";
 
-import { AnyObject, ServiceResult } from "@/types/types";
+import { ActionResult, AnyObject } from "@/types/types";
 import { Purchase } from "@/types/schemas";
 import { purchaseService } from "@/backend/services/purchases";
+import { actionResult } from "@/utils/backend/actionResult";
 
 export default async function create(
   payload: FormData | AnyObject
-): Promise<ServiceResult<Purchase | null>> {
-  return await purchaseService.create(payload);
+): Promise<ActionResult<Purchase | null>> {
+  const response = await purchaseService.create(payload);
+  return actionResult(response);
 }

@@ -25,7 +25,8 @@ function serviceResultFieldErrors<T = any>(
 ): ServiceResult<T> {
   return {
     success: false,
-    fieldErrors: mapZodErrors(errors),
+    // fieldErrors: mapZodErrors(errors),
+    fieldErrors: errors,
     message: "Confira os campos e tente novamente",
     status: 400,
   };
@@ -37,7 +38,8 @@ function serviceResultError<T = any>(
 ): ServiceResult<T> {
   return {
     success: false,
-    fieldErrors: {},
+    // fieldErrors: {},
+    fieldErrors: [],
     message: message ?? "Erro interno",
     status,
   };

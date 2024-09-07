@@ -1,4 +1,5 @@
 import { FieldError } from "react-hook-form";
+import { ZodIssue } from "zod";
 
 export type AnyObject<T = any> = { [k: string]: T };
 
@@ -18,7 +19,8 @@ export type ServiceResult<T = any> = {
     }
 );
 
-export type ZodErrorObject = AnyObject<string>;
+// export type ZodErrorObject = AnyObject<string>;
+export type ZodErrorObject = ZodIssue[];
 
 export type SearchList<T = any> = {
   total: number;

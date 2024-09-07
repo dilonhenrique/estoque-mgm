@@ -1,11 +1,12 @@
 import { FormProps } from "@/types/form";
 import { zodResolver } from "@/utils/formResolver/zodResolver";
 import { merge } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FieldValues,
   FormProvider,
   get,
+  Path,
   useForm,
   UseFormProps,
 } from "react-hook-form";
@@ -19,7 +20,11 @@ function Form<
     defaultValues,
     resolver: schema ? zodResolver(schema) : undefined,
   };
-  const methods = useForm<T>(merge(defaultFormProps, useFormProps));
+  const _options = useMemo(
+    () => merge(defaultFormProps, useFormProps),
+    [defaultFormProps, useFormProps]
+  );
+  const methods = useForm<T>(merge(_options));
 
   const [mounted, setMounted] = useState(false);
   const {
@@ -86,9 +91,14 @@ function Form<
           ) {
             hasError = true;
             onError && onError({ response });
+
+            for (const [name, error] of Object.entries(response.fieldErrors)) {
+              methods.setError(name as Path<T>, error);
+            }
+
             type = String(response.status);
           } else {
-            onSuccess && onSuccess({ response });
+            onSuccess && onSuccess(response);
           }
         } catch (error: unknown) {
           hasError = true;

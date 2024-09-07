@@ -9,6 +9,7 @@ import Input from "../ui/forms/atoms/Input/Input";
 import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
 import { z } from "zod";
 import { Form } from "../ui/forms/atoms/Form/Form";
+import { customerAction } from "@/backend/actions/customers";
 
 type Props = {
   customer?: Customer;
@@ -40,8 +41,8 @@ export default function CustomerForm({ customer }: Props) {
 
   async function submit(formData: FormData | Customer) {
     return customer
-      ? await customerService.update(customer.id, formData)
-      : await customerService.create(formData);
+      ? await customerAction.update(customer.id, formData)
+      : await customerAction.create(formData);
   }
 
   return (
@@ -50,18 +51,22 @@ export default function CustomerForm({ customer }: Props) {
       schema={schema}
       defaultValues={customer}
       action={submit}
-      onSuccess={() => {
-        toast.success("Salvo com sucesso!");
+      onSuccess={(res) => {
+        toast.success(res.message);
         if (!customer) router.push("/clientes");
       }}
-      onError={() => {
-        toast.error("Confira os campos e tente novamente");
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
       }}
     >
       <Input name="name" label="Nome do cliente" isRequired />
       <Input name="email" label="E-mail do cliente" />
       <Input name="phone" label="Telefone do cliente" />
-      <DatePicker name="birthday" label="Aniversário do cliente" granularity="day" />
+      <DatePicker
+        name="birthday"
+        label="Aniversário do cliente"
+        granularity="day"
+      />
 
       <div className="w-full flex justify-end gap-4">
         {customer && (
