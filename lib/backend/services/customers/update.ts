@@ -1,6 +1,5 @@
 "use server";
 
-import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
@@ -8,6 +7,7 @@ import { Customer } from "@/types/schemas";
 import { customerRepo } from "@/backend/repositories/customers";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
+import { customerSchema } from "@/utils/validation/schema/customer";
 
 export default async function update(
   id: string,
@@ -16,7 +16,7 @@ export default async function update(
   await getSessionUserOrLogout();
 
   const data = prepareDataForZod(product);
-  const payload = schema.safeParse(data);
+  const payload = customerSchema.create.safeParse(data);
 
   if (!payload.success) {
     return serviceResult.fieldErrors(payload.error.errors);
@@ -34,24 +34,3 @@ export default async function update(
   if (response) revalidatePath("/", "layout");
   return serviceResult.success(response);
 }
-
-const schema = z.object({
-  name: z.string().optional(),
-  email: z.string().email().optional(),
-  img_url: z.string().optional(),
-  birthday: z.coerce.date().optional(),
-  phone: z.string().optional(),
-  address: z
-    .object({
-      zip_code: z.string(),
-      country: z.string(),
-      state: z.string(),
-      city: z.string(),
-      neighborhood: z.string().optional(),
-      street: z.string(),
-      number: z.string(),
-      complement: z.string().optional(),
-    })
-    .optional()
-    .nullable(),
-});

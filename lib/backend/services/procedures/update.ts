@@ -1,6 +1,5 @@
 "use server";
 
-import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
@@ -10,6 +9,7 @@ import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
+import { procedureSchema } from "@/utils/validation/schema/procedure";
 
 export default async function update(
   id: string,
@@ -20,7 +20,7 @@ export default async function update(
   const data = prepareDataForZod(product);
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
-  const payload = schema.safeParse(data);
+  const payload = procedureSchema.update.safeParse(data);
 
   if (!payload.success) {
     return serviceResult.fieldErrors(payload.error.errors);
@@ -45,23 +45,3 @@ export default async function update(
   if (response) revalidatePath("/", "layout");
   return serviceResult.success(response);
 }
-
-const schema = z.object({
-  name: z.string().optional(),
-  service_id: z.string().uuid().optional(),
-  customer_id: z.string().uuid().optional(),
-  labeled_customer_id: z.string().optional(),
-  scheduled_for: z.coerce.date().optional(),
-  confirmed_by_customer: z
-    .literal("confirmed")
-    .optional()
-    .transform((val) => val === "confirmed"),
-  products: z
-    .array(
-      z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
-      })
-    )
-    .optional(),
-});

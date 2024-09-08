@@ -1,6 +1,5 @@
 "use server";
 
-import { z } from "zod";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
@@ -8,6 +7,7 @@ import { Service } from "@/types/schemas";
 import { serviceRepo } from "@/backend/repositories/services";
 import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
+import { serviceSchema } from "@/utils/validation/schema/service";
 
 export default async function update(
   id: string,
@@ -16,7 +16,7 @@ export default async function update(
   await getSessionUserOrLogout();
 
   const data = prepareDataForZod(product);
-  const payload = schema.safeParse(data);
+  const payload = serviceSchema.update.safeParse(data);
 
   if (!payload.success) {
     return serviceResult.fieldErrors(payload.error.errors);
@@ -30,16 +30,3 @@ export default async function update(
   if (response) revalidatePath("/", "layout");
   return serviceResult.success(response);
 }
-
-const schema = z.object({
-  // account_id: z.string().uuid(),
-  name: z.string(),
-  products: z
-    .array(
-      z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
-      })
-    )
-    .optional(),
-});

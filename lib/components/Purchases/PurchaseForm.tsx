@@ -9,31 +9,12 @@ import { useState } from "react";
 import { purchaseService } from "@/backend/services/purchases";
 import SupplierAutocomplete from "../ui/forms/custom/SupplierAutocomplete/SupplierAutocomplete";
 import { Form } from "../ui/forms/atoms/Form/Form";
-import { z } from "zod";
 import { purchaseAction } from "@/backend/actions/purchases";
+import { purchaseSchema } from "@/utils/validation/schema/purchase";
 
 type Props = {
   purchase?: Purchase;
 };
-
-const schema = z.object({
-  // account_id: z.string().uuid(),
-  supplier: z
-    .object({
-      id: z.string().uuid().optional(),
-      name: z.string().optional(),
-    })
-    .optional(),
-  products: z
-    .array(
-      z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
-        cost: z.coerce.number().optional(),
-      })
-    )
-    .optional(),
-});
 
 export default function PurchaseForm({ purchase }: Props) {
   const router = useRouter();
@@ -63,7 +44,7 @@ export default function PurchaseForm({ purchase }: Props) {
   return (
     <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      schema={schema}
+      schema={purchaseSchema}
       defaultValues={purchase}
       action={submitAction}
       onSuccess={(res) => {

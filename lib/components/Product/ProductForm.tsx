@@ -2,8 +2,6 @@
 
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-import { ServiceResult } from "@/types/types";
 import { productService } from "@/backend/services/products";
 import { Product } from "@/types/schemas";
 import { toast } from "sonner";
@@ -15,23 +13,12 @@ import ModalStockEdit from "./StockEdit/ModalStockEdit";
 import { useState } from "react";
 import Input from "../ui/forms/atoms/Input/Input";
 import { Form } from "../ui/forms/atoms/Form/Form";
-import { z } from "zod";
 import { productAction } from "@/backend/actions/products";
+import { productSchema } from "@/utils/validation/schema/product";
 
 type Props = {
   product?: Product;
 };
-
-const schema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  unit: z.string().optional(),
-  stock: z.coerce.number().optional(),
-  minStock: z.coerce.number().optional(),
-  code: z.string().optional(),
-  category: z.string().optional(),
-  img_url: z.string().optional(),
-});
 
 export default function ProductForm({ product }: Props) {
   const router = useRouter();
@@ -47,7 +34,7 @@ export default function ProductForm({ product }: Props) {
     <>
       <Form
         className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-        schema={schema}
+        schema={product ? productSchema.update : productSchema.create}
         defaultValues={product}
         action={submit}
         onSuccess={(res) => {

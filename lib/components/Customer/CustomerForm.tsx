@@ -7,34 +7,13 @@ import FormButton, { SubmitButton } from "../ui/FormButton";
 import { customerService } from "@/backend/services/customers";
 import Input from "../ui/forms/atoms/Input/Input";
 import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
-import { z } from "zod";
 import { Form } from "../ui/forms/atoms/Form/Form";
 import { customerAction } from "@/backend/actions/customers";
+import { customerSchema } from "@/utils/validation/schema/customer";
 
 type Props = {
   customer?: Customer;
 };
-
-const schema = z.object({
-  // account_id: z.string().uuid(),
-  name: z.string().min(1, "Nome é obrigatório"),
-  email: z.string().email().optional(),
-  img_url: z.string().optional(),
-  birthday: z.coerce.date().optional(),
-  phone: z.string().optional(),
-  address: z
-    .object({
-      zip_code: z.string(),
-      country: z.string(),
-      state: z.string(),
-      city: z.string(),
-      neighborhood: z.string().optional(),
-      street: z.string(),
-      number: z.string(),
-      complement: z.string().optional(),
-    })
-    .optional(),
-});
 
 export default function CustomerForm({ customer }: Props) {
   const router = useRouter();
@@ -48,7 +27,7 @@ export default function CustomerForm({ customer }: Props) {
   return (
     <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      schema={schema}
+      schema={customer ? customerSchema.update : customerSchema.create}
       defaultValues={customer}
       action={submit}
       onSuccess={(res) => {
