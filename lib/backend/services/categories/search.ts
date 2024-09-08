@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { ProductCategory } from "@/types/schemas";
 import { categoryRepo } from "@/backend/repositories/categories";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function search(
   query?: Query
@@ -13,7 +14,7 @@ export default async function search(
 
   const response = await categoryRepo.search(user.account_id, query);
 
-  return { success: true, fieldErrors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 type Query = {

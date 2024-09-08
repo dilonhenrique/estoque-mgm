@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { ServiceResult } from "@/types/types";
 import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function unsetDone(
   id: string
@@ -14,5 +15,5 @@ export default async function unsetDone(
   const response = await procedureRepo.unsetDone(id);
 
   if (response) revalidatePath("/", "layout");
-  return { success: true, fieldErrors: {}, data: response };
+  return serviceResult.success(response);
 }

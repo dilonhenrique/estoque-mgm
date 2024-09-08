@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { Service } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { serviceRepo } from "@/backend/repositories/services";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function search(
   query?: Query
@@ -24,7 +25,7 @@ export default async function search(
 
   const response = await serviceRepo.search(user.account_id, find);
 
-  return { success: true, fieldErrors: {}, data: response };
+  return serviceResult.success(response);
 }
 
 type Query = {

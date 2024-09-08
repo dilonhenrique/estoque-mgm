@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { ServiceResult } from "@/types/types";
 import { serviceRepo } from "@/backend/repositories/services";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function remove(
   productId: string
@@ -10,5 +11,5 @@ export default async function remove(
   const deleted = await serviceRepo.remove(productId);
 
   if (deleted) revalidatePath("/", "layout");
-  return { success: true, fieldErrors: {}, data: deleted };
+  return serviceResult.success(deleted);
 }

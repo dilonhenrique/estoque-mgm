@@ -2,12 +2,12 @@
 
 import { logRepo } from "@/backend/repositories/logs";
 import { ServiceResult } from "@/types/types";
-import { LogComplete } from "@/types/schemas";
+import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function removeAndUpdateProduct(
   id: string
-): Promise<ServiceResult<LogComplete>> {
+): Promise<ServiceResult<boolean>> {
   const response = await logRepo.removeAndUpdateProduct(id);
 
-  return { success: true, fieldErrors: {}, data: response };
+  return serviceResult.success(!!response);
 }
