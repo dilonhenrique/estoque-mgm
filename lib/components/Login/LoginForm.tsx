@@ -1,69 +1,42 @@
 "use client";
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Divider,
-} from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Divider } from "@nextui-org/react";
 import { SubmitButton } from "../ui/FormButton";
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-import { ServiceResult } from "@/types/types";
+import { AnyObject } from "@/types/types";
 import { toast } from "sonner";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { signIn } from "next-auth/react";
-import { authService } from "@/backend/services/auth";
 import Link from "next/link";
 import Input from "../ui/forms/atoms/Input/Input";
+import { loginSchema } from "@/utils/validation/schema/login";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { authAction } from "@/backend/actions/auth";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    fieldErrors: {},
-  } as ServiceResult);
 
-  async function submitAction(status: ServiceResult, formData: FormData) {
-    const response = await authService.login(formData);
-
-    if (!response.success) {
-      if (response.status === 400) {
-        toast.error("Confira os campos e tente novamente");
-      } else {
-        toast.error(response.fieldErrors.message ?? "Error");
-      }
-    } else {
-      toast.success("Logado com sucesso!");
-      router.push("/");
-    }
-
-    return response;
+  async function submit(formData: FormData | AnyObject) {
+    return await authAction.login(formData);
   }
 
   return (
-    <form
+    <Form
       className="w-full gap-4 flex flex-col max-w-lg"
-      action={formAction}
-      noValidate
+      schema={loginSchema}
+      action={submit}
+      onSuccess={(res) => {
+        toast.success(res.message);
+        router.push("/");
+      }}
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
+      }}
     >
       <Card>
         <CardBody className="gap-4">
-          <Input
-            name="email"
-            label="Email"
-            className="col-span-6"
-            isInvalid={!!state.fieldErrors.email}
-            errorMessage={state.fieldErrors.email}
-          />
-          <PasswordInput
-            name="password"
-            label="Senha"
-            className="col-span-6"
-            isInvalid={!!state.fieldErrors.password}
-            errorMessage={state.fieldErrors.password}
-          />
+          <Input name="email" label="Email" className="col-span-6" />
+          <PasswordInput name="password" label="Senha" className="col-span-6" />
         </CardBody>
         <CardFooter className="pb-4">
           <SubmitButton color="primary" variant="shadow" fullWidth>
@@ -96,6 +69,6 @@ export default function LoginForm() {
           Faça seu cadastro
         </Button>
       </div>
-    </form>
+    </Form>
   );
 }

@@ -67,10 +67,10 @@ function ControlledDatePicker({
       render={({ field: { disabled, ref, onChange, value, ...field } }) => {
         return (
           <NormalDatePicker
-            {...rest}
             {...field}
             isDisabled={disabled}
             inputRef={ref}
+            {...rest}
             defaultValue={_defaultValue}
             onChange={(val) => {
               const sanitizedDate = sanitizeDate(val.toString());

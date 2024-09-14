@@ -1,5 +1,5 @@
 import { globalConfig } from "@/utils/consts/global.config";
-import { Input as NInput, InputProps } from "@nextui-org/react";
+import { Input as NInput, InputProps, forwardRef } from "@nextui-org/react";
 import {
   Controller,
   ControllerProps,
@@ -44,16 +44,21 @@ function ControlledInput({ name, control, ...rest }: ControlledProps) {
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalInput {...rest} {...field} isDisabled={disabled} />
+        <NormalInput {...field} isDisabled={disabled} {...rest} />
       )}
     />
   );
 }
 
-function NormalInput(props: NormalProps) {
+const NormalInput = forwardRef((props: NormalProps, ref) => {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (
-    <NInput variant={variant} labelPlacement={labelPlacement} {...props} />
+    <NInput
+      ref={ref}
+      variant={variant}
+      labelPlacement={labelPlacement}
+      {...props}
+    />
   );
-}
+});

@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-import { ServiceResult } from "@/types/types";
 import { Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
@@ -10,6 +8,9 @@ import { serviceService } from "@/backend/services/services";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { useState } from "react";
 import Input from "../ui/forms/atoms/Input/Input";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { serviceSchema } from "@/utils/validation/schema/service";
+import { serviceAction } from "@/backend/actions/services";
 
 type ServiceFormProps = {
   service?: Service;
@@ -18,48 +19,39 @@ type ServiceFormProps = {
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
   const [products, setProducts] = useState(service?.products);
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    fieldErrors: {},
-  } as ServiceResult<Service>);
 
-  async function submitAction(status: ServiceResult, formData: FormData) {
+  async function submit(formData: FormData | Service) {
     const payload = {
-      ...Object.fromEntries(formData),
+      ...(formData instanceof FormData
+        ? Object.fromEntries(formData)
+        : formData),
       products: products?.map((item) => ({ id: item.id, qty: item.qty })) ?? [],
     };
 
-    const response = service
-      ? await serviceService.update(service.id, payload)
-      : await serviceService.create(payload);
-
-    if (response.success) {
-      toast.success("Salvo com sucesso!");
-
-      if (!service) {
-        router.push("/servicos");
-      }
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
-
-    return response;
+    return service
+      ? await serviceAction.update(service.id, payload)
+      : await serviceAction.create(payload);
   }
 
   return (
-    <form
+    <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      action={formAction}
-      noValidate
+      schema={service ? serviceSchema.update : serviceSchema.create}
+      defaultValues={service}
+      action={submit}
+      onSuccess={(res) => {
+        toast.success(res.message);
+        if (!service) router.push("/servicos");
+      }}
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
+      }}
     >
       <Input
         name="name"
         label="Nome do serviço"
-        defaultValue={service?.name}
         isRequired
         className="w-full"
-        isInvalid={!!state.fieldErrors.name}
-        errorMessage={state.fieldErrors.name}
       />
 
       <div className="w-full">
@@ -87,6 +79,6 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           {service ? "Atualizar" : "Cadastrar"}
         </SubmitButton>
       </div>
-    </form>
+    </Form>
   );
 }

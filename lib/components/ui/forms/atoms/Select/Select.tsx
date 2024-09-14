@@ -1,5 +1,6 @@
 import { globalConfig } from "@/utils/consts/global.config";
 import { Select as NSelect, SelectProps } from "@nextui-org/react";
+import { Ref } from "react";
 import {
   Controller,
   ControllerProps,
@@ -8,7 +9,9 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-type NormalProps<U extends object> = SelectProps<U>;
+type NormalProps<U extends object> = SelectProps<U> & {
+  selectRef?: Ref<HTMLSelectElement>;
+};
 
 type ControlledProps<
   U extends object,
@@ -48,17 +51,30 @@ function ControlledSelect<T extends object>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { disabled, ...field } }) => (
-        <NormalSelect {...rest} {...field} isDisabled={disabled} />
+      render={({ field: { disabled, ref, ...field } }) => (
+        <NormalSelect
+          {...field}
+          selectRef={ref}
+          isDisabled={disabled}
+          {...rest}
+        />
       )}
     />
   );
 }
 
-function NormalSelect<T extends object>(props: NormalProps<T>) {
+function NormalSelect<T extends object>({
+  selectRef,
+  ...props
+}: NormalProps<T>) {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (
-    <NSelect variant={variant} labelPlacement={labelPlacement} {...props} />
+    <NSelect
+      variant={variant}
+      labelPlacement={labelPlacement}
+      ref={selectRef}
+      {...props}
+    />
   );
 }

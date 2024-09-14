@@ -1,244 +1,201 @@
+import { fakeEvent } from "@/utils/form/fakeEvent";
 import { mask } from "@/utils/mask";
-import { Button, ButtonProps, InputProps } from "@nextui-org/react";
+import {
+  Button,
+  ButtonProps,
+  forwardRef,
+  Input,
+  InputProps,
+} from "@nextui-org/react";
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
-import Input from "../Input/Input";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  useFormContext,
+} from "react-hook-form";
 
-type Props = Omit<InputProps, "endContent" | "startContent"> & {
+type Props = NormalProps | ControlledProps;
+
+type ControlledProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = NormalProps & Omit<ControllerProps<TFieldValues, TName>, "render">;
+
+type NormalProps = Omit<
+  InputProps,
+  | "endContent"
+  | "startContent"
+  | "value"
+  | "defaultValue"
+  | "onValueChange"
+  | "min"
+  | "max"
+> & {
   buttonProps?: ButtonProps;
+  value?: number | null;
+  defaultValue?: number | null;
+  onValueChange?: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
-export default function IncreaserInput({
-  defaultValue,
-  value,
-  onValueChange = () => {},
-  buttonProps,
-  ...props
-}: Props) {
-  const [_value, _setValue] = useState(value ?? defaultValue ?? "0");
+export default function IncreaserInput(props: Props) {
+  const { name, ...rest } = props;
+  const methods = useFormContext();
 
-  const hasLabelInside =
-    props.label &&
-    (props.labelPlacement === "inside" || props.labelPlacement === undefined);
-  const isMin = Number(_value) <= Number(props.min);
-  const isMax = Number(_value) >= Number(props.max);
+  if (methods?.control && name) {
+    const fieldErros = methods.formState.errors[name];
 
-  function onChange(value: string) {
-    onValueChange(value);
-    _setValue(value);
+    return (
+      <ControlledIncreaserInput
+        name={name}
+        control={methods.control}
+        isInvalid={!!fieldErros?.message}
+        errorMessage={fieldErros?.message?.toString()}
+        {...rest}
+      />
+    );
   }
 
-  function sumString(string: string | undefined, value: number) {
-    return String(Number(string) + value);
-  }
+  return <NormalIncreaserInput {...props} />;
+}
 
-  const decrease = () => {
-    const val = sumString(_value, -1);
-    if (Number(val) < Number(props.min)) return;
-    onChange(String(val));
-  };
-
-  const increase = () => {
-    const val = sumString(_value, +1);
-    if (Number(val) > Number(props.max)) return;
-    onChange(val);
-  };
-
-  const DecreaseButton = () => (
-    <Button
-      isIconOnly
-      onPress={decrease}
-      isDisabled={isMin}
-      size="sm"
-      // variant={hasLabelInside ? "light" : undefined}
-      className={!hasLabelInside ? "-ms-2" : "min-w-6 w-6 h-6 rounded-t-none"}
-      {...buttonProps}
-    >
-      <Minus />
-    </Button>
-  );
-
-  const IncreaseButton = () => (
-    <Button
-      isIconOnly
-      onPress={increase}
-      isDisabled={isMax}
-      size="sm"
-      // variant={hasLabelInside ? "light" : undefined}
-      className={!hasLabelInside ? "-me-2" : "min-w-6 w-6 h-6 rounded-b-none"}
-      {...buttonProps}
-    >
-      <Plus />
-    </Button>
-  );
-
+function ControlledIncreaserInput({ name, control, ...rest }: ControlledProps) {
   return (
-    <Input
-      value={mask.number(_value)}
-      onValueChange={onChange}
-      classNames={{
-        // base: "w-auto",
-        input: !hasLabelInside ? "text-center" : undefined,
-      }}
-      startContent={!hasLabelInside && <DecreaseButton />}
-      endContent={
-        !hasLabelInside ? (
-          <IncreaseButton />
-        ) : (
-          <div className="grid grid-rows-2 -mb-1.5 -me-1.5">
-            <IncreaseButton />
-            <DecreaseButton />
-          </div>
-        )
-      }
-      {...props}
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { disabled, ...field } }) => (
+        <NormalIncreaserInput {...field} isDisabled={disabled} {...rest} />
+      )}
     />
   );
 }
 
-// import { mask } from "@/utils/mask";
-// import { Button, ButtonProps, InputProps } from "@nextui-org/react";
-// import { Minus, Plus } from "lucide-react";
-// import { useState } from "react";
-// import Input from "../Input/Input";
-// import {
-//   Controller,
-//   ControllerProps,
-//   FieldPath,
-//   FieldValues,
-//   useFormContext,
-// } from "react-hook-form";
+const NormalIncreaserInput = forwardRef(
+  (
+    {
+      defaultValue,
+      min = 0,
+      max = 100,
+      step = 1,
+      value = 0,
+      onChange,
+      buttonProps,
+      onValueChange,
+      ...props
+    }: NormalProps,
+    ref
+  ) => {
+    const [currentValue, setCurrentValue] = useState(
+      value ?? defaultValue ?? 0
+    );
 
-// type NormalProps = Omit<InputProps, "endContent" | "startContent"> & {
-//   buttonProps?: ButtonProps;
-// };
+    const inputRef = useRef<HTMLInputElement>(null);
+    useImperativeHandle(ref, () => inputRef.current);
 
-// type ControlledProps<
-//   TFieldValues extends FieldValues = FieldValues,
-//   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-// > = NormalProps & Omit<ControllerProps<TFieldValues, TName>, "render">;
+    const focusInput = () => inputRef.current?.focus();
 
-// type Props = NormalProps | ControlledProps;
+    const changeCurrentValue = (newValue: number) => {
+      setCurrentValue(newValue);
+      if (onChange) onChange(fakeEvent(props.name, newValue));
+      if (onValueChange) onValueChange(newValue);
+    };
 
-// export default function IncreaserInput(props: Props) {
-//   const { name, ...rest } = props;
-//   const methods = useFormContext();
+    const handleDecrease = () => {
+      const newValue = Math.max(min, currentValue - step);
+      changeCurrentValue(newValue);
 
-//   if (methods?.control && name) {
-//     const fieldErros = methods.formState.errors[name];
+      focusInput();
+    };
 
-//     return (
-//       <ControlledIncreaserInput
-//         name={name}
-//         control={methods.control}
-//         isInvalid={!!fieldErros?.message}
-//         errorMessage={fieldErros?.message?.toString()}
-//         {...rest}
-//       />
-//     );
-//   }
+    const handleIncrease = () => {
+      const newValue = Math.min(max, currentValue + step);
+      changeCurrentValue(newValue);
 
-//   return <NormalIncreaserInput {...props} />;
-// }
+      focusInput();
+    };
 
-// function ControlledIncreaserInput({ name, control, ...rest }: ControlledProps) {
-//   return (
-//     <Controller
-//       name={name}
-//       control={control}
-//       render={({ field: { disabled, ...field } }) => (
-//         <NormalIncreaserInput {...rest} {...field} isDisabled={disabled} />
-//       )}
-//     />
-//   );
-// }
+    const handleInputChange = (val: string) => {
+      const newValue = Number(val);
+      if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+        changeCurrentValue(newValue);
+      }
+    };
 
-// function NormalIncreaserInput({
-//   defaultValue,
-//   value,
-//   onValueChange = () => {},
-//   buttonProps,
-//   ...props
-// }: Props) {
-//   const [_value, _setValue] = useState(value ?? defaultValue ?? "0");
+    useEffect(() => {
+      setCurrentValue(value ?? 0);
+    }, [value]);
 
-//   const hasLabelInside =
-//     props.label &&
-//     (props.labelPlacement === "inside" || props.labelPlacement === undefined);
-//   const isMin = Number(_value) <= Number(props.min);
-//   const isMax = Number(_value) >= Number(props.max);
+    const hasLabelInside =
+      props.label &&
+      (props.labelPlacement === "inside" || props.labelPlacement === undefined);
+    const isMin = currentValue <= min;
+    const isMax = currentValue >= max;
 
-//   function onChange(value: string) {
-//     onValueChange(value);
-//     _setValue(value);
-//   }
+    const DecreaseButton = () => (
+      <Button
+        isIconOnly
+        onPress={handleDecrease}
+        onMouseDown={(e) => e.preventDefault()}
+        isDisabled={isMin}
+        size="sm"
+        className={!hasLabelInside ? "-ms-2" : "min-w-6 w-6 h-6 rounded-t-none"}
+        {...buttonProps}
+      >
+        <Minus />
+      </Button>
+    );
 
-//   function sumString(string: string | undefined, value: number) {
-//     return String(Number(string) + value);
-//   }
+    const IncreaseButton = () => (
+      <Button
+        isIconOnly
+        onPress={handleIncrease}
+        onMouseDown={(e) => e.preventDefault()}
+        isDisabled={isMax}
+        size="sm"
+        className={!hasLabelInside ? "-me-2" : "min-w-6 w-6 h-6 rounded-b-none"}
+        {...buttonProps}
+      >
+        <Plus />
+      </Button>
+    );
 
-//   const decrease = () => {
-//     const val = sumString(_value, -1);
-//     if (Number(val) < Number(props.min)) return;
-//     onChange(String(val));
-//   };
-
-//   const increase = () => {
-//     const val = sumString(_value, +1);
-//     if (Number(val) > Number(props.max)) return;
-//     onChange(val);
-//   };
-
-//   const DecreaseButton = () => (
-//     <Button
-//       isIconOnly
-//       onPress={decrease}
-//       isDisabled={isMin}
-//       size="sm"
-//       // variant={hasLabelInside ? "light" : undefined}
-//       className={!hasLabelInside ? "-ms-2" : "min-w-6 w-6 h-6 rounded-t-none"}
-//       {...buttonProps}
-//     >
-//       <Minus />
-//     </Button>
-//   );
-
-//   const IncreaseButton = () => (
-//     <Button
-//       isIconOnly
-//       onPress={increase}
-//       isDisabled={isMax}
-//       size="sm"
-//       // variant={hasLabelInside ? "light" : undefined}
-//       className={!hasLabelInside ? "-me-2" : "min-w-6 w-6 h-6 rounded-b-none"}
-//       {...buttonProps}
-//     >
-//       <Plus />
-//     </Button>
-//   );
-
-//   return (
-//     <div className="flex items-center gap-1">
-//       <Input
-//         value={mask.number(_value)}
-//         onValueChange={onChange}
-//         classNames={{
-//           base: "w-auto",
-//           input: !hasLabelInside ? "text-center" : undefined,
-//         }}
-//         startContent={!hasLabelInside && <DecreaseButton />}
-//         endContent={
-//           !hasLabelInside ? (
-//             <IncreaseButton />
-//           ) : (
-//             <div className="grid grid-rows-2 -mb-1.5 -me-1.5">
-//               <IncreaseButton />
-//               <DecreaseButton />
-//             </div>
-//           )
-//         }
-//         {...props}
-//       />
-//     </div>
-//   );
-// }
+    return (
+      <Input
+        ref={inputRef}
+        value={String(currentValue)}
+        onValueChange={handleInputChange}
+        min={min}
+        max={max}
+        step={step}
+        classNames={{
+          input: !hasLabelInside ? "text-center" : undefined,
+        }}
+        startContent={!hasLabelInside && <DecreaseButton />}
+        endContent={
+          !hasLabelInside ? (
+            <IncreaseButton />
+          ) : (
+            <div className="grid grid-rows-2 -mb-1.5 -me-1.5">
+              <IncreaseButton />
+              <DecreaseButton />
+            </div>
+          )
+        }
+        {...props}
+      />
+    );
+  }
+);

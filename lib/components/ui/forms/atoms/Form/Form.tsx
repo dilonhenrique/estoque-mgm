@@ -70,20 +70,9 @@ function Form<
 
       if (action) {
         try {
-          // const shouldStringifySubmissionData = [
-          //   headers && headers["Content-Type"],
-          //   encType,
-          // ].some((value) => value && value.includes("json"));
-
+          console.log("submit payload:", data);
           const response = await action(data);
-          // : await fetch(action, {
-          //     method,
-          //     headers: {
-          //       ...headers,
-          //       ...(encType ? { "Content-Type": encType } : {}),
-          //     },
-          //     body: shouldStringifySubmissionData ? formDataJson : formData,
-          //   });
+          console.log("submit response:", response);
 
           if (
             response &&

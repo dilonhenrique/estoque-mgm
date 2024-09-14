@@ -1,14 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
-import { ServiceResult } from "@/types/types";
 import { Supplier } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { supplierService } from "@/backend/services/suppliers";
 import { mask } from "@/utils/mask";
 import Input from "../ui/forms/atoms/Input/Input";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { supplierSchema } from "@/utils/validation/schema/supplier";
+import { supplierAction } from "@/backend/actions/suppliers";
 
 type Props = {
   supplier?: Supplier;
@@ -16,71 +17,44 @@ type Props = {
 
 export default function SupplierForm({ supplier }: Props) {
   const router = useRouter();
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    fieldErrors: {},
-  } as ServiceResult<Supplier>);
 
-  async function submitAction(status: ServiceResult, formData: FormData) {
-    const response = supplier
-      ? await supplierService.update(supplier.id, formData)
-      : await supplierService.create(formData);
-
-    if (response.success) {
-      toast.success("Salvo com sucesso!");
-
-      if (!supplier) {
-        router.push("/fornecedores");
-      }
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
-
-    return response;
+  async function submit(formData: FormData | Supplier) {
+    return supplier
+      ? await supplierAction.update(supplier.id, formData)
+      : await supplierAction.create(formData);
   }
 
   return (
-    <form
+    <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"
-      action={formAction}
-      noValidate
+      schema={supplier ? supplierSchema.update : supplierSchema.create}
+      defaultValues={supplier}
+      action={submit}
+      onSuccess={(res) => {
+        toast.success(res.message);
+        if (!supplier) router.push("/fornecedores");
+      }}
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
+      }}
     >
       <Input
         name="name"
         label="Nome do fornecedor"
-        defaultValue={supplier?.name}
         isRequired
         className="w-full"
-        isInvalid={!!state.fieldErrors.name}
-        errorMessage={state.fieldErrors.name}
       />
 
       <Input
         name="cnpj"
         label="CNPJ do fornecedor"
-        defaultValue={mask.cnpj(supplier?.cnpj)}
+        defaultValue={mask.cnpj(supplier?.cnpj)} // TODO: mask
         className="w-full"
-        isInvalid={!!state.fieldErrors.cnpj}
-        errorMessage={state.fieldErrors.cnpj}
       />
 
-      <Input
-        name="email"
-        label="E-mail do fornecedor"
-        defaultValue={supplier?.email}
-        className="w-full"
-        isInvalid={!!state.fieldErrors.email}
-        errorMessage={state.fieldErrors.email}
-      />
+      <Input name="email" label="E-mail do fornecedor" className="w-full" />
 
-      <Input
-        name="phone"
-        label="Telefone do fornecedor"
-        defaultValue={supplier?.phone}
-        className="w-full"
-        isInvalid={!!state.fieldErrors.phone}
-        errorMessage={state.fieldErrors.phone}
-      />
+      <Input name="phone" label="Telefone do fornecedor" className="w-full" />
 
       <div className="w-full flex justify-end gap-4">
         {supplier && (
@@ -102,6 +76,6 @@ export default function SupplierForm({ supplier }: Props) {
           {supplier ? "Atualizar" : "Cadastrar"}
         </SubmitButton>
       </div>
-    </form>
+    </Form>
   );
 }

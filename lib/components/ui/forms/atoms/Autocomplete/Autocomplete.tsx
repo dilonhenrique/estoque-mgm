@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Ref, useMemo, useState } from "react";
 import { globalConfig } from "@/utils/consts/global.config";
 import {
   Autocomplete as NAutocomplete,
@@ -19,7 +19,11 @@ import { fakeEvent } from "@/utils/form/fakeEvent";
 
 type Key = string | number;
 
-type NormalProps<T extends object> = AutocompleteProps<T>;
+type RawProps<T extends object> = AutocompleteProps<T> & {
+  inputRef?: Ref<HTMLInputElement>;
+};
+
+type NormalProps<T extends object> = RawProps<T>;
 
 type ControlledProps<
   U extends object,
@@ -61,6 +65,7 @@ function ControlledAutocomplete<T extends object>({
   selectedKey,
   defaultSelectedKey,
   onSelectionChange = () => {},
+  inputRef,
   ...rest
 }: ControlledProps<T>) {
   const typedInputName = useMemo(() => generateInputLabelName(name), [name]);
@@ -85,15 +90,16 @@ function ControlledAutocomplete<T extends object>({
       <Controller
         name={typedInputName}
         control={control}
-        render={({ field: { disabled, onChange, ...field } }) => (
+        render={({ field: { disabled, onChange, ref, ...field } }) => (
           <RawAutocomplete
             selectedKey={selectedKey}
             onSelectionChange={syncValues}
             isDisabled={disabled}
             onInputChange={(val) => onChange(fakeEvent(typedInputName, val))}
             defaultSelectedKey={_defaultSelectedKey}
-            {...rest}
+            inputRef={ref}
             {...field}
+            {...rest}
           />
         )}
       />
@@ -110,6 +116,7 @@ function NormalAutocomplete<T extends object>({
   name,
   selectedKey,
   onSelectionChange = () => {},
+  inputRef,
   ...props
 }: NormalProps<T>) {
   const [value, setValue] = useState<Key | null | undefined>(
@@ -131,6 +138,7 @@ function NormalAutocomplete<T extends object>({
       />
       <input
         className="hidden"
+        ref={inputRef}
         name={name}
         value={value === undefined || value === null ? "" : String(value)}
         onInput={(ev) => setValue(ev.currentTarget.value)}
@@ -139,7 +147,10 @@ function NormalAutocomplete<T extends object>({
   );
 }
 
-function RawAutocomplete<T extends object>(props: AutocompleteProps<T>) {
+function RawAutocomplete<T extends object>({
+  inputRef,
+  ...props
+}: RawProps<T>) {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (
@@ -147,6 +158,7 @@ function RawAutocomplete<T extends object>(props: AutocompleteProps<T>) {
       <NAutocomplete
         variant={variant}
         labelPlacement={labelPlacement}
+        inputProps={{ ref: inputRef }}
         {...props}
       />
     </>

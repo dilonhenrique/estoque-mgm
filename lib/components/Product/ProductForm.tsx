@@ -54,6 +54,7 @@ export default function ProductForm({ product }: Props) {
 
         {product ? (
           <Input
+            name="stock"
             label="Quantidade atual"
             className="w-60 grow"
             isReadOnly

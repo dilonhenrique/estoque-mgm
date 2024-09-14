@@ -18,7 +18,7 @@ type Props = {
   availableProducts: Product[];
   removeItem: (id: string) => void;
   changeItemProduct: (index: number, id: string) => void;
-  changeItemIncrement: (index: number, inc: string) => void;
+  changeItemIncrement: (index: number, inc: number) => void;
   newItem: () => void;
 };
 
@@ -83,7 +83,7 @@ export default function ProductTableEditor({
                   <IncreaserInput
                     min="1"
                     // max={item.product.stock}
-                    value={item.qty.toString()}
+                    value={item.qty}
                     onValueChange={(inc) => changeItemIncrement(index, inc)}
                   />
                 </TableCell>

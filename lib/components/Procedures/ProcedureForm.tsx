@@ -103,8 +103,6 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
         customService
         defaultSelectedKey={procedure?.service?.id}
         className="w-full grow"
-        isInvalid={!!formState.fieldErrors.service_id}
-        errorMessage={formState.fieldErrors.service_id}
         onServiceChange={onServiceChange}
         isDisabled={procedure?.done}
       />

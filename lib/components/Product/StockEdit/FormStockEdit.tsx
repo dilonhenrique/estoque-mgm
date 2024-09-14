@@ -4,13 +4,13 @@ import { LogCause } from "@prisma/client";
 import IncreaserInput from "../../ui/forms/atoms/IncreaserInput/IncreaserInput";
 import { useState } from "react";
 import { numberColor } from "@/utils/maps/numberColor";
-import { useFormState } from "react-dom";
-import { ServiceResult } from "@/types/types";
-import { logService } from "@/backend/services/logs";
+import { AnyObject } from "@/types/types";
 import { toast } from "sonner";
 import { SubmitButton } from "@/components/ui/FormButton";
 import { locale } from "@/utils/locale";
 import Select from "@/components/ui/forms/atoms/Select/Select";
+import { Form } from "@/components/ui/forms/atoms/Form/Form";
+import { logAction } from "@/backend/actions/logs";
 
 type Props = {
   product: Product;
@@ -25,38 +25,33 @@ export default function FormStockEdit({
   const qty = stock - product.stock;
   const QtyIcon = numberColor.icon(qty);
 
-  const [state, formAction] = useFormState(submitAction, {
-    success: true,
-    fieldErrors: {},
-  } as ServiceResult);
-
-  async function submitAction(status: ServiceResult, formData: FormData) {
+  async function submit(payload: AnyObject) {
     const data = {
-      ...Object.fromEntries(formData),
+      ...payload,
       qty: String(qty),
       product_id: product.id,
     };
-    const response = await logService.createAndUpdateProduct(data);
-
-    if (response.success) {
-      toast.success("Estoque alterado com sucesso!");
-      closeModal();
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
-
-    return response;
+    return await logAction.createAndUpdateProduct(data);
   }
 
   return (
-    <form className="flex flex-col gap-4" action={formAction} noValidate>
+    <Form
+      className="flex flex-col gap-4"
+      action={submit}
+      onSuccess={(res) => {
+        // toast.success(res.message);
+        toast.success("Estoque alterado com sucesso!");
+        closeModal();
+      }}
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
+      }}
+    >
       <Select
         name="cause"
         label="Motivo"
         labelPlacement="outside"
         placeholder="Selecione o motivo"
-        isInvalid={!!state.fieldErrors.cause}
-        errorMessage={state.fieldErrors.cause}
         items={Object.values(LogCause).map((item) => ({
           value: item,
           label: locale.logCause(item),
@@ -71,8 +66,9 @@ export default function FormStockEdit({
           label="Novo estoque:"
           min={0}
           labelPlacement="outside"
-          value={stock.toString()}
-          onValueChange={(val) => setStock(Number(val))}
+          value={stock}
+          onValueChange={(val) => setStock(val)}
+          className="w-48"
         />
 
         <Chip
@@ -85,10 +81,14 @@ export default function FormStockEdit({
           {qty} {product.unit}
         </Chip>
 
-        <SubmitButton className="ms-auto" color="primary" isDisabled={qty === 0}>
+        <SubmitButton
+          className="ms-auto self-end"
+          color="primary"
+          isDisabled={qty === 0}
+        >
           Enviar
         </SubmitButton>
       </div>
-    </form>
+    </Form>
   );
 }

@@ -94,11 +94,11 @@ export default function ProductSelector({
     }
   }
 
-  function changeItemIncrement(index: number, increment: string) {
+  function changeItemIncrement(index: number, increment: number) {
     setSelectedProducts(
       selectedProducts.map((item, i) => {
         if (i === index) {
-          item.qty = Number(increment);
+          item.qty = increment;
         }
         return item;
       })

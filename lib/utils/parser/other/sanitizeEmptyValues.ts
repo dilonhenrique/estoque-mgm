@@ -1,4 +1,4 @@
-import { Dictionary, isDate, isEmpty, omitBy } from "lodash";
+import { Dictionary, isDate, isEmpty, isNumber, omitBy } from "lodash";
 
 export function sanitizeEmptyValues(
   obj: Dictionary<unknown> | null | undefined
@@ -11,5 +11,5 @@ function isEmptyAndNotDate<
     __trapAny: any;
   }
 >(value: T) {
-  return isEmpty(value) && !isDate(value);
+  return isEmpty(value) && !isDate(value) && !isNumber(value);
 }

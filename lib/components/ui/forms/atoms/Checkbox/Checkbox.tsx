@@ -44,7 +44,7 @@ function ControlledCheckbox({ name, control, ...rest }: ControlledProps) {
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalCheckbox {...rest} {...field} isDisabled={disabled} />
+        <NormalCheckbox {...field} isDisabled={disabled} {...rest} />
       )}
     />
   );

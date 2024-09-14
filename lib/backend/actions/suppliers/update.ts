@@ -1,12 +1,14 @@
 "use server";
 
-import { AnyObject, ServiceResult } from "@/types/types";
+import { ActionResult, AnyObject } from "@/types/types";
 import { Supplier } from "@/types/schemas";
 import { supplierService } from "@/backend/services/suppliers";
+import { actionResult } from "@/utils/backend/actionResult";
 
 export default async function update(
   id: string,
   payload: FormData | AnyObject
-): Promise<ServiceResult<Supplier | null>> {
-  return await supplierService.update(id, payload);
+): Promise<ActionResult<Supplier | null>> {
+  const response = await supplierService.update(id, payload);
+  return actionResult(response);
 }

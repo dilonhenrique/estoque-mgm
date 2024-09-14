@@ -13,7 +13,6 @@ type Props = {
 export default function ModalStockEdit({ product, isOpen, onClose }: Props) {
   return (
     <Modal
-      defaultOpen
       size="md"
       scrollBehavior="inside"
       backdrop="blur"
