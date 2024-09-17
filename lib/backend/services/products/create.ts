@@ -6,20 +6,21 @@ import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
 import { Product } from "@/types/schemas";
 import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { productSchema } from "@/utils/validation/schema/product";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Product | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
-  const payload = productSchema.create.safeParse(data);
+  const data = prepareDataForSchema(product);
+  const payload = validateYupSchema(productSchema.create, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   const category_id = await resolveCategoryId(payload.data.category);

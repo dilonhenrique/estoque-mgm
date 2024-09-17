@@ -23,7 +23,7 @@ export default function CustomerForm({ customer }: Props) {
       ? await customerAction.update(customer.id, formData)
       : await customerAction.create(formData);
   }
-
+console.log("customer address",customer?.address)
   return (
     <Form
       className="w-full max-w-2xl flex flex-wrap gap-4 items-start"

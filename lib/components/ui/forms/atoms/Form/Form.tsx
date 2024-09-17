@@ -1,5 +1,5 @@
 import { FormProps } from "@/types/form";
-import { zodResolver } from "@/utils/formResolver/zodResolver";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { merge } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -18,7 +18,16 @@ function Form<
   const defaultFormProps: UseFormProps<T> = {
     mode: "onBlur",
     defaultValues,
-    resolver: schema ? zodResolver(schema) : undefined,
+    resolver: schema
+      ? (data, ctx, opt) => {
+          console.log("schema interceptor:", data);
+          return (yupResolver(schema, {}, { raw: true }) as any)(
+            data,
+            ctx,
+            opt
+          );
+        }
+      : undefined,
   };
   const _options = useMemo(
     () => merge(defaultFormProps, useFormProps),
@@ -41,12 +50,13 @@ function Form<
     validateResponse,
     ...rest
   } = props;
-
+  console.log("errors", methods.formState.errors);
   const submit = async (event?: React.BaseSyntheticEvent) => {
     let hasError = false;
     let type = "";
 
     await control.handleSubmit(async (data) => {
+      console.log("handling submit", data);
       const formData = new FormData();
       let formDataJson = "";
 

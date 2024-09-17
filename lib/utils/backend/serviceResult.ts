@@ -1,6 +1,7 @@
 import { ZodIssue } from "zod";
 import { mapZodErrors } from "../parser/other/mapZodErrors";
 import { ServiceResult } from "@/types/types";
+import { FieldError } from "react-hook-form";
 
 export const serviceResult = {
   success: serviceResultSuccess,
@@ -21,7 +22,8 @@ function serviceResultSuccess<T = any>(
 }
 
 function serviceResultFieldErrors<T = any>(
-  errors: ZodIssue[]
+  // errors: ZodIssue[]
+  errors: Record<string, FieldError>
 ): ServiceResult<T> {
   return {
     success: false,
@@ -39,7 +41,7 @@ function serviceResultError<T = any>(
   return {
     success: false,
     // fieldErrors: {},
-    fieldErrors: [],
+    fieldErrors: {},
     message: message ?? "Erro interno",
     status,
   };

@@ -1,12 +1,13 @@
-import { z } from "zod";
+import { object, string } from "yup";
 
-export const addressSchema = z.object({
-  zip_code: z.string(),
-  country: z.string(),
-  state: z.string(),
-  city: z.string(),
-  neighborhood: z.string().optional(),
-  street: z.string(),
-  number: z.string(),
-  complement: z.string().optional(),
-});
+
+export const addressSchema = object({
+  zip_code: string().required(),
+  country: string().required(),
+  state: string().required(),
+  city: string().required(),
+  neighborhood: string().optional(),
+  street: string().required(),
+  number: string().required(),
+  complement: string().optional(),
+})

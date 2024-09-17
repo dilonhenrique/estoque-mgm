@@ -7,22 +7,23 @@ import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { procedureSchema } from "@/utils/validation/schema/procedure";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Procedure | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
-  const payload = procedureSchema.create.safeParse(data);
+  const payload = validateYupSchema(procedureSchema.create, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   if (!payload.data.customer_id && payload.data.labeled_customer_id) {

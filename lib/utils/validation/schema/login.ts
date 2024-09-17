@@ -1,6 +1,7 @@
-import { z } from "zod";
+import { object, string } from "yup";
 
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-})
+
+export const loginSchema = object({
+  email: string().email().required(),
+  password: string().required(),
+});

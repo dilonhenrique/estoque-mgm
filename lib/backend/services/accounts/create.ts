@@ -7,28 +7,30 @@ import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
+import * as yup from "yup";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Account>> {
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
 
-  const accountPayload = accountSchema.safeParse(data);
-  const addressPayload = addressSchema.safeParse(data);
-  const userPayload = userSchema.safeParse(data);
+  const accountPayload = validateYupSchema(accountSchema, data);
+  const addressPayload = validateYupSchema(addressSchema, data);
+  const userPayload = validateYupSchema(userSchema, data);
 
   if (
     !accountPayload.success ||
     !addressPayload.success ||
     !userPayload.success
   ) {
-    return serviceResult.fieldErrors([
-      ...(accountPayload.error?.errors ?? []),
-      ...(addressPayload.error?.errors ?? []),
-      ...(userPayload.error?.errors ?? []),
-    ]);
+    return serviceResult.fieldErrors({
+      ...(accountPayload.errors ?? {}),
+      ...(addressPayload.errors ?? {}),
+      ...(userPayload.errors ?? {}),
+    });
   }
 
   const { data: account } = accountPayload;
@@ -53,36 +55,38 @@ export default async function create(
   }
 }
 
-const accountSchema = z.object({
-  fullname: z.string(),
-  professional_number: z.string(),
-  document_type: z.nativeEnum(DocType),
-  document: z.string(),
+const accountSchema = yup.object({
+  fullname: yup.string().required(),
+  professional_number: yup.string().required(),
+  document_type: yup.string().oneOf(Object.values(DocType)).required(),
+  document: yup.string().required(),
 });
 
-const addressSchema = z.object({
-  zip_code: z.string(),
-  country: z.string(),
-  state: z.string(),
-  city: z.string(),
-  neighborhood: z.string().optional(),
-  street: z.string(),
-  number: z.string(),
-  complement: z.string().optional(),
+const addressSchema = yup.object({
+  zip_code: yup.string().required(),
+  country: yup.string().required(),
+  state: yup.string().required(),
+  city: yup.string().required(),
+  neighborhood: yup.string().optional(),
+  street: yup.string().required(),
+  number: yup.string().required(),
+  complement: yup.string().optional(),
 });
 
-const userSchema = z
-  .object({
-    name: z.string(),
-    email: z.string().email(),
-    img_url: z.string().optional(),
-    password: z.string().min(8),
-    confirm_password: z.string().min(8),
-  })
-  .refine(({ confirm_password, password }) => confirm_password === password, {
-    message: "passwords_must_be_equal",
-    path: ["confirm_password"],
-  });
+const userSchema = yup.object({
+  name: yup.string().required(),
+  email: yup.string().email().required(),
+  img_url: yup.string().optional().required(),
+  password: yup.string().min(8).required(),
+  confirm_password: yup
+    .string()
+    .oneOf([yup.ref("password")], "passwords_must_be_equal")
+    .required(),
+});
+// .refine(({ confirm_password, password }) => confirm_password === password, {
+//   message: "passwords_must_be_equal",
+//   path: ["confirm_password"],
+// });
 
 function getSocialAccountFromCookies() {
   const accountData = cookies().get(SOCIAL_ACCOUNT_DATA)?.value;

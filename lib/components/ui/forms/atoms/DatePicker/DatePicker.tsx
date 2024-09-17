@@ -73,7 +73,7 @@ function ControlledDatePicker({
             {...rest}
             defaultValue={_defaultValue}
             onChange={(val) => {
-              const sanitizedDate = sanitizeDate(val.toString());
+              const sanitizedDate = sanitizeDate(val?.toString());
               onChange(fakeEvent(name, sanitizedDate));
             }}
           />

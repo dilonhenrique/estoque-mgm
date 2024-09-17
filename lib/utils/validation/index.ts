@@ -1,4 +1,9 @@
-import cnpjValidation from "./cnpj";
-import cpfValidation from "./cpf";
+import cnpj from "./cnpj";
+import cpf from "./cpf";
+import notEmpty from "./notEmpty";
 
-export const validation = { cnpj: cnpjValidation, cpf: cpfValidation };
+export const validation = {
+  cnpj,
+  cpf,
+  notEmpty,
+};

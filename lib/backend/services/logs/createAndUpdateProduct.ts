@@ -5,20 +5,23 @@ import { AnyObject, ServiceResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { logSchema } from "@/utils/validation/schema/log";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function createAndUpdateProduct(
   formData: FormData | AnyObject
 ): Promise<ServiceResult<LogComplete>> {
   await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(formData);
-  const payload = logSchema.safeParse(data);
+  const data = prepareDataForSchema(formData);
+  // const payload = logSchema.validate(data);
+
+  const payload = validateYupSchema(logSchema, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   const response = await logRepo.createAndUpdateProduct({

@@ -2,18 +2,19 @@
 
 import { AnyObject, ServiceResult } from "@/types/types";
 import { CredentialError, signIn } from "@/auth";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { loginSchema } from "@/utils/validation/schema/login";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function login(
   formData: FormData | AnyObject
 ): Promise<ServiceResult<string | undefined | null>> {
-  const data = prepareDataForZod(formData);
-  const payload = loginSchema.safeParse(data);
+  const data = prepareDataForSchema(formData);
+  const payload = validateYupSchema(loginSchema, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   try {

@@ -5,9 +5,10 @@ import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
 import { Service } from "@/types/schemas";
 import { serviceRepo } from "@/backend/repositories/services";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { serviceSchema } from "@/utils/validation/schema/service";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function update(
   id: string,
@@ -15,11 +16,11 @@ export default async function update(
 ): Promise<ServiceResult<Service | null>> {
   await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
-  const payload = serviceSchema.update.safeParse(data);
+  const data = prepareDataForSchema(product);
+  const payload = validateYupSchema(serviceSchema.update, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   const response = await serviceRepo.update(id, {

@@ -1,23 +1,24 @@
-import { z } from "zod";
+import { array, boolean, date, mixed, number, object, string } from "yup";
 
-const create = z.object({
-  name: z.string(),
-  service_id: z.string().uuid().optional(),
-  customer_id: z.string().uuid().optional(),
-  labeled_customer_id: z.string().optional(),
-  scheduled_for: z.coerce.date().optional(),
-  confirmed_by_customer: z
-    .literal("confirmed")
+const create = object({
+  name: string().required(),
+  service_id: string().uuid().optional(),
+  customer_id: string().uuid().optional(),
+  labeled_customer_id: string().optional(),
+  scheduled_for: date().optional(),
+  confirmed_by_customer: boolean()
     .optional()
-    .transform((val) => val === "confirmed"),
-  products: z
-    .array(
-      z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
-      })
-    )
-    .optional(),
+    .transform((_, originalValue) => originalValue === "confirmed"),
+  products: array(
+    object({
+      qty: number()
+        .transform((value, originalValue) =>
+          originalValue === "" ? undefined : value
+        )
+        .required(),
+      id: string().uuid().required(),
+    })
+  ).optional(),
 });
 
 const update = create.partial();

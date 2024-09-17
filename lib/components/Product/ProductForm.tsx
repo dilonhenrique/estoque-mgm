@@ -42,7 +42,8 @@ export default function ProductForm({ product }: Props) {
           if (!product) router.push("/produtos");
         }}
         onError={(res) => {
-          if (res.response?.message) toast.error(res.response?.message);
+          console.log(res)
+          toast.error(res.response?.message ?? "Erro inesperado!");
         }}
       >
         <Input
@@ -95,7 +96,7 @@ export default function ProductForm({ product }: Props) {
         />
 
         <CategoryAutocomplete
-          name="category"
+          name="category.id"
           label="Categoria"
           placeholder="Escolha ou digite uma categoria"
           allowsCustomValue

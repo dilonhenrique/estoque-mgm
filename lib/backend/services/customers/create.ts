@@ -5,20 +5,21 @@ import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
 import { Customer } from "@/types/schemas";
 import { customerRepo } from "@/backend/repositories/customers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { customerSchema } from "@/utils/validation/schema/customer";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Customer | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
-  const payload = customerSchema.create.safeParse(data);
+  const data = prepareDataForSchema(product);
+  const payload = validateYupSchema(customerSchema.create, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   const response = await customerRepo.create({

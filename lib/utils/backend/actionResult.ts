@@ -9,7 +9,8 @@ export function actionResult<T>(result: ServiceResult<T>): ActionResult<T> {
 function parseZodErrorsToRhf(errors?: ZodErrorObject): AnyObject<FieldError>{
   if(!errors) return {};
 
-  return parseErrorSchema(errors, true);
+  return errors;
+  // return parseErrorSchema(errors, true);
   // return {
   //   type: ""
   // }

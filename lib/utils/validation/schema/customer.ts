@@ -1,19 +1,19 @@
-import { z } from "zod";
+import { date, object, string } from "yup";
 import { addressSchema } from "./address";
 
-const create = z.object({
-  name: z.string(),
-  email: z.string().email().optional(),
-  img_url: z.string().optional(),
-  birthday: z.coerce.date().optional(),
-  phone: z.string().optional(),
-  address: addressSchema.optional(),
+const create = object({
+  name: string().required(),
+  email: string().email().optional(),
+  img_url: string().optional(),
+  birthday: date().optional(),
+  phone: string().optional(),
+  address: addressSchema.optional().default(undefined),
 });
 
 const update = create
-  .extend({
-    address: addressSchema.optional().nullable(),
-  })
+  // .extend({
+  //   address: addressSchema.optional().nullable(),
+  // })
   .partial();
 
 export const customerSchema = { create, update };

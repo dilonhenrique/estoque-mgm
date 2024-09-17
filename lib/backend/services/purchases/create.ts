@@ -6,20 +6,21 @@ import { AnyObject, ServiceResult } from "@/types/types";
 import { Purchase } from "@/types/schemas";
 import { purchaseRepo } from "@/backend/repositories/purchases";
 import { supplierService } from "../suppliers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { purchaseSchema } from "@/utils/validation/schema/purchase";
+import { validateYupSchema } from "@/utils/form/validateYupSchema";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Purchase | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
-  const payload = purchaseSchema.safeParse(data);
+  const data = prepareDataForSchema(product);
+  const payload = validateYupSchema(purchaseSchema, data);
 
   if (!payload.success) {
-    return serviceResult.fieldErrors(payload.error.errors);
+    return serviceResult.fieldErrors(payload.errors);
   }
 
   if (!payload.data.supplier_id && payload.data.labeled_supplier_id) {

@@ -4,6 +4,7 @@ import {
   FormProps as OriginalFormProps,
   UseFormProps,
 } from "react-hook-form";
+import { AnyObject, lazy, Lazy, ObjectSchema } from "yup";
 import { z } from "zod";
 
 export type ResponseWithError = { response?: ActionResult; error?: unknown };
@@ -21,7 +22,9 @@ export type FormProps<
   validateResponse?: (response: ActionResult) => boolean;
   onSuccess?: (res: ActionResult) => void;
   onError?: (res: ResponseWithError) => void;
-  schema?: z.ZodType;
+  schema?:
+    | ObjectSchema<AnyObject>
+    | ReturnType<typeof lazy<ObjectSchema<AnyObject>>>;
   defaultValues?: UseFormProps<T>["defaultValues"];
   useFormProps?: UseFormProps<T>;
 };

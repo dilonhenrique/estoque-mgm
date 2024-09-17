@@ -1,24 +1,23 @@
-import { z } from "zod";
+import { object, string } from "yup";
 import { validation } from "..";
 import { addressSchema } from "./address";
 import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringToOnlyNumber";
 
-const create = z.object({
-  name: z.string(),
-  email: z.string().email().optional(),
-  cnpj: z
-    .string()
-    .refine(validation.cnpj, "invalid_cnpj")
+const create = object({
+  name: string().required(),
+  email: string().email().optional(),
+  cnpj: string()
+    .test("invalid_cnpj", "Cnpj inválido", validation.cnpj)
     .optional()
     .transform(sanitizeStringToOnlyNumber),
-  phone: z.string().optional(),
+  phone: string().optional(),
   address: addressSchema.optional(),
 });
 
 const update = create
-  .extend({
-    address: addressSchema.optional().nullable(),
-  })
+  // .extend({
+  //   address: addressSchema.optional().nullable(),
+  // })
   .partial();
 
 export const supplierSchema = { create, update };
