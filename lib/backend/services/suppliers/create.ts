@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
 import { Supplier } from "@/types/schemas";
 import { supplierRepo } from "@/backend/repositories/suppliers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { supplierSchema } from "@/utils/validation/schema/supplier";
 
@@ -14,7 +14,7 @@ export default async function create(
 ): Promise<ServiceResult<Supplier | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
   const payload = supplierSchema.create.safeParse(data);
 
   if (!payload.success) {

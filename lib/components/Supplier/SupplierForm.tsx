@@ -44,18 +44,10 @@ export default function SupplierForm({ supplier }: Props) {
         isRequired
         className="w-full"
       />
-
-      <Input
-        name="cnpj"
-        label="CNPJ do fornecedor"
-        defaultValue={mask.cnpj(supplier?.cnpj)} // TODO: mask
-        className="w-full"
-      />
-
+      {/* TODO: mask */}
+      <Input name="cnpj" label="CNPJ do fornecedor" className="w-full" />{" "}
       <Input name="email" label="E-mail do fornecedor" className="w-full" />
-
       <Input name="phone" label="Telefone do fornecedor" className="w-full" />
-
       <div className="w-full flex justify-end gap-4">
         {supplier && (
           <FormButton

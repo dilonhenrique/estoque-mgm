@@ -65,7 +65,7 @@ export const zodResolver: Resolver =
 
       const data = await schema[
         resolverOptions.mode === "sync" ? "parse" : "parseAsync"
-      ](sanitizeEmptyValues(values));
+      ](values);
 
       console.log("validation result:", data);
 

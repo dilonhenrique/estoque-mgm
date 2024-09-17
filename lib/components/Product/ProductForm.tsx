@@ -95,7 +95,7 @@ export default function ProductForm({ product }: Props) {
         />
 
         <CategoryAutocomplete
-          name="category"
+          name="category.id"
           label="Categoria"
           placeholder="Escolha ou digite uma categoria"
           allowsCustomValue

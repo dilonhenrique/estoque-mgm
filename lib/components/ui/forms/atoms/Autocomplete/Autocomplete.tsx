@@ -158,7 +158,7 @@ function RawAutocomplete<T extends object>({
       <NAutocomplete
         variant={variant}
         labelPlacement={labelPlacement}
-        inputProps={{ ref: inputRef }}
+        // inputProps={{ ref: inputRef }}
         {...props}
       />
     </>

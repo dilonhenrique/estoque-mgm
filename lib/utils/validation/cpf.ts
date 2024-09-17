@@ -1,4 +1,6 @@
-export default function cpfValidation(cpf: string) {
+export default function cpfValidation(cpf?: string) {
+  if (!cpf) return false;
+
   cpf = cpf.replace(/[^\d]+/g, "");
 
   if (cpf == "00000000000") return false;

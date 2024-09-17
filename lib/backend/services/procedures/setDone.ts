@@ -6,7 +6,7 @@ import { AnyObject, ServiceResult } from "@/types/types";
 import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { procedureSchema } from "@/utils/validation/schema/procedure";
 
@@ -16,7 +16,7 @@ export default async function setDone(
 ): Promise<ServiceResult<Procedure | null>> {
   await getSessionUserOrLogout();
 
-  const preparedData = prepareDataForZod(data);
+  const preparedData = prepareDataForSchema(data);
   preparedData.scheduled_for = sanitizeDate(preparedData.scheduled_for);
 
   const payload = procedureSchema.setDone.safeParse(preparedData);

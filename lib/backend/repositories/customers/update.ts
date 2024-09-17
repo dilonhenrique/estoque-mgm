@@ -42,7 +42,7 @@ type Payload = {
   img_url?: string;
   email?: string;
   phone?: string;
-  birthday?: Date;
+  birthday?: Date | null;
   address?: AddressPayload | null;
 };
 

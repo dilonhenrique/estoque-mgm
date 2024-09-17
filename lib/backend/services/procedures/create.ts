@@ -7,7 +7,7 @@ import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { procedureSchema } from "@/utils/validation/schema/procedure";
 
@@ -16,7 +16,7 @@ export default async function create(
 ): Promise<ServiceResult<Procedure | null>> {
   const user = await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
   const payload = procedureSchema.create.safeParse(data);

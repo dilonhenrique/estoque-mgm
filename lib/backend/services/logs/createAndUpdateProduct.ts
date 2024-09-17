@@ -5,7 +5,7 @@ import { AnyObject, ServiceResult } from "@/types/types";
 import { LogComplete } from "@/types/schemas";
 import { getSessionUserOrLogout } from "@/utils/authUtils";
 import { revalidatePath } from "next/cache";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { logSchema } from "@/utils/validation/schema/log";
 
@@ -14,7 +14,7 @@ export default async function createAndUpdateProduct(
 ): Promise<ServiceResult<LogComplete>> {
   await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(formData);
+  const data = prepareDataForSchema(formData);
   const payload = logSchema.safeParse(data);
 
   if (!payload.success) {

@@ -56,7 +56,7 @@ type Payload = {
   name?: string;
   service_id?: string;
   customer_id?: string;
-  scheduled_for?: Date;
+  scheduled_for?: Date | null;
   confirmed_by_customer?: boolean;
   products: ProductPayload[];
 };

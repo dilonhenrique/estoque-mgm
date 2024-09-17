@@ -7,7 +7,7 @@ import { Procedure } from "@/types/schemas";
 import { procedureRepo } from "@/backend/repositories/procedures";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { customerService } from "../customers";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { procedureSchema } from "@/utils/validation/schema/procedure";
 
@@ -17,7 +17,7 @@ export default async function update(
 ): Promise<ServiceResult<Procedure | null>> {
   await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
   data.scheduled_for = sanitizeDate(data.scheduled_for);
 
   const payload = procedureSchema.update.safeParse(data);
@@ -37,7 +37,7 @@ export default async function update(
     name: payload.data.name,
     service_id: payload.data.service_id,
     customer_id: payload.data.customer_id,
-    scheduled_for: payload.data.scheduled_for,
+    scheduled_for: payload.data.scheduled_for ?? null,
     confirmed_by_customer: payload.data.confirmed_by_customer,
     products: payload.data.products ?? [],
   });

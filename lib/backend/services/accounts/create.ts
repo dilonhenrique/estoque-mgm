@@ -7,13 +7,13 @@ import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Account>> {
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
 
   const accountPayload = accountSchema.safeParse(data);
   const addressPayload = addressSchema.safeParse(data);

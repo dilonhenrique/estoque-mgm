@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { AnyObject, ServiceResult } from "@/types/types";
 import { Product } from "@/types/schemas";
 import { resolveCategoryId } from "@/utils/backend/resolveCategoryId";
-import { prepareDataForZod } from "@/utils/form/prepareDataForZod";
+import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
 import { productSchema } from "@/utils/validation/schema/product";
 
@@ -16,7 +16,7 @@ export default async function update(
 ): Promise<ServiceResult<Product | null>> {
   await getSessionUserOrLogout();
 
-  const data = prepareDataForZod(product);
+  const data = prepareDataForSchema(product);
   const payload = productSchema.update.safeParse(data);
 
   if (!payload.success) {
