@@ -29,6 +29,6 @@ type Payload = {
   unit?: string;
   minStock?: number;
   code?: string;
-  category_id?: string;
+  category_id?: string | null;
   img_url?: string;
 };

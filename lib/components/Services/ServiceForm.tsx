@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { serviceService } from "@/backend/services/services";
 import ProductSelector from "../ProductSelector/ProductSelector";
-import { useState } from "react";
 import Input from "../ui/forms/atoms/Input/Input";
 import { Form } from "../ui/forms/atoms/Form/Form";
 import { serviceSchema } from "@/utils/validation/schema/service";
@@ -18,19 +17,11 @@ type ServiceFormProps = {
 
 export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
-  const [products, setProducts] = useState(service?.products);
 
   async function submit(formData: FormData | Service) {
-    const payload = {
-      ...(formData instanceof FormData
-        ? Object.fromEntries(formData)
-        : formData),
-      products: products?.map((item) => ({ id: item.id, qty: item.qty })) ?? [],
-    };
-
     return service
-      ? await serviceAction.update(service.id, payload)
-      : await serviceAction.create(payload);
+      ? await serviceAction.update(service.id, formData)
+      : await serviceAction.create(formData);
   }
 
   return (
@@ -56,7 +47,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
       <div className="w-full">
         <h4 className="text-content4-foreground mb-2">Produtos utilizados:</h4>
-        <ProductSelector value={products} onValueChange={setProducts} />
+        <ProductSelector defaultValue={service?.products} />
       </div>
 
       <div className="w-full flex justify-end gap-4">

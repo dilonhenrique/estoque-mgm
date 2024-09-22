@@ -23,19 +23,22 @@ export default async function update(
     return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  if (!payload.data.supplier_id && payload.data.labeled_supplier_id) {
+  if (
+    payload.data.supplier &&
+    !payload.data.supplier.id &&
+    payload.data.supplier.name
+  ) {
     const supplierResponse = await supplierService.create({
-      name: payload.data.labeled_supplier_id,
+      name: payload.data.supplier.name,
     });
-    payload.data.supplier_id = supplierResponse.data?.id;
+    payload.data.supplier.id = supplierResponse.data?.id;
   }
 
   const response = await purchaseRepo.update(id, {
-    supplier_id: payload.data.supplier_id,
-    products: payload.data.products ?? [],
+    supplier_id: payload.data.supplier.id,
+    products: payload.data.items ?? [],
   });
 
   if (response) revalidatePath("/", "layout");
   return serviceResult.success(response);
 }
-

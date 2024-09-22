@@ -23,7 +23,7 @@ export default async function update(
     return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  const category_id = await resolveCategoryId(payload.data.category);
+  const category_id = (await resolveCategoryId(payload.data.category)) ?? null;
 
   const response = await productRepo.update(id, {
     name: payload.data.name,

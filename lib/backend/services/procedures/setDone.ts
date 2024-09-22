@@ -26,8 +26,8 @@ export default async function setDone(
   }
 
   const updatedProcedure = await procedureRepo.update(id, {
-    service_id: payload.data.service_id,
-    customer_id: payload.data.customer_id,
+    service_id: payload.data.service?.id ?? undefined,
+    customer_id: payload.data.customer?.id, // TODO: add customer if only name
     scheduled_for: payload.data.scheduled_for,
     confirmed_by_customer: payload.data.confirmed_by_customer,
     products: payload.data.products ?? [],

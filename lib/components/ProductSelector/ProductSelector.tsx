@@ -11,6 +11,7 @@ type Props = {
   onValueChange?: (products: ProductWithQty[]) => void;
   isViewOnly?: boolean;
   refreshItems?: boolean;
+  arrayName?: string;
 };
 
 export default function ProductSelector({
@@ -19,6 +20,7 @@ export default function ProductSelector({
   onValueChange = () => {},
   isViewOnly,
   refreshItems,
+  arrayName = "products",
 }: Props) {
   const [initialLoad, setInitialLoad] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -127,6 +129,7 @@ export default function ProductSelector({
           changeItemProduct={changeItemProduct}
           changeItemIncrement={changeItemIncrement}
           newItem={newItem}
+          arrayName={arrayName}
         />
       )}
     </div>

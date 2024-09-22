@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { object, z } from "zod";
 
 const create = z.object({
   name: z.string(),
@@ -6,8 +6,11 @@ const create = z.object({
   stock: z.coerce.number(),
   minStock: z.coerce.number().optional(),
   code: z.string().optional(),
-  category: z.string().optional(),
   img_url: z.string().optional(),
+  category: object({
+    id: z.string().uuid().optional().or(z.literal(null)),
+    name: z.string().optional(),
+  }),
 });
 
 const update = create.partial();

@@ -20,6 +20,7 @@ type Props = {
   changeItemProduct: (index: number, id: string) => void;
   changeItemIncrement: (index: number, inc: number) => void;
   newItem: () => void;
+  arrayName: string;
 };
 
 export default function ProductTableEditor({
@@ -29,6 +30,7 @@ export default function ProductTableEditor({
   changeItemProduct,
   changeItemIncrement,
   newItem,
+  arrayName,
 }: Props) {
   return (
     <Table
@@ -62,12 +64,13 @@ export default function ProductTableEditor({
 
                 <TableCell>
                   <Autocomplete
+                    name={`${arrayName}.${index}.id`}
                     isClearable={false}
                     selectedKey={item.id}
                     onSelectionChange={(id) =>
                       changeItemProduct(index, String(id))
                     }
-                    aria-label="selecione um produto"
+                    aria-label="Selecione um produto"
                   >
                     {availableProducts.concat(item).map((product) => (
                       <AutocompleteItem
@@ -81,7 +84,8 @@ export default function ProductTableEditor({
 
                 <TableCell>
                   <IncreaserInput
-                    min="1"
+                    name={`${arrayName}.${index}.qty`}
+                    min={1}
                     // max={item.product.stock}
                     value={item.qty}
                     onValueChange={(inc) => changeItemIncrement(index, inc)}

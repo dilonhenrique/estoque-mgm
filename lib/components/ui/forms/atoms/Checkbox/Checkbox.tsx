@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Checkbox as NCheckbox, CheckboxProps } from "@nextui-org/react";
 import {
   Controller,
   ControllerProps,
   FieldPath,
   FieldValues,
+  get,
   useFormContext,
 } from "react-hook-form";
 
@@ -22,7 +23,7 @@ export default function Checkbox(props: Props) {
   const methods = useFormContext();
 
   if (methods?.control && name) {
-    const fieldErros = methods.formState.errors[name];
+    const fieldErros = methods.getFieldState(name)?.error;
 
     return (
       <ControlledCheckbox
@@ -38,13 +39,28 @@ export default function Checkbox(props: Props) {
   return <NormalCheckbox {...props} />;
 }
 
-function ControlledCheckbox({ name, control, ...rest }: ControlledProps) {
+function ControlledCheckbox({
+  name,
+  control,
+  defaultSelected,
+  ...rest
+}: ControlledProps) {
+  const _defaultSelected = useMemo(
+    () => defaultSelected ?? get(control?._defaultValues, name),
+    [name, defaultSelected]
+  );
+
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalCheckbox {...field} isDisabled={disabled} {...rest} />
+        <NormalCheckbox
+          {...field}
+          isDisabled={disabled}
+          {...rest}
+          defaultSelected={_defaultSelected}
+        />
       )}
     />
   );

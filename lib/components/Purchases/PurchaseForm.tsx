@@ -18,27 +18,11 @@ type Props = {
 
 export default function PurchaseForm({ purchase }: Props) {
   const router = useRouter();
-  const [products, setProducts] = useState(purchase?.items ?? []);
-
-  const [refreshItems, setRefreshItems] = useState(true);
-  const refreshProducts = () => setRefreshItems(!refreshItems);
 
   async function submitAction(formData: FormData | Purchase) {
-    const data =
-      formData instanceof FormData ? Object.fromEntries(formData) : formData;
-    const payload = {
-      ...data,
-      products:
-        products?.map((item) => ({
-          id: item.id,
-          qty: item.qty,
-          cost: item.cost,
-        })) ?? [],
-    };
-
     return purchase
-      ? await purchaseAction.update(purchase.id, payload)
-      : await purchaseAction.create(payload);
+      ? await purchaseAction.update(purchase.id, formData)
+      : await purchaseAction.create(formData);
   }
 
   return (
@@ -52,7 +36,7 @@ export default function PurchaseForm({ purchase }: Props) {
         if (!purchase) {
           router.push("/compras");
         } else {
-          refreshProducts();
+          // refreshProducts();
         }
       }}
       onError={(res) => {
@@ -70,9 +54,11 @@ export default function PurchaseForm({ purchase }: Props) {
       <div className="w-full">
         <h4 className="text-content4-foreground mb-2">Produtos comprados:</h4>
         <ProductSelector
-          value={products}
-          onValueChange={setProducts}
-          refreshItems={refreshItems}
+          arrayName="items"
+          defaultValue={purchase?.items}
+          // value={products}
+          // onValueChange={setProducts}
+          // refreshItems={refreshItems}
         />
       </div>
 

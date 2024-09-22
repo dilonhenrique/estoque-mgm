@@ -17,7 +17,7 @@ export default async function create(
   const user = await getSessionUserOrLogout();
 
   const data = prepareDataForSchema(product);
-  data.scheduled_for = sanitizeDate(data.scheduled_for);
+  data.scheduled_for = sanitizeDate(data.scheduled_for); // TODO: preprocess
 
   const payload = procedureSchema.create.safeParse(data);
 
@@ -25,19 +25,20 @@ export default async function create(
     return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  if (!payload.data.customer_id && payload.data.labeled_customer_id) {
+  let customerId = payload.data.customer?.id;
+  if (!customerId && payload.data.customer?.name) {
     const customerResponse = await customerService.create({
-      name: payload.data.labeled_customer_id,
+      name: payload.data.customer.name,
     });
-    payload.data.customer_id = customerResponse.data?.id;
+    customerId = customerResponse.data?.id;
   }
 
   const response = await procedureRepo.create({
     account_id: user.account_id,
     created_by: user.id,
     name: payload.data.name,
-    service_id: payload.data.service_id,
-    customer_id: payload.data.customer_id,
+    service_id: payload.data.service?.id ?? undefined,
+    customer_id: customerId,
     scheduled_for: payload.data.scheduled_for,
     confirmed_by_customer: payload.data.confirmed_by_customer,
     products: payload.data.products ?? [],
@@ -46,4 +47,3 @@ export default async function create(
   if (response) revalidatePath("/", "layout");
   return serviceResult.success(response);
 }
-

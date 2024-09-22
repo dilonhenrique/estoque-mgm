@@ -26,7 +26,10 @@ export default function Select<T extends object>(props: Props<T>) {
   const methods = useFormContext();
 
   if (methods?.control && name) {
-    const fieldErros = methods.formState.errors[name];
+    const fieldErros = methods.getFieldState(name)?.error;
+
+    const value = props.selectedKeys ?? props.defaultSelectedKeys;
+    if (value !== undefined) methods.setValue(name, value);
 
     return (
       <ControlledSelect

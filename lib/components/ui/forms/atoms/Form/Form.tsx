@@ -1,44 +1,28 @@
 import { FormProps } from "@/types/form";
-import { zodResolver } from "@/utils/formResolver/zodResolver";
-import { merge } from "lodash";
-import { useEffect, useMemo, useState } from "react";
-import {
-  FieldValues,
-  FormProvider,
-  get,
-  Path,
-  useForm,
-  UseFormProps,
-} from "react-hook-form";
+import { useEffect, useState } from "react";
+import { FieldValues, FormProvider, get, Path } from "react-hook-form";
+import { useFormCustom } from "./useFormProps";
 
-function Form<
-  T extends FieldValues,
-  U extends FieldValues | undefined = undefined
->({ schema, defaultValues, useFormProps, ...props }: FormProps<T, U>) {
-  const defaultFormProps: UseFormProps<T> = {
-    mode: "onBlur",
-    defaultValues,
-    resolver: schema ? zodResolver(schema) : undefined,
-  };
-  const _options = useMemo(
-    () => merge(defaultFormProps, useFormProps),
-    [defaultFormProps, useFormProps]
-  );
-  const methods = useForm<T>(merge(_options));
+function Form<T extends FieldValues>({
+  schema,
+  defaultValues,
+  useFormProps,
+  ...props
+}: FormProps<T>) {
+  const methods = useFormCustom<T>({ defaultValues, schema, useFormProps });
 
   const [mounted, setMounted] = useState(false);
   const {
     control = methods.control,
-    onSubmit,
+    beforeSubmit,
     children,
     action,
-    method = "post",
     headers,
-    encType,
-    onError,
     render,
+    onError,
     onSuccess,
     validateResponse,
+    formRef,
     ...rest
   } = props;
 
@@ -58,21 +42,20 @@ function Form<
         formData.append(name, get(data, name));
       }
 
-      if (onSubmit) {
-        await onSubmit({
+      if (beforeSubmit) {
+        const submitReponse = await beforeSubmit({
           data,
           event,
-          method,
           formData,
-          formDataJson,
+          methods,
         });
+
+        if (!submitReponse) return;
       }
 
       if (action) {
         try {
-          console.log("submit payload:", data);
           const response = await action(data);
-          console.log("submit response:", response);
 
           if (
             response &&
@@ -113,16 +96,12 @@ function Form<
   return (
     <FormProvider {...methods}>
       {render ? (
-        <>
-          {render({
-            submit,
-          })}
-        </>
+        render({ submit })
       ) : (
         <form
+          ref={formRef}
           noValidate={mounted}
           action={action}
-          method={method}
           onSubmit={submit}
           {...rest}
         >

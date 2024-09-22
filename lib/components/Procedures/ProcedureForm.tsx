@@ -1,118 +1,135 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ServiceResult } from "@/types/types";
 import { Procedure, Service } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
-import { FormEvent, useRef, useState } from "react";
+import { useState } from "react";
 import { procedureService } from "@/backend/services/procedures";
 import ServiceAutocomplete from "../ui/forms/custom/ServiceAutocomplete/ServiceAutocomplete";
 import { SquareCheckBig, SquareX } from "lucide-react";
 import ProcedureDetailsForm from "./ProcedureDetailsForm";
+import { procedureAction } from "@/backend/actions/procedures";
+import { Form } from "../ui/forms/atoms/Form/Form";
+import { AnyObject } from "@/types/types";
 
 type ProcedureFormProps = {
   procedure?: Procedure;
 };
 
+type SimpleService = {
+  id: string;
+  name: string;
+};
+
 export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   const router = useRouter();
-  const form = useRef<HTMLFormElement>(null);
+  // const form = useRef<HTMLFormElement>(null);
 
-  const [hasDetails, setHasDetails] = useState(!!procedure);
-  const [products, setProducts] = useState(procedure?.products ?? []);
-  const [name, setName] = useState(procedure?.name ?? "");
+  const [service, setService] = useState<Service | SimpleService | undefined>(
+    procedure?.service
+  );
 
-  const [formState, setFormState] = useState({
-    success: true,
-    fieldErrors: {},
-  } as ServiceResult<Procedure | null>);
-
-  function onServiceChange(service?: Service) {
-    if (service === undefined) return setHasDetails(false);
-
-    setHasDetails(true);
+  function onServiceChange(selectedService?: Service) {
+    if (selectedService === undefined) return setService(undefined);
 
     if (
-      !hasDetails ||
-      (hasDetails &&
+      !service ||
+      (service &&
         confirm(
-          `Substituir dados atuais pelos pré definidos no Serviço: ${service.name}?`
+          `Substituir dados atuais pelos pré definidos no Serviço: ${selectedService.name}?`
         ))
     ) {
-      setName(service.name);
-      setProducts(service.products);
+      setService(selectedService);
     }
   }
 
-  async function onSubmit(ev: FormEvent<HTMLFormElement>) {
-    ev.preventDefault();
+  async function saveAction(formData: FormData | Procedure) {
+    return procedure
+      ? await procedureAction.update(procedure.id, formData)
+      : await procedureAction.create(formData);
+  }
 
-    const formData = new FormData(form.current ?? ev.currentTarget);
-    const payload = {
-      ...Object.fromEntries(formData),
-      products,
-    };
-
-    const response = procedure
-      ? await procedureService.update(procedure.id, payload)
-      : await procedureService.create(payload);
-
-    if (response.success) {
-      toast.success("Salvo com sucesso!");
-
-      if (!procedure) {
-        router.push("/procedimentos");
+  async function handleDone(formData: AnyObject) {
+    if (procedure) {
+      if (!confirm("Tem certeza?")) {
+        return null;
       }
-    } else {
-      toast.error("Confira os campos e tente novamente");
-    }
 
-    setFormState(response);
-  }
-
-  async function handleDone() {
-    if (form.current && procedure && confirm("Tem certeza?")) {
       if (procedure.done) {
-        await procedureService.unsetDone(procedure.id);
+        return await procedureService.unsetDone(procedure.id);
       } else {
-        const formData = new FormData(form.current);
-        const payload = {
-          ...Object.fromEntries(formData),
-          products,
-        };
-
-        const response = await procedureService.setDone(procedure.id, payload);
-        setFormState(response);
+        return await procedureAction.setDone(procedure.id, formData);
       }
-      router.refresh();
     }
   }
 
   return (
-    <form
-      ref={form}
+    <Form
+      id="procedure-form"
       className="w-full max-w-2xl flex flex-wrap gap-4 items-end"
-      onSubmit={onSubmit}
-      noValidate
+      action={saveAction}
+      defaultValues={procedure}
+      beforeSubmit={async ({ event, methods, data }): Promise<boolean> => {
+        if (event?.nativeEvent && "submitter" in event.nativeEvent) {
+          const submitter = event?.nativeEvent.submitter as
+            | HTMLButtonElement
+            | undefined;
+
+          if (submitter?.value === "setDone") {
+            const response = await handleDone(data);
+
+            if (!response) return false;
+
+            router.refresh();
+            console.log(response);
+            if (response.success) {
+              toast.success(response.message);
+            } else {
+              toast.error(response.message);
+
+              Object.entries(response.fieldErrors).forEach(([name, error]) => {
+                methods.setError(name as keyof Procedure, error);
+              });
+            }
+
+            return false;
+          }
+        }
+
+        return true;
+      }}
+      onSuccess={(res) => {
+        toast.success(res.message);
+
+        if (!procedure) {
+          router.push("/procedimentos");
+        }
+      }}
+      onError={(res) => {
+        if (res.response?.message) toast.error(res.response?.message);
+      }}
     >
       <ServiceAutocomplete
-        name="service_id"
+        name="service.id"
         label="Tipo de Serviço"
         placeholder="Escolha um serviço"
-        customService
+        addCustomOption
         defaultSelectedKey={procedure?.service?.id}
         className="w-full grow"
         onServiceChange={onServiceChange}
         isDisabled={procedure?.done}
       />
 
-      {hasDetails && (
+      {service && (
         <ProcedureDetailsForm
-          procedure={{ ...procedure, name, products }}
-          formState={formState}
-          productState={[products, setProducts]}
-          nameState={[name, setName]}
+          key={`procedure-details-${service.id}`}
+          procedure={{
+            ...procedure,
+            name: service.name,
+            products:
+              "products" in service ? service.products : procedure?.products,
+          }}
         />
       )}
 
@@ -137,9 +154,11 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
             )}
 
             <FormButton
-              // variant="flat"
+              type="submit"
               startContent={procedure.done ? <SquareX /> : <SquareCheckBig />}
-              onClick={handleDone}
+              // onClick={handleDone}
+              value="setDone"
+              formTarget="procedure-form"
             >
               {procedure.done
                 ? "Desmarcar como Realizado"
@@ -150,14 +169,14 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
 
         {!procedure?.done && (
           <SubmitButton
-            type="submit"
             color="primary"
             isDisabled={procedure?.done}
+            formTarget="procedure-form"
           >
             {procedure ? "Atualizar" : "Cadastrar"}
           </SubmitButton>
         )}
       </div>
-    </form>
+    </Form>
   );
 }

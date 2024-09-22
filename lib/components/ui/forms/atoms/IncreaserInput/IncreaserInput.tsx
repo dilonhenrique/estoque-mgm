@@ -55,7 +55,10 @@ export default function IncreaserInput(props: Props) {
   const methods = useFormContext();
 
   if (methods?.control && name) {
-    const fieldErros = methods.formState.errors[name];
+    const fieldErros = methods.getFieldState(name)?.error;
+
+    const value = props.value ?? props.defaultValue;
+    if (value !== undefined) methods.setValue(name, value);
 
     return (
       <ControlledIncreaserInput
@@ -76,9 +79,13 @@ function ControlledIncreaserInput({ name, control, ...rest }: ControlledProps) {
     <Controller
       name={name}
       control={control}
-      render={({ field: { disabled, ...field } }) => (
-        <NormalIncreaserInput {...field} isDisabled={disabled} {...rest} />
-      )}
+      render={({ field: { disabled, ...field } }) => {
+        // console.log(rest.isInvalid);
+        // console.log(field.value);
+        return (
+          <NormalIncreaserInput {...field} isDisabled={disabled} {...rest} />
+        );
+      }}
     />
   );
 }

@@ -41,7 +41,10 @@ export default function Autocomplete<T extends object>(props: Props<T>) {
   const methods = useFormContext();
 
   if (methods?.control && name) {
-    const fieldErros = methods.formState.errors[name];
+    const fieldErros = methods.getFieldState(name)?.error;
+    
+    const value = props.selectedKey ?? props.defaultSelectedKey;
+    if (value !== undefined) methods.setValue(name, value);
 
     return (
       <ControlledAutocomplete

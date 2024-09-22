@@ -17,19 +17,19 @@ type Props = Omit<
   | "items"
 > & {
   onServiceChange?: (service?: Service) => void;
-  customService?: boolean;
+  addCustomOption?: boolean;
 };
 
 export default function ServiceAutocomplete({
   onServiceChange = () => {},
   onSelectionChange = () => {},
-  customService,
+  addCustomOption,
   ...props
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   
   const { services, isLoading, hasMore, onLoadMore } = useServiceList();
-  const custom: Service[] = customService
+  const custom: Service[] = addCustomOption
     ? [{ id: "CUSTOM", name: "Customizado", products: [] }]
     : [];
   const allServices = custom.concat(services);

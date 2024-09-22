@@ -33,7 +33,10 @@ export default function DatePicker(props: Props) {
   const methods = useFormContext();
 
   if (methods?.control && name) {
-    const fieldErros = methods.formState.errors[name];
+    const fieldErros = methods.getFieldState(name)?.error;
+
+    const value = props.value ?? props.defaultValue;
+    if (value !== undefined) methods.setValue(name, value);
 
     return (
       <ControlledDatePicker
