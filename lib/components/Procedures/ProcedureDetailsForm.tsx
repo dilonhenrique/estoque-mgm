@@ -3,9 +3,7 @@
 import { Procedure } from "@/types/schemas";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import CustomerAutocomplete from "../ui/forms/custom/CustomerAutocomplete/CustomerAutocomplete";
-import Input from "../ui/forms/atoms/Input/Input";
-import Checkbox from "../ui/forms/atoms/Checkbox/Checkbox";
-import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
+import { Checkbox, DatePicker, Input } from "../ui/forms/fields";
 
 type ProcedureFormProps = {
   procedure?: Partial<Procedure>;

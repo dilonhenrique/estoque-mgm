@@ -7,14 +7,12 @@ import { Product } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import CategoryAutocomplete from "../ui/forms/custom/CategoryAutocomplete/CategoryAutocomplete";
-import IncreaserInput from "../ui/forms/atoms/IncreaserInput/IncreaserInput";
 import { Pencil } from "lucide-react";
 import ModalStockEdit from "./StockEdit/ModalStockEdit";
 import { useState } from "react";
-import Input from "../ui/forms/atoms/Input/Input";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { productAction } from "@/backend/actions/products";
 import { productSchema } from "@/utils/validation/schema/product";
+import { Form, IncreaserInput, Input } from "../ui/forms/fields";
 
 type Props = {
   product?: Product;

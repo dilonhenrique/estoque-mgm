@@ -5,11 +5,9 @@ import { Supplier } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { supplierService } from "@/backend/services/suppliers";
-import { mask } from "@/utils/mask";
-import Input from "../ui/forms/atoms/Input/Input";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { supplierSchema } from "@/utils/validation/schema/supplier";
 import { supplierAction } from "@/backend/actions/suppliers";
+import { Form, Input } from "../ui/forms/fields";
 
 type Props = {
   supplier?: Supplier;

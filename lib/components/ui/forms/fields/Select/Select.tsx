@@ -1,27 +1,13 @@
 import { globalConfig } from "@/utils/consts/global.config";
-import { Select as NSelect, SelectProps } from "@nextui-org/react";
-import { Ref } from "react";
+import { Select as NSelect } from "@nextui-org/react";
+import { Controller, useFormContext } from "react-hook-form";
 import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  useFormContext,
-} from "react-hook-form";
+  SelectControlledProps,
+  SelectProps,
+  SelectUncontrolledProps,
+} from "./Select.type";
 
-type NormalProps<U extends object> = SelectProps<U> & {
-  selectRef?: Ref<HTMLSelectElement>;
-};
-
-type ControlledProps<
-  U extends object,
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = NormalProps<U> & Omit<ControllerProps<TFieldValues, TName>, "render">;
-
-type Props<U extends object> = NormalProps<U> | ControlledProps<U>;
-
-export default function Select<T extends object>(props: Props<T>) {
+export default function Select<T extends object>(props: SelectProps<T>) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -32,7 +18,7 @@ export default function Select<T extends object>(props: Props<T>) {
     if (value !== undefined) methods.setValue(name, value);
 
     return (
-      <ControlledSelect
+      <Controlled
         name={name}
         control={methods.control}
         isInvalid={!!fieldErros?.message}
@@ -42,20 +28,20 @@ export default function Select<T extends object>(props: Props<T>) {
     );
   }
 
-  return <NormalSelect {...props} />;
+  return <Uncontrolled {...props} />;
 }
 
-function ControlledSelect<T extends object>({
+function Controlled<T extends object>({
   name,
   control,
   ...rest
-}: ControlledProps<T>) {
+}: SelectControlledProps<T>) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { disabled, ref, ...field } }) => (
-        <NormalSelect
+        <Uncontrolled
           {...field}
           selectRef={ref}
           isDisabled={disabled}
@@ -66,10 +52,10 @@ function ControlledSelect<T extends object>({
   );
 }
 
-function NormalSelect<T extends object>({
+function Uncontrolled<T extends object>({
   selectRef,
   ...props
-}: NormalProps<T>) {
+}: SelectUncontrolledProps<T>) {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (

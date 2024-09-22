@@ -50,7 +50,7 @@ export default function ProductSelector({
         return { ...prod, qty: selected.qty };
       })
     );
-  }, [allProducts]);
+  }, [allProducts, selectedProducts]);
 
   useEffect(() => {
     if (initialLoad) {

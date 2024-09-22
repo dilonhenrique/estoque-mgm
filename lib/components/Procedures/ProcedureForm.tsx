@@ -10,7 +10,7 @@ import ServiceAutocomplete from "../ui/forms/custom/ServiceAutocomplete/ServiceA
 import { SquareCheckBig, SquareX } from "lucide-react";
 import ProcedureDetailsForm from "./ProcedureDetailsForm";
 import { procedureAction } from "@/backend/actions/procedures";
-import { Form } from "../ui/forms/atoms/Form/Form";
+import { Form } from "../ui/forms/fields";
 
 type ProcedureFormProps = {
   procedure?: Procedure;

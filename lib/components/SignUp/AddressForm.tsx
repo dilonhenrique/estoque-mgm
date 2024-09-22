@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ServiceResult } from "@/types/types";
 import { cepService } from "@/backend/services/cep";
 import { toast } from "sonner";
-import Input from "../ui/forms/atoms/Input/Input";
+import { Input } from "../ui/forms/fields";
 
 type IProps = {
   title: string;

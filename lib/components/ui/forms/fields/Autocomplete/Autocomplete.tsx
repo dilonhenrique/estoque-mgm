@@ -1,42 +1,23 @@
 "use client";
 
-import { Ref, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { globalConfig } from "@/utils/consts/global.config";
 import {
-  Autocomplete as NAutocomplete,
   AutocompleteProps,
+  Autocomplete as NAutocomplete,
 } from "@nextui-org/react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  get,
-  useFormContext,
-  UseFormRegister,
-} from "react-hook-form";
+import { Controller, get, useFormContext } from "react-hook-form";
 import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
+import {
+  AutocompleteControlledProps,
+  AutocompleteRawProps,
+  AutocompleteUncontrolledProps,
+  Key,
+} from "./Autocomplete.type";
 
-type Key = string | number;
-
-type RawProps<T extends object> = AutocompleteProps<T> & {
-  inputRef?: Ref<HTMLInputElement>;
-};
-
-type NormalProps<T extends object> = RawProps<T>;
-
-type ControlledProps<
-  U extends object,
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = NormalProps<U> &
-  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
-    register: UseFormRegister<FieldValues>;
-  };
-
-type Props<U extends object> = NormalProps<U> | ControlledProps<U>;
-
-export default function Autocomplete<T extends object>(props: Props<T>) {
+export default function Autocomplete<T extends object>(
+  props: AutocompleteProps<T>
+) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -70,7 +51,7 @@ function ControlledAutocomplete<T extends object>({
   onSelectionChange = () => {},
   inputRef,
   ...rest
-}: ControlledProps<T>) {
+}: AutocompleteControlledProps<T>) {
   const typedInputName = useMemo(() => generateInputLabelName(name), [name]);
   const _defaultSelectedKey = useMemo(
     () => defaultSelectedKey ?? get(control?._defaultValues, name),
@@ -123,7 +104,7 @@ function NormalAutocomplete<T extends object>({
   onSelectionChange = () => {},
   inputRef,
   ...props
-}: NormalProps<T>) {
+}: AutocompleteUncontrolledProps<T>) {
   const [value, setValue] = useState<Key | null | undefined>(
     selectedKey ?? props.defaultSelectedKey
   );
@@ -155,7 +136,7 @@ function NormalAutocomplete<T extends object>({
 function RawAutocomplete<T extends object>({
   inputRef,
   ...props
-}: RawProps<T>) {
+}: AutocompleteRawProps<T>) {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (
@@ -163,7 +144,6 @@ function RawAutocomplete<T extends object>({
       <NAutocomplete
         variant={variant}
         labelPlacement={labelPlacement}
-        // inputProps={{ ref: inputRef }}
         {...props}
       />
     </>

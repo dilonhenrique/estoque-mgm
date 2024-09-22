@@ -1,10 +1,10 @@
-import { FormProps } from "@/types/form";
+import { FormProps } from "./form";
 import { FormEvent, useEffect, useState } from "react";
 import { FieldValues, FormProvider, get, Path } from "react-hook-form";
 import { useFormCustom } from "./useFormProps";
 import { resolveActionToUse } from "@/utils/form/resolveActionToUse";
 
-function Form<T extends FieldValues>({
+export default function Form<T extends FieldValues>({
   schema,
   defaultValues,
   useFormProps,

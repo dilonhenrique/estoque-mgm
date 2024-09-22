@@ -8,10 +8,9 @@ import { toast } from "sonner";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import Input from "../ui/forms/atoms/Input/Input";
 import { loginSchema } from "@/utils/validation/schema/login";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { authAction } from "@/backend/actions/auth";
+import { Form, Input } from "../ui/forms/fields";
 
 export default function LoginForm() {
   const router = useRouter();

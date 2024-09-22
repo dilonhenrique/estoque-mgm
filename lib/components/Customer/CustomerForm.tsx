@@ -5,11 +5,9 @@ import { Customer } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { customerService } from "@/backend/services/customers";
-import Input from "../ui/forms/atoms/Input/Input";
-import DatePicker from "../ui/forms/atoms/DatePicker/DatePicker";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { customerAction } from "@/backend/actions/customers";
 import { customerSchema } from "@/utils/validation/schema/customer";
+import { DatePicker, Form, Input } from "../ui/forms/fields";
 
 type Props = {
   customer?: Customer;

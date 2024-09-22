@@ -1,4 +1,4 @@
-import { FormAction } from "@/types/form";
+import { FormAction } from "@/components/ui/forms/fields/Form/form";
 import { AnyObject } from "@/types/types";
 import { FieldValues } from "react-hook-form";
 

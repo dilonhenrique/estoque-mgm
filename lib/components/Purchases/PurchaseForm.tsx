@@ -7,10 +7,10 @@ import FormButton, { SubmitButton } from "../ui/FormButton";
 import ProductSelector from "../ProductSelector/ProductSelector";
 import { purchaseService } from "@/backend/services/purchases";
 import SupplierAutocomplete from "../ui/forms/custom/SupplierAutocomplete/SupplierAutocomplete";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { purchaseAction } from "@/backend/actions/purchases";
 import { purchaseSchema } from "@/utils/validation/schema/purchase";
 import { useState } from "react";
+import { Form } from "../ui/forms/fields";
 
 type Props = {
   purchase?: Purchase;

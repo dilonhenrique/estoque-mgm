@@ -6,10 +6,9 @@ import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import { serviceService } from "@/backend/services/services";
 import ProductSelector from "../ProductSelector/ProductSelector";
-import Input from "../ui/forms/atoms/Input/Input";
-import { Form } from "../ui/forms/atoms/Form/Form";
 import { serviceSchema } from "@/utils/validation/schema/service";
 import { serviceAction } from "@/backend/actions/services";
+import { Form, Input } from "../ui/forms/fields";
 
 type ServiceFormProps = {
   service?: Service;

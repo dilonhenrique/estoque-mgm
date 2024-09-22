@@ -8,8 +8,7 @@ import {
 } from "@nextui-org/react";
 import { ServiceResult } from "@/types/types";
 import { DocType } from "@prisma/client";
-import Select from "../ui/forms/atoms/Select/Select";
-import Input from "../ui/forms/atoms/Input/Input";
+import { Input, Select } from "../ui/forms/fields";
 
 type IProps = {
   title: string;

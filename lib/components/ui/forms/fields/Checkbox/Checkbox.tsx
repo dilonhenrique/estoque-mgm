@@ -1,24 +1,12 @@
 import React, { useMemo } from "react";
-import { Checkbox as NCheckbox, CheckboxProps } from "@nextui-org/react";
+import { CheckboxProps, Checkbox as NCheckbox } from "@nextui-org/react";
+import { Controller, get, useFormContext } from "react-hook-form";
 import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  get,
-  useFormContext,
-} from "react-hook-form";
+  CheckboxControlledProps,
+  CheckboxUncontrolledProps,
+} from "./Checkbox.type";
 
-type NormalProps = CheckboxProps;
-
-type ControlledProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = NormalProps & Omit<ControllerProps<TFieldValues, TName>, "render">;
-
-type Props = NormalProps | ControlledProps;
-
-export default function Checkbox(props: Props) {
+export default function Checkbox(props: CheckboxProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -26,25 +14,24 @@ export default function Checkbox(props: Props) {
     const fieldErros = methods.getFieldState(name)?.error;
 
     return (
-      <ControlledCheckbox
+      <Controlled
         name={name}
         control={methods.control}
         isInvalid={!!fieldErros?.message}
-        // errorMessage={fieldErros?.message?.toString()}
         {...rest}
       />
     );
   }
 
-  return <NormalCheckbox {...props} />;
+  return <Uncontrolled {...props} />;
 }
 
-function ControlledCheckbox({
+function Controlled({
   name,
   control,
   defaultSelected,
   ...rest
-}: ControlledProps) {
+}: CheckboxControlledProps) {
   const _defaultSelected = useMemo(
     () => defaultSelected ?? get(control?._defaultValues, name),
     [name, defaultSelected]
@@ -55,7 +42,7 @@ function ControlledCheckbox({
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalCheckbox
+        <Uncontrolled
           {...field}
           isDisabled={disabled}
           {...rest}
@@ -66,7 +53,7 @@ function ControlledCheckbox({
   );
 }
 
-function NormalCheckbox(props: NormalProps) {
+function Uncontrolled(props: CheckboxUncontrolledProps) {
   // const { variant, labelPlacement } = globalConfig.input;
 
   return <NCheckbox {...props} />;

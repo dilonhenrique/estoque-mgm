@@ -24,7 +24,7 @@ export default async function create(
   const response = await serviceRepo.create({
     account_id: user.account_id,
     name: payload.data.name,
-    products: payload.data.products,
+    products: payload.data.products ?? [],
   });
 
   if (response) revalidatePath("/", "layout");

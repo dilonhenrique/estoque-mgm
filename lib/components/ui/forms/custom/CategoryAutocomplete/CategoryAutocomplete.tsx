@@ -7,7 +7,7 @@ import {
 import { useState } from "react";
 import { useCategoryList } from "./useCategoryList";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import Autocomplete from "../../atoms/Autocomplete/Autocomplete";
+import { Autocomplete } from "../../fields";
 
 export default function CategoryAutocomplete(
   props: Omit<

@@ -1,23 +1,9 @@
 import { globalConfig } from "@/utils/consts/global.config";
-import { Input as NInput, InputProps, forwardRef } from "@nextui-org/react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  useFormContext,
-} from "react-hook-form";
+import { Input as NInput, forwardRef } from "@nextui-org/react";
+import { Controller, useFormContext } from "react-hook-form";
+import { InputControlledProps, InputProps, InputUncontrolledProps } from "./Input.type";
 
-type NormalProps = InputProps;
-
-type ControlledProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = NormalProps & Omit<ControllerProps<TFieldValues, TName>, "render">;
-
-type Props = NormalProps | ControlledProps;
-
-export default function Input(props: Props) {
+export default function Input(props: InputProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -28,7 +14,7 @@ export default function Input(props: Props) {
     if (value !== undefined) methods.setValue(name, value);
 
     return (
-      <ControlledInput
+      <Controlled
         name={name}
         control={methods.control}
         isInvalid={!!fieldErros?.message}
@@ -38,22 +24,22 @@ export default function Input(props: Props) {
     );
   }
 
-  return <NormalInput {...props} />;
+  return <Uncontrolled {...props} />;
 }
 
-function ControlledInput({ name, control, ...rest }: ControlledProps) {
+function Controlled({ name, control, ...rest }: InputControlledProps) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => (
-        <NormalInput {...field} isDisabled={disabled} {...rest} />
+        <Uncontrolled {...field} isDisabled={disabled} {...rest} />
       )}
     />
   );
 }
 
-const NormalInput = forwardRef((props: NormalProps, ref) => {
+const Uncontrolled = forwardRef((props: InputUncontrolledProps, ref) => {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (

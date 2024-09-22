@@ -1,48 +1,15 @@
 import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
-import {
-  Button,
-  ButtonProps,
-  forwardRef,
-  Input,
-  InputProps,
-} from "@nextui-org/react";
+import { Button, forwardRef, Input } from "@nextui-org/react";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  useFormContext,
-} from "react-hook-form";
+  IncreaserInputControlledProps,
+  IncreaserInputProps,
+  IncreaserInputUncontrolledProps,
+} from "./IncreaserInput.type";
 
-type Props = NormalProps | ControlledProps;
-
-type ControlledProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = NormalProps & Omit<ControllerProps<TFieldValues, TName>, "render">;
-
-type NormalProps = Omit<
-  InputProps,
-  | "endContent"
-  | "startContent"
-  | "value"
-  | "defaultValue"
-  | "onValueChange"
-  | "min"
-  | "max"
-> & {
-  buttonProps?: ButtonProps;
-  value?: number | null;
-  defaultValue?: number | null;
-  onValueChange?: (value: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-};
-
-export default function IncreaserInput(props: Props) {
+export default function IncreaserInput(props: IncreaserInputProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
@@ -53,7 +20,7 @@ export default function IncreaserInput(props: Props) {
     if (value !== undefined) methods.setValue(name, value);
 
     return (
-      <ControlledIncreaserInput
+      <Controlled
         name={name}
         control={methods.control}
         isInvalid={!!fieldErros?.message}
@@ -63,26 +30,22 @@ export default function IncreaserInput(props: Props) {
     );
   }
 
-  return <NormalIncreaserInput {...props} />;
+  return <Uncontrolled {...props} />;
 }
 
-function ControlledIncreaserInput({ name, control, ...rest }: ControlledProps) {
+function Controlled({ name, control, ...rest }: IncreaserInputControlledProps) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { disabled, ...field } }) => {
-        // console.log(rest.isInvalid);
-        // console.log(field.value);
-        return (
-          <NormalIncreaserInput {...field} isDisabled={disabled} {...rest} />
-        );
+        return <Uncontrolled {...field} isDisabled={disabled} {...rest} />;
       }}
     />
   );
 }
 
-const NormalIncreaserInput = forwardRef(
+const Uncontrolled = forwardRef(
   (
     {
       defaultValue,
@@ -94,7 +57,7 @@ const NormalIncreaserInput = forwardRef(
       buttonProps,
       onValueChange,
       ...props
-    }: NormalProps,
+    }: IncreaserInputUncontrolledProps,
     ref
   ) => {
     const [currentValue, setCurrentValue] = useState(
