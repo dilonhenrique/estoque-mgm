@@ -15,5 +15,5 @@ export default async function unsetDone(
   const response = await procedureRepo.unsetDone(id);
 
   if (response) revalidatePath("/", "layout");
-  return serviceResult.success(response);
+  return serviceResult.success(response, "Desmarcado como Realizado!");
 }

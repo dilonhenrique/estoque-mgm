@@ -1,7 +1,8 @@
 import { FormProps } from "@/types/form";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { FieldValues, FormProvider, get, Path } from "react-hook-form";
 import { useFormCustom } from "./useFormProps";
+import { resolveActionToUse } from "@/utils/form/resolveActionToUse";
 
 function Form<T extends FieldValues>({
   schema,
@@ -26,36 +27,34 @@ function Form<T extends FieldValues>({
     ...rest
   } = props;
 
-  const submit = async (event?: React.BaseSyntheticEvent) => {
+  const submit = async (event?: FormEvent<HTMLFormElement>) => {
     let hasError = false;
     let type = "";
 
     await control.handleSubmit(async (data) => {
       const formData = new FormData();
-      let formDataJson = "";
-
-      try {
-        formDataJson = JSON.stringify(data);
-      } catch {}
 
       for (const name of Object.keys(methods.getValues())) {
         formData.append(name, get(data, name));
       }
 
       if (beforeSubmit) {
-        const submitReponse = await beforeSubmit({
+        await beforeSubmit({
           data,
           event,
           formData,
           methods,
         });
-
-        if (!submitReponse) return;
       }
 
-      if (action) {
+      const actionToUse = resolveActionToUse(
+        event?.nativeEvent as SubmitEvent,
+        action
+      );
+
+      if (actionToUse) {
         try {
-          const response = await action(data);
+          const response = await actionToUse(data);
 
           if (
             response &&
@@ -98,13 +97,7 @@ function Form<T extends FieldValues>({
       {render ? (
         render({ submit })
       ) : (
-        <form
-          ref={formRef}
-          noValidate={mounted}
-          action={action}
-          onSubmit={submit}
-          {...rest}
-        >
+        <form ref={formRef} noValidate={mounted} onSubmit={submit} {...rest}>
           {children}
         </form>
       )}

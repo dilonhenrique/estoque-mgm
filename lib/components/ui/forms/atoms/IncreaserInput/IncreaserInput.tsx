@@ -1,5 +1,4 @@
-import { fakeEvent } from "@/utils/form/fakeEvent";
-import { mask } from "@/utils/mask";
+import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
 import {
   Button,
   ButtonProps,
@@ -8,14 +7,7 @@ import {
   InputProps,
 } from "@nextui-org/react";
 import { Minus, Plus } from "lucide-react";
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import {
   Controller,
   ControllerProps,
@@ -116,7 +108,7 @@ const NormalIncreaserInput = forwardRef(
 
     const changeCurrentValue = (newValue: number) => {
       setCurrentValue(newValue);
-      if (onChange) onChange(fakeEvent(props.name, newValue));
+      if (onChange) onChange(syntheticChangeEvent(props.name, newValue));
       if (onValueChange) onValueChange(newValue);
     };
 

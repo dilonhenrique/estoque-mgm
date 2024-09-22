@@ -23,19 +23,16 @@ export default async function update(
     return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  if (
-    payload.data.supplier &&
-    !payload.data.supplier.id &&
-    payload.data.supplier.name
-  ) {
+  let supplierId = payload.data.supplier?.id;
+  if (!supplierId && payload.data.supplier?.name) {
     const supplierResponse = await supplierService.create({
       name: payload.data.supplier.name,
     });
-    payload.data.supplier.id = supplierResponse.data?.id;
+    supplierId = supplierResponse.data?.id;
   }
 
   const response = await purchaseRepo.update(id, {
-    supplier_id: payload.data.supplier.id,
+    supplier_id: supplierId,
     products: payload.data.items ?? [],
   });
 

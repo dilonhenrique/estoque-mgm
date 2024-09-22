@@ -22,17 +22,18 @@ export default async function create(
     return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  if (!payload.data.supplier_id && payload.data.labeled_supplier_id) {
+  let supplierId = payload.data.supplier?.id;
+  if (!supplierId && payload.data.supplier?.name) {
     const supplierResponse = await supplierService.create({
-      name: payload.data.labeled_supplier_id,
+      name: payload.data.supplier.name,
     });
-    payload.data.supplier_id = supplierResponse.data?.id;
+    supplierId = supplierResponse.data?.id;
   }
 
   const response = await purchaseRepo.create({
     account_id: user.account_id,
-    supplier_id: payload.data.supplier_id,
-    products: payload.data.products ?? [],
+    supplier_id: supplierId,
+    products: payload.data.items ?? [],
   });
 
   if (response) revalidatePath("/", "layout");

@@ -5,12 +5,12 @@ import { Purchase } from "@/types/schemas";
 import { toast } from "sonner";
 import FormButton, { SubmitButton } from "../ui/FormButton";
 import ProductSelector from "../ProductSelector/ProductSelector";
-import { useState } from "react";
 import { purchaseService } from "@/backend/services/purchases";
 import SupplierAutocomplete from "../ui/forms/custom/SupplierAutocomplete/SupplierAutocomplete";
 import { Form } from "../ui/forms/atoms/Form/Form";
 import { purchaseAction } from "@/backend/actions/purchases";
 import { purchaseSchema } from "@/utils/validation/schema/purchase";
+import { useState } from "react";
 
 type Props = {
   purchase?: Purchase;
@@ -18,6 +18,9 @@ type Props = {
 
 export default function PurchaseForm({ purchase }: Props) {
   const router = useRouter();
+
+  const [refresh, setRefresh] = useState(false);
+  const refreshProducts = () => setRefresh((prod) => !prod);
 
   async function submitAction(formData: FormData | Purchase) {
     return purchase
@@ -36,7 +39,7 @@ export default function PurchaseForm({ purchase }: Props) {
         if (!purchase) {
           router.push("/compras");
         } else {
-          // refreshProducts();
+          refreshProducts();
         }
       }}
       onError={(res) => {
@@ -56,9 +59,7 @@ export default function PurchaseForm({ purchase }: Props) {
         <ProductSelector
           arrayName="items"
           defaultValue={purchase?.items}
-          // value={products}
-          // onValueChange={setProducts}
-          // refreshItems={refreshItems}
+          refreshItems={refresh}
         />
       </div>
 

@@ -15,7 +15,7 @@ import {
   useFormContext,
   UseFormRegister,
 } from "react-hook-form";
-import { fakeEvent } from "@/utils/form/fakeEvent";
+import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
 
 type Key = string | number;
 
@@ -42,7 +42,7 @@ export default function Autocomplete<T extends object>(props: Props<T>) {
 
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
-    
+
     const value = props.selectedKey ?? props.defaultSelectedKey;
     if (value !== undefined) methods.setValue(name, value);
 
@@ -85,7 +85,7 @@ function ControlledAutocomplete<T extends object>({
   function syncValues(key: Key | null) {
     onSelectionChange(key);
     setValue(key);
-    inputProps.onChange(fakeEvent(name, key));
+    inputProps.onChange(syntheticChangeEvent(name, key));
   }
 
   return (
@@ -98,7 +98,9 @@ function ControlledAutocomplete<T extends object>({
             selectedKey={selectedKey}
             onSelectionChange={syncValues}
             isDisabled={disabled}
-            onInputChange={(val) => onChange(fakeEvent(typedInputName, val))}
+            onInputChange={(val) =>
+              onChange(syntheticChangeEvent(typedInputName, val))
+            }
             defaultSelectedKey={_defaultSelectedKey}
             inputRef={ref}
             {...field}

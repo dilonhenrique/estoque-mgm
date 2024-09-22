@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ActionResult } from "@/types/types";
-import { BaseSyntheticEvent, Ref } from "react";
+import { ActionResult, AnyObject } from "@/types/types";
+import { FormEvent, Ref } from "react";
 import {
   Control,
   FieldValues,
@@ -8,11 +8,15 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 
+export type FormAction<T extends FieldValues> =
+  | ((formData: FormData | T) => ActionResult)
+  | ((formData: FormData | T) => Promise<ActionResult>);
+
 export type ResponseWithError = { response?: ActionResult; error?: unknown };
 
 type BeforeSubmitPayload<T extends FieldValues> = {
   data: T;
-  event?: BaseSyntheticEvent<object, any, any>;
+  event?: FormEvent<HTMLFormElement>;
   formData: FormData;
   methods: UseFormReturn<T, any, undefined>;
 };
@@ -25,11 +29,9 @@ export type FormProps<T extends FieldValues> = Omit<
   headers?: Record<string, string>;
   children?: React.ReactNode | React.ReactNode[];
   render?: (props: {
-    submit: (e?: React.FormEvent) => void;
+    submit: (e?: FormEvent<HTMLFormElement>) => void;
   }) => React.ReactNode | React.ReactNode[];
-  action?:
-    | ((formData: FormData | T) => ActionResult)
-    | ((formData: FormData | T) => Promise<ActionResult>);
+  action?: FormAction<T> | AnyObject<FormAction<T>>;
   validateResponse?: (response: ActionResult) => boolean;
   onSuccess?: (res: ActionResult) => void;
   onError?: (res: ResponseWithError) => void;

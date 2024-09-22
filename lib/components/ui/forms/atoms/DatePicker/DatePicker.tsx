@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { fakeEvent } from "@/utils/form/fakeEvent";
+import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { globalConfig } from "@/utils/consts/global.config";
 import { parseDateToDateValue } from "@/utils/parser/other/parseDateToDateValue";
@@ -77,7 +77,7 @@ function ControlledDatePicker({
             defaultValue={_defaultValue}
             onChange={(val) => {
               const sanitizedDate = sanitizeDate(val?.toString());
-              onChange(fakeEvent(name, sanitizedDate));
+              onChange(syntheticChangeEvent(name, sanitizedDate));
             }}
           />
         );

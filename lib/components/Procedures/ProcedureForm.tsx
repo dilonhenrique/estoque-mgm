@@ -11,7 +11,6 @@ import { SquareCheckBig, SquareX } from "lucide-react";
 import ProcedureDetailsForm from "./ProcedureDetailsForm";
 import { procedureAction } from "@/backend/actions/procedures";
 import { Form } from "../ui/forms/atoms/Form/Form";
-import { AnyObject } from "@/types/types";
 
 type ProcedureFormProps = {
   procedure?: Procedure;
@@ -24,7 +23,6 @@ type SimpleService = {
 
 export default function ProcedureForm({ procedure }: ProcedureFormProps) {
   const router = useRouter();
-  // const form = useRef<HTMLFormElement>(null);
 
   const [service, setService] = useState<Service | SimpleService | undefined>(
     procedure?.service
@@ -50,55 +48,21 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
       : await procedureAction.create(formData);
   }
 
-  async function handleDone(formData: AnyObject) {
-    if (procedure) {
-      if (!confirm("Tem certeza?")) {
-        return null;
-      }
-
-      if (procedure.done) {
-        return await procedureService.unsetDone(procedure.id);
-      } else {
-        return await procedureAction.setDone(procedure.id, formData);
-      }
-    }
+  async function doneAction(formData: FormData | Procedure) {
+    return procedure?.done
+      ? await procedureAction.unsetDone(procedure.id)
+      : await procedureAction.setDone(procedure?.id ?? "", formData);
   }
 
   return (
     <Form
       id="procedure-form"
       className="w-full max-w-2xl flex flex-wrap gap-4 items-end"
-      action={saveAction}
-      defaultValues={procedure}
-      beforeSubmit={async ({ event, methods, data }): Promise<boolean> => {
-        if (event?.nativeEvent && "submitter" in event.nativeEvent) {
-          const submitter = event?.nativeEvent.submitter as
-            | HTMLButtonElement
-            | undefined;
-
-          if (submitter?.value === "setDone") {
-            const response = await handleDone(data);
-
-            if (!response) return false;
-
-            router.refresh();
-            console.log(response);
-            if (response.success) {
-              toast.success(response.message);
-            } else {
-              toast.error(response.message);
-
-              Object.entries(response.fieldErrors).forEach(([name, error]) => {
-                methods.setError(name as keyof Procedure, error);
-              });
-            }
-
-            return false;
-          }
-        }
-
-        return true;
+      action={{
+        upsert: saveAction,
+        done: doneAction,
       }}
+      defaultValues={procedure}
       onSuccess={(res) => {
         toast.success(res.message);
 
@@ -156,9 +120,8 @@ export default function ProcedureForm({ procedure }: ProcedureFormProps) {
             <FormButton
               type="submit"
               startContent={procedure.done ? <SquareX /> : <SquareCheckBig />}
-              // onClick={handleDone}
-              value="setDone"
               formTarget="procedure-form"
+              value="done"
             >
               {procedure.done
                 ? "Desmarcar como Realizado"

@@ -1,4 +1,4 @@
-export function fakeEvent(name?: string, value?: any) {
+export function syntheticChangeEvent(name?: string, value?: any) {
   const event = {
     target: {
       value,

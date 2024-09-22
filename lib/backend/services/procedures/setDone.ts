@@ -42,5 +42,5 @@ export default async function setDone(
   });
 
   if (response) revalidatePath("/", "layout");
-  return serviceResult.success(response);
+  return serviceResult.success(response, "Marcado como Realizado!");
 }

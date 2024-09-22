@@ -4,7 +4,13 @@ export const purchaseSchema = z.object({
   // supplier_id: z.string().uuid().optional(),
   // labeled_supplier_id: z.string().optional(),
   supplier: object({
-    id: z.string().uuid().optional().or(z.literal("")),
+    id: z
+      .string()
+      .uuid()
+      .optional()
+      .nullable()
+      .or(z.literal(""))
+      .transform((val) => (val === "" || val === null ? undefined : val)),
     name: z.string().optional(),
   }),
   items: z
