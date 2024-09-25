@@ -15,12 +15,15 @@ export function useFormCustom<T extends FieldValues>({
   schema,
   useFormProps,
 }: Props<T> = {}) {
-  // TODO: TRY TO GET CONTEXT FIRST
-  const defaultFormProps: UseFormProps<T> = {
-    mode: "onBlur",
-    defaultValues,
-    resolver: schema ? zodResolver(schema) : undefined,
-  };
+  const defaultFormProps: UseFormProps<T> = useMemo(
+    () => ({
+      mode: "onBlur",
+      reValidateMode: "onChange",
+      defaultValues,
+      resolver: schema ? zodResolver(schema) : undefined,
+    }),
+    [schema, defaultValues]
+  );
 
   const _options = useMemo(
     () => merge(defaultFormProps, useFormProps),

@@ -13,6 +13,10 @@ export default function IncreaserInput(props: IncreaserInputProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
+  useEffect(() => {
+    if (name) methods.setValue(name, props.value);
+  }, [props.value, name, methods]);
+
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 

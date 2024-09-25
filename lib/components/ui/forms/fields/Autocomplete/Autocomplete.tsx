@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { globalConfig } from "@/utils/consts/global.config";
 import {
   AutocompleteProps,
@@ -20,6 +20,10 @@ export default function Autocomplete<T extends object>(
 ) {
   const { name, ...rest } = props;
   const methods = useFormContext();
+
+  useEffect(() => {
+    if (name) methods.setValue(name, props.selectedKey);
+  }, [props.selectedKey, name, methods]);
 
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
@@ -55,7 +59,7 @@ function ControlledAutocomplete<T extends object>({
   const typedInputName = useMemo(() => generateInputLabelName(name), [name]);
   const _defaultSelectedKey = useMemo(
     () => defaultSelectedKey ?? get(control?._defaultValues, name),
-    [name, defaultSelectedKey]
+    [name, defaultSelectedKey, control?._defaultValues]
   );
   const inputProps = register(name);
 

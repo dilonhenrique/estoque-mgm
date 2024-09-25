@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
 import { sanitizeDate } from "@/utils/parser/other/sanitizeDate";
 import { globalConfig } from "@/utils/consts/global.config";
@@ -14,6 +14,10 @@ import {
 export default function DatePicker(props: DatePickerProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
+
+  useEffect(() => {
+    if (name) methods.setValue(name, props.value);
+  }, [props.value, name, methods]);
 
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;

@@ -6,7 +6,7 @@ export function actionResult<T>(result: ServiceResult<T>): ActionResult<T> {
   return { ...result, fieldErrors: parseZodErrorsToRhf(result.fieldErrors) };
 }
 
-function parseZodErrorsToRhf(errors?: ZodErrorObject): AnyObject<FieldError>{
+export function parseZodErrorsToRhf(errors?: ZodErrorObject): AnyObject<FieldError>{
   if(!errors) return {};
 
   return parseErrorSchema(errors, true);

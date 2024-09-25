@@ -6,16 +6,31 @@ import {
   SelectProps,
   SelectUncontrolledProps,
 } from "./Select.type";
+import { useEffect } from "react";
 
 export default function Select<T extends object>(props: SelectProps<T>) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
+  useEffect(() => {
+    if (name && props.selectedKeys) {
+      const value =
+        props.selectionMode === "multiple"
+          ? props.selectedKeys
+          : Array.from(props.selectedKeys)[0];
+      methods.setValue(name, value);
+    }
+  }, [props.selectedKeys, props.selectionMode, name, methods]);
+
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.selectedKeys ?? props.defaultSelectedKeys;
-    if (value !== undefined) methods.setValue(name, value);
+    const keys = props.selectedKeys ?? props.defaultSelectedKeys;
+    if (keys !== undefined) {
+      const value =
+        props.selectionMode === "multiple" ? keys : Array.from(keys)[0];
+      if (value !== undefined) methods.setValue(name, value);
+    }
 
     return (
       <Controlled

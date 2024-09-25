@@ -1,7 +1,13 @@
 import { FormProps } from "./form";
 import { FormEvent, useEffect, useState } from "react";
-import { FieldValues, FormProvider, get, Path } from "react-hook-form";
-import { useFormCustom } from "./useFormProps";
+import {
+  FieldValues,
+  FormProvider,
+  get,
+  Path,
+  useFormContext,
+} from "react-hook-form";
+import { useFormCustom } from "./useFormCustom";
 import { resolveActionToUse } from "@/utils/form/resolveActionToUse";
 
 export default function Form<T extends FieldValues>({
@@ -10,7 +16,14 @@ export default function Form<T extends FieldValues>({
   useFormProps,
   ...props
 }: FormProps<T>) {
-  const methods = useFormCustom<T>({ defaultValues, schema, useFormProps });
+  const contextMethods = useFormContext<T>();
+  const defaultMethods = useFormCustom<T>({
+    defaultValues,
+    schema,
+    useFormProps,
+  });
+
+  const methods = contextMethods ?? defaultMethods;
 
   const [mounted, setMounted] = useState(false);
   const {
@@ -92,17 +105,27 @@ export default function Form<T extends FieldValues>({
     setMounted(true);
   }, []);
 
+  function FormChildren() {
+    return (
+      <>
+        {render ? (
+          render({ submit })
+        ) : (
+          <form ref={formRef} noValidate={mounted} onSubmit={submit} {...rest}>
+            {children}
+          </form>
+        )}
+      </>
+    );
+  }
+
+  if (contextMethods) {
+    return <FormChildren />;
+  }
+
   return (
     <FormProvider {...methods}>
-      {render ? (
-        render({ submit })
-      ) : (
-        <form ref={formRef} noValidate={mounted} onSubmit={submit} {...rest}>
-          {children}
-        </form>
-      )}
+      <FormChildren />
     </FormProvider>
   );
 }
-
-export { Form };

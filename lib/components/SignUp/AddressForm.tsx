@@ -11,10 +11,9 @@ import { Input } from "../ui/forms/fields";
 
 type IProps = {
   title: string;
-  formState: ServiceResult;
 };
 
-export default function AddressForm({ title, formState }: IProps) {
+export default function AddressForm({ title }: IProps) {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -44,71 +43,71 @@ export default function AddressForm({ title, formState }: IProps) {
       </CardHeader>
       <CardBody className="gap-4 grid md:grid-cols-12 grid-cols-2">
         <Input
-          name="zip_code"
+          name="address.zip_code"
           label="CEP"
           className="max-w-md col-span-12"
           onValueChange={zipChange}
-          isInvalid={!!formState.fieldErrors.zip_code}
-          errorMessage={formState.fieldErrors.zip_code}
+          // isInvalid={!!formState.fieldErrors.zip_code}
+          // errorMessage={formState.fieldErrors.zip_code}
         />
         <Input
-          name="country"
+          name="address.country"
           label="País"
           className="col-span-4"
           value={country}
           onValueChange={setCountry}
-          isInvalid={!!formState.fieldErrors.country}
-          errorMessage={formState.fieldErrors.country}
+          // isInvalid={!!formState.fieldErrors.country}
+          // errorMessage={formState.fieldErrors.country}
         />
         <Input
-          name="state"
+          name="address.state"
           label="Estado"
           className="col-span-2"
           value={state}
           onValueChange={setState}
-          isInvalid={!!formState.fieldErrors.state}
-          errorMessage={formState.fieldErrors.state}
+          // isInvalid={!!formState.fieldErrors.state}
+          // errorMessage={formState.fieldErrors.state}
         />
         <Input
-          name="city"
+          name="address.city"
           label="Cidade"
           className="col-span-6"
           value={city}
           onValueChange={setCity}
-          isInvalid={!!formState.fieldErrors.city}
-          errorMessage={formState.fieldErrors.city}
+          // isInvalid={!!formState.fieldErrors.city}
+          // errorMessage={formState.fieldErrors.city}
         />
         <Input
-          name="neighborhood"
+          name="address.neighborhood"
           label="Bairro"
           className="col-span-6"
           value={neighborhood}
           onValueChange={setNeighborhood}
-          isInvalid={!!formState.fieldErrors.neighborhood}
-          errorMessage={formState.fieldErrors.neighborhood}
+          // isInvalid={!!formState.fieldErrors.neighborhood}
+          // errorMessage={formState.fieldErrors.neighborhood}
         />
         <Input
-          name="street"
+          name="address.street"
           label="Endereço"
           className="col-span-6"
           value={street}
           onValueChange={setStreet}
-          isInvalid={!!formState.fieldErrors.street}
-          errorMessage={formState.fieldErrors.street}
+          // isInvalid={!!formState.fieldErrors.street}
+          // errorMessage={formState.fieldErrors.street}
         />
         <Input
-          name="number"
+          name="address.number"
           label="Número"
           className="col-span-6"
-          isInvalid={!!formState.fieldErrors.number}
-          errorMessage={formState.fieldErrors.number}
+          // isInvalid={!!formState.fieldErrors.number}
+          // errorMessage={formState.fieldErrors.number}
         />
         <Input
-          name="complement"
+          name="address.complement"
           label="Complemento"
           className="col-span-6"
-          isInvalid={!!formState.fieldErrors.complement}
-          errorMessage={formState.fieldErrors.complement}
+          // isInvalid={!!formState.fieldErrors.complement}
+          // errorMessage={formState.fieldErrors.complement}
         />
       </CardBody>
     </Card>

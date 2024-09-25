@@ -1,11 +1,20 @@
 import { globalConfig } from "@/utils/consts/global.config";
 import { Input as NInput, forwardRef } from "@nextui-org/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { InputControlledProps, InputProps, InputUncontrolledProps } from "./Input.type";
+import {
+  InputControlledProps,
+  InputProps,
+  InputUncontrolledProps,
+} from "./Input.type";
+import { useEffect } from "react";
 
 export default function Input(props: InputProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
+
+  useEffect(() => {
+    if (name) methods.setValue(name, props.value);
+  }, [props.value, name, methods]);
 
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;

@@ -1,14 +1,16 @@
 "use server";
 
-import { z } from "zod";
 import { AnyObject, ServiceResult } from "@/types/types";
-import { Account, DocType } from "@prisma/client";
+import { Account } from "@prisma/client";
 import { accountRepo } from "@/backend/repositories/accounts";
 import { cookies } from "next/headers";
 import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
 import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
+import { addressSchema } from "@/utils/validation/schema/address";
+import { accountSchema } from "@/utils/validation/schema/account";
+import { userSchema } from "@/utils/validation/schema/user";
 
 export default async function create(
   product: FormData | AnyObject
@@ -52,37 +54,6 @@ export default async function create(
     return serviceResult.error();
   }
 }
-
-const accountSchema = z.object({
-  fullname: z.string(),
-  professional_number: z.string(),
-  document_type: z.nativeEnum(DocType),
-  document: z.string(),
-});
-
-const addressSchema = z.object({
-  zip_code: z.string(),
-  country: z.string(),
-  state: z.string(),
-  city: z.string(),
-  neighborhood: z.string().optional(),
-  street: z.string(),
-  number: z.string(),
-  complement: z.string().optional(),
-});
-
-const userSchema = z
-  .object({
-    name: z.string(),
-    email: z.string().email(),
-    img_url: z.string().optional(),
-    password: z.string().min(8),
-    confirm_password: z.string().min(8),
-  })
-  .refine(({ confirm_password, password }) => confirm_password === password, {
-    message: "passwords_must_be_equal",
-    path: ["confirm_password"],
-  });
 
 function getSocialAccountFromCookies() {
   const accountData = cookies().get(SOCIAL_ACCOUNT_DATA)?.value;

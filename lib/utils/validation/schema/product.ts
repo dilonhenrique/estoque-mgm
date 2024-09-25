@@ -8,7 +8,13 @@ const create = z.object({
   code: z.string().optional(),
   img_url: z.string().optional(),
   category: object({
-    id: z.string().uuid().optional().or(z.literal(null)),
+    id: z
+      .string()
+      .uuid()
+      .optional()
+      .nullable()
+      .or(z.literal(""))
+      .transform((val) => (val === "" || val === null ? undefined : val)),
     name: z.string().optional(),
   }),
 });

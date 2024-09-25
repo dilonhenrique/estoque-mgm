@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { CheckboxProps, Checkbox as NCheckbox } from "@nextui-org/react";
 import { Controller, get, useFormContext } from "react-hook-form";
 import {
@@ -10,8 +10,18 @@ export default function Checkbox(props: CheckboxProps) {
   const { name, ...rest } = props;
   const methods = useFormContext();
 
+  useEffect(() => {
+    if (name) methods?.setValue(name, props.isSelected);
+  }, [props.isSelected, name, methods]);
+
   if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
+
+    const selected =
+      typeof props.isSelected === "boolean"
+        ? props.isSelected
+        : props.defaultSelected;
+    if (selected !== undefined) methods.setValue(name, selected);
 
     return (
       <Controlled
@@ -30,11 +40,11 @@ function Controlled({
   name,
   control,
   defaultSelected,
-  ...rest
+  ...props
 }: CheckboxControlledProps) {
   const _defaultSelected = useMemo(
     () => defaultSelected ?? get(control?._defaultValues, name),
-    [name, defaultSelected]
+    [name, defaultSelected, control?._defaultValues]
   );
 
   return (
@@ -45,7 +55,7 @@ function Controlled({
         <Uncontrolled
           {...field}
           isDisabled={disabled}
-          {...rest}
+          {...props}
           defaultSelected={_defaultSelected}
         />
       )}

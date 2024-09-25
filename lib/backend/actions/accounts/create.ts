@@ -1,11 +1,13 @@
 "use server";
 
-import { AnyObject, ServiceResult } from "@/types/types";
+import { ActionResult, AnyObject, ServiceResult } from "@/types/types";
 import { Account } from "@prisma/client";
 import { accountService } from "@/backend/services/accounts";
+import { actionResult } from "@/utils/backend/actionResult";
 
 export default async function create(
   account: FormData | AnyObject
-): Promise<ServiceResult<Account>> {
-  return await accountService.create(account);
+): Promise<ActionResult<Account>> {
+  const response = await accountService.create(account);
+  return actionResult(response);
 }
