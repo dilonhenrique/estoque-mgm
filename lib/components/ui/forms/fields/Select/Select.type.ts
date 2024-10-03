@@ -11,8 +11,11 @@ export type SelectControlledProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = SelectUncontrolledProps<U> &
-  Omit<ControllerProps<TFieldValues, TName>, "render">;
+  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
+    disableRhf?: false;
+    selectedKeys?: never;
+  };
 
 export type SelectProps<U extends object> =
-  | SelectUncontrolledProps<U>
+  | (SelectUncontrolledProps<U> & { disableRhf: true })
   | SelectControlledProps<U>;

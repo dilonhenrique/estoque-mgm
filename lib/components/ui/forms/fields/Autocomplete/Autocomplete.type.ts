@@ -23,8 +23,10 @@ export type AutocompleteControlledProps<
 > = AutocompleteUncontrolledProps<U> &
   Omit<ControllerProps<TFieldValues, TName>, "render"> & {
     register: UseFormRegister<FieldValues>;
+    disableRhf?: false;
+    selectedKey?: never;
   };
 
 export type AutocompleteProps<U extends object> =
-  | AutocompleteUncontrolledProps<U>
+  | (AutocompleteUncontrolledProps<U> & { disableRhf: true })
   | AutocompleteControlledProps<U>;

@@ -2,33 +2,28 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { globalConfig } from "@/utils/consts/global.config";
-import {
-  AutocompleteProps,
-  Autocomplete as NAutocomplete,
-} from "@nextui-org/react";
+import { Autocomplete as NAutocomplete } from "@nextui-org/react";
 import { Controller, get, useFormContext } from "react-hook-form";
 import { syntheticChangeEvent } from "@/utils/form/syntheticEvent";
 import {
   AutocompleteControlledProps,
+  AutocompleteProps,
   AutocompleteRawProps,
   AutocompleteUncontrolledProps,
   Key,
 } from "./Autocomplete.type";
 
-export default function Autocomplete<T extends object>(
-  props: AutocompleteProps<T>
-) {
-  const { name, ...rest } = props;
+export default function Autocomplete<T extends object>({
+  disableRhf,
+  ...props
+}: AutocompleteProps<T>) {
+  const { name, selectedKey, ...rest } = props;
   const methods = useFormContext();
 
-  useEffect(() => {
-    if (name) methods.setValue(name, props.selectedKey);
-  }, [props.selectedKey, name, methods]);
-
-  if (methods?.control && name) {
+  if (methods?.control && name && !disableRhf) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.selectedKey ?? props.defaultSelectedKey;
+    const value = props.defaultSelectedKey;
     if (value !== undefined) methods.setValue(name, value);
 
     return (

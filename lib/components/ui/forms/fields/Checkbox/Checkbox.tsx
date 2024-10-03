@@ -1,26 +1,20 @@
-import React, { useEffect, useMemo } from "react";
-import { CheckboxProps, Checkbox as NCheckbox } from "@nextui-org/react";
+import React, { useMemo } from "react";
+import { Checkbox as NCheckbox } from "@nextui-org/react";
 import { Controller, get, useFormContext } from "react-hook-form";
 import {
   CheckboxControlledProps,
+  CheckboxProps,
   CheckboxUncontrolledProps,
 } from "./Checkbox.type";
 
-export default function Checkbox(props: CheckboxProps) {
-  const { name, ...rest } = props;
+export default function Checkbox({ disableRhf, ...props }: CheckboxProps) {
+  const { name, isSelected, ...rest } = props;
   const methods = useFormContext();
 
-  useEffect(() => {
-    if (name) methods?.setValue(name, props.isSelected);
-  }, [props.isSelected, name, methods]);
-
-  if (methods?.control && name) {
+  if (methods?.control && name && !disableRhf) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const selected =
-      typeof props.isSelected === "boolean"
-        ? props.isSelected
-        : props.defaultSelected;
+    const selected = props.defaultSelected;
     if (selected !== undefined) methods.setValue(name, selected);
 
     return (

@@ -6,21 +6,16 @@ import {
   InputProps,
   InputUncontrolledProps,
 } from "./Input.type";
-import { useEffect } from "react";
 
-export default function Input(props: InputProps) {
-  const { name, ...rest } = props;
+export default function Input({ disableRhf, ...props }: InputProps) {
+  const { name, value, ...rest } = props;
   const methods = useFormContext();
 
-  useEffect(() => {
-    if (name) methods.setValue(name, props.value);
-  }, [props.value, name, methods]);
-
-  if (methods?.control && name) {
+  if (methods?.control && name && !disableRhf) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.value ?? props.defaultValue;
-    if (value !== undefined) methods.setValue(name, value);
+    if (props.defaultValue !== undefined)
+      methods.setValue(name, props.defaultValue);
 
     return (
       <Controlled

@@ -8,17 +8,19 @@ import { ServiceResult } from "@/types/types";
 import { cepService } from "@/backend/services/cep";
 import { toast } from "sonner";
 import { Input } from "../ui/forms/fields";
+import { useFormContext } from "react-hook-form";
 
 type IProps = {
   title: string;
 };
 
 export default function AddressForm({ title }: IProps) {
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [neighborhood, setNeighborhood] = useState("");
-  const [street, setStreet] = useState("");
+  const methods = useFormContext();
+  // const [country, setCountry] = useState("");
+  // const [state, setState] = useState("");
+  // const [city, setCity] = useState("");
+  // const [neighborhood, setNeighborhood] = useState("");
+  // const [street, setStreet] = useState("");
 
   const zipChange = _.debounce(async (val: string) => {
     if (val.length > 7) {
@@ -28,11 +30,16 @@ export default function AddressForm({ title }: IProps) {
         return toast.error(response.error);
       }
 
-      setCountry("Brasil");
-      setState(response.data.uf);
-      setCity(response.data.localidade);
-      setNeighborhood(response.data.bairro);
-      setStreet(response.data.logradouro);
+      // setCountry("Brasil");
+      // setState(response.data.uf);
+      // setCity(response.data.localidade);
+      // setNeighborhood(response.data.bairro);
+      // setStreet(response.data.logradouro);
+      methods.setValue("address.country", "Brasil");
+      methods.setValue("address.state", response.data.uf);
+      methods.setValue("address.city", response.data.localidade);
+      methods.setValue("address.neighborhood", response.data.bairro);
+      methods.setValue("address.street", response.data.logradouro);
     }
   }, 500);
 
@@ -47,6 +54,8 @@ export default function AddressForm({ title }: IProps) {
           label="CEP"
           className="max-w-md col-span-12"
           onValueChange={zipChange}
+          // value=""
+          // disableRhf={true}
           // isInvalid={!!formState.fieldErrors.zip_code}
           // errorMessage={formState.fieldErrors.zip_code}
         />
@@ -54,8 +63,8 @@ export default function AddressForm({ title }: IProps) {
           name="address.country"
           label="País"
           className="col-span-4"
-          value={country}
-          onValueChange={setCountry}
+          // value={country}
+          // onValueChange={setCountry}
           // isInvalid={!!formState.fieldErrors.country}
           // errorMessage={formState.fieldErrors.country}
         />
@@ -63,8 +72,8 @@ export default function AddressForm({ title }: IProps) {
           name="address.state"
           label="Estado"
           className="col-span-2"
-          value={state}
-          onValueChange={setState}
+          // value={state}
+          // onValueChange={setState}
           // isInvalid={!!formState.fieldErrors.state}
           // errorMessage={formState.fieldErrors.state}
         />
@@ -72,8 +81,8 @@ export default function AddressForm({ title }: IProps) {
           name="address.city"
           label="Cidade"
           className="col-span-6"
-          value={city}
-          onValueChange={setCity}
+          // value={city}
+          // onValueChange={setCity}
           // isInvalid={!!formState.fieldErrors.city}
           // errorMessage={formState.fieldErrors.city}
         />
@@ -81,8 +90,8 @@ export default function AddressForm({ title }: IProps) {
           name="address.neighborhood"
           label="Bairro"
           className="col-span-6"
-          value={neighborhood}
-          onValueChange={setNeighborhood}
+          // value={neighborhood}
+          // onValueChange={setNeighborhood}
           // isInvalid={!!formState.fieldErrors.neighborhood}
           // errorMessage={formState.fieldErrors.neighborhood}
         />
@@ -90,8 +99,8 @@ export default function AddressForm({ title }: IProps) {
           name="address.street"
           label="Endereço"
           className="col-span-6"
-          value={street}
-          onValueChange={setStreet}
+          // value={street}
+          // onValueChange={setStreet}
           // isInvalid={!!formState.fieldErrors.street}
           // errorMessage={formState.fieldErrors.street}
         />

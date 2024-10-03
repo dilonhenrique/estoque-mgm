@@ -7,6 +7,14 @@ export type InputControlledProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = InputUncontrolledProps &
-  Omit<ControllerProps<TFieldValues, TName>, "render">;
+  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
+    disableRhf?: false;
+    value?: never;
+  };
 
-export type InputProps = InputUncontrolledProps | InputControlledProps;
+export type InputProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> =
+  | (InputUncontrolledProps & { disableRhf: true })
+  | InputControlledProps<TFieldValues, TName>;

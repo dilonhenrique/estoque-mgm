@@ -28,7 +28,10 @@ export default function SignUpForm() {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams);
 
-  const methods = useFormCustom({ schema: signupSchema });
+  const methods = useFormCustom({
+    schema: signupSchema,
+    useFormProps: { shouldUnregister: false },
+  });
 
   const [active, _setActive] = useState(1);
   function setActive(val: number) {
@@ -37,7 +40,7 @@ export default function SignUpForm() {
 
   function validateStep(step: number): boolean {
     methods.clearErrors();
-    
+
     const activeKey = stepToName.get(step) as keyof typeof signupSchema.shape;
     const activeSchema = signupSchema.pick({ [activeKey]: true } as any);
 
@@ -51,7 +54,7 @@ export default function SignUpForm() {
         methods.control.setError(name, error);
       }
     );
-    
+
     router.refresh();
     return false;
   }
