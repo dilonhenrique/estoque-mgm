@@ -60,13 +60,9 @@ export const zodResolver: Resolver =
   (schema, schemaOptions, resolverOptions = {}) =>
   async (values, _, options) => {
     try {
-      console.log("starting validation for:", values);
-
       const data = await schema[
         resolverOptions.mode === "sync" ? "parse" : "parseAsync"
       ](values);
-
-      console.log("validation result:", data);
 
       options.shouldUseNativeValidation && validateFieldsNatively({}, options);
 
@@ -75,8 +71,6 @@ export const zodResolver: Resolver =
         values: resolverOptions.raw ? values : data,
       };
     } catch (error: any) {
-      console.log("validation error:", error);
-
       if (isZodError(error)) {
         return {
           values: {},

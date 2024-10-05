@@ -7,11 +7,6 @@ export type CheckboxControlledProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = CheckboxUncontrolledProps &
-  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
-    disableRhf?: false;
-    isSelected?: never;
-  };
+  Omit<ControllerProps<TFieldValues, TName>, "render">;
 
-export type CheckboxProps =
-  | (CheckboxUncontrolledProps & { disableRhf: true })
-  | CheckboxControlledProps;
+export type CheckboxProps = CheckboxUncontrolledProps | CheckboxControlledProps;

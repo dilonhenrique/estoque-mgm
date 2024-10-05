@@ -7,14 +7,17 @@ import {
   CheckboxUncontrolledProps,
 } from "./Checkbox.type";
 
-export default function Checkbox({ disableRhf, ...props }: CheckboxProps) {
-  const { name, isSelected, ...rest } = props;
+export default function Checkbox(props: CheckboxProps) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const selected = props.defaultSelected;
+    const selected =
+      typeof props.isSelected === "boolean"
+        ? props.isSelected
+        : props.defaultSelected;
     if (selected !== undefined) methods.setValue(name, selected);
 
     return (

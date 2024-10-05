@@ -7,17 +7,14 @@ import {
   SelectUncontrolledProps,
 } from "./Select.type";
 
-export default function Select<T extends object>({
-  disableRhf,
-  ...props
-}: SelectProps<T>) {
-  const { name, selectedKeys, ...rest } = props;
+export default function Select<T extends object>(props: SelectProps<T>) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const keys = props.defaultSelectedKeys;
+    const keys = props.selectedKeys ?? props.defaultSelectedKeys;
     if (keys !== undefined) {
       const value =
         props.selectionMode === "multiple" ? keys : Array.from(keys)[0];

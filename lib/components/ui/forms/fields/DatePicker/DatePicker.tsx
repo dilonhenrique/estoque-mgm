@@ -11,14 +11,14 @@ import {
   DatePickerUncontrolledProps,
 } from "./DatePicker.type";
 
-export default function DatePicker({ disableRhf, ...props }: DatePickerProps) {
-  const { name, value, ...rest } = props;
+export default function DatePicker(props: DatePickerProps) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.defaultValue;
+    const value = props.value ?? props.defaultValue;
     if (value !== undefined) methods.setValue(name, value);
 
     return (

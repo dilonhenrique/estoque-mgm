@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  SelectItem,
-} from "@nextui-org/react";
-import { ServiceResult } from "@/types/types";
+import { Card, CardBody, CardHeader, SelectItem } from "@nextui-org/react";
 import { DocType } from "@prisma/client";
 import { Input, Select } from "../ui/forms/fields";
 
@@ -25,15 +19,11 @@ export default function AccountForm({ title }: IProps) {
           name="account.fullname"
           label="Nome completo"
           className="col-span-6"
-          // isInvalid={!!formState.fieldErrors.fullname}
-          // errorMessage={formState.fieldErrors.fullname}
         />
         <Input
           name="account.professional_number"
           label="Número CRBM"
           className="col-span-6"
-          // isInvalid={!!formState.fieldErrors.professional_number}
-          // errorMessage={formState.fieldErrors.professional_number}
         />
         <Select
           name="account.document_type"
@@ -41,8 +31,6 @@ export default function AccountForm({ title }: IProps) {
           items={Object.values(DocType).map((value) => ({ value }))}
           defaultSelectedKeys={[DocType.CPF]}
           className="col-span-4"
-          // isInvalid={!!formState.fieldErrors.document_type}
-          // errorMessage={formState.fieldErrors.document_type}
         >
           {(item) => <SelectItem key={item.value}>{item.value}</SelectItem>}
         </Select>
@@ -50,8 +38,6 @@ export default function AccountForm({ title }: IProps) {
           name="account.document"
           label="CPF/CNPJ"
           className="col-span-8"
-          // isInvalid={!!formState.fieldErrors.document}
-          // errorMessage={formState.fieldErrors.document}
         />
       </CardBody>
     </Card>

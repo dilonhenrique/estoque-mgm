@@ -15,11 +15,8 @@ export type DatePickerControlledProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = DatePickerUncontrolledProps &
-  Omit<ControllerProps<TFieldValues, TName>, "render"> & {
-    disableRhf?: false;
-    value?: never;
-  };
+  Omit<ControllerProps<TFieldValues, TName>, "render">;
 
 export type DatePickerProps =
-  | (DatePickerUncontrolledProps & { disableRhf: true })
+  | DatePickerUncontrolledProps
   | DatePickerControlledProps;

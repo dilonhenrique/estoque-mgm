@@ -7,15 +7,15 @@ import {
   InputUncontrolledProps,
 } from "./Input.type";
 
-export default function Input({ disableRhf, ...props }: InputProps) {
-  const { name, value, ...rest } = props;
+export default function Input(props: InputProps) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    if (props.defaultValue !== undefined)
-      methods.setValue(name, props.defaultValue);
+    const value = props.value ?? props.defaultValue;
+    if (value !== undefined) methods.setValue(name, value);
 
     return (
       <Controlled

@@ -13,17 +13,16 @@ import {
   Key,
 } from "./Autocomplete.type";
 
-export default function Autocomplete<T extends object>({
-  disableRhf,
-  ...props
-}: AutocompleteProps<T>) {
-  const { name, selectedKey, ...rest } = props;
+export default function Autocomplete<T extends object>(
+  props: AutocompleteProps<T>
+) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.defaultSelectedKey;
+    const value = props.selectedKey ?? props.defaultSelectedKey;
     if (value !== undefined) methods.setValue(name, value);
 
     return (

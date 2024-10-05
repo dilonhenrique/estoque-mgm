@@ -9,17 +9,14 @@ import {
   IncreaserInputUncontrolledProps,
 } from "./IncreaserInput.type";
 
-export default function IncreaserInput({
-  disableRhf,
-  ...props
-}: IncreaserInputProps) {
-  const { name, value, ...rest } = props;
+export default function IncreaserInput(props: IncreaserInputProps) {
+  const { name, ...rest } = props;
   const methods = useFormContext();
 
-  if (methods?.control && name && !disableRhf) {
+  if (methods?.control && name) {
     const fieldErros = methods.getFieldState(name)?.error;
 
-    const value = props.defaultValue;
+    const value = props.value ?? props.defaultValue;
     if (value !== undefined) methods.setValue(name, value);
 
     return (

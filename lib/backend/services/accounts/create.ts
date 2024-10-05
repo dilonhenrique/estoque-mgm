@@ -8,42 +8,24 @@ import { SOCIAL_ACCOUNT_DATA } from "@/auth";
 import { Account as AuthAccount } from "next-auth";
 import { prepareDataForSchema } from "@/utils/form/prepareDataForZod";
 import { serviceResult } from "@/utils/backend/serviceResult";
-import { addressSchema } from "@/utils/validation/schema/address";
-import { accountSchema } from "@/utils/validation/schema/account";
-import { userSchema } from "@/utils/validation/schema/user";
+import { signupSchema } from "@/utils/validation/schema/signup";
 
 export default async function create(
   product: FormData | AnyObject
 ): Promise<ServiceResult<Account>> {
   const data = prepareDataForSchema(product);
+  const payload = signupSchema.safeParse(data);
 
-  const accountPayload = accountSchema.safeParse(data);
-  const addressPayload = addressSchema.safeParse(data);
-  const userPayload = userSchema.safeParse(data);
-
-  if (
-    !accountPayload.success ||
-    !addressPayload.success ||
-    !userPayload.success
-  ) {
-    return serviceResult.fieldErrors([
-      ...(accountPayload.error?.errors ?? []),
-      ...(addressPayload.error?.errors ?? []),
-      ...(userPayload.error?.errors ?? []),
-    ]);
+  if (!payload.success) {
+    return serviceResult.fieldErrors(payload.error.errors);
   }
 
-  const { data: account } = accountPayload;
-  const { data: address } = addressPayload;
-  const {
-    data: { confirm_password, ...user },
-  } = userPayload;
+  const { confirm_password, ...user } = payload.data.user;
   const social_account = getSocialAccountFromCookies();
 
   try {
     const response = await accountRepo.create({
-      account,
-      address,
+      ...payload.data,
       user,
       social_account,
     });
