@@ -3,6 +3,7 @@
 import { Card, CardBody, CardHeader, SelectItem } from "@nextui-org/react";
 import { DocType } from "@prisma/client";
 import { Input, Select } from "../ui/forms/fields";
+import { mask } from "@/utils/mask";
 
 type IProps = {
   title: string;
@@ -20,24 +21,27 @@ export default function AccountForm({ title }: IProps) {
           label="Nome completo"
           className="col-span-6"
         />
+
         <Input
           name="account.professional_number"
           label="Número CRBM"
           className="col-span-6"
         />
+
         <Select
           name="account.document_type"
           label="Tipo de documento"
           items={Object.values(DocType).map((value) => ({ value }))}
-          // defaultSelectedKeys={[DocType.CPF]}
           className="col-span-4"
         >
           {(item) => <SelectItem key={item.value}>{item.value}</SelectItem>}
         </Select>
+
         <Input
           name="account.document"
           label="CPF/CNPJ"
           className="col-span-8"
+          mask={[mask.cpf, mask.cnpj]}
         />
       </CardBody>
     </Card>

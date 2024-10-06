@@ -1,9 +1,9 @@
-export default function cpfValidation(cpf?: string) {
-  if (!cpf) return false;
+export default function cpfValidation(cpf?: string, isOptional = false) {
+  if (!cpf) return isOptional;
 
   cpf = cpf.replace(/[^\d]+/g, "");
 
-  if (cpf == "00000000000") return false;
+  if (cpf === "00000000000") return false;
   if (cpf.length != 11) return false;
 
   var soma = 0;

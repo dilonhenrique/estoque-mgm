@@ -7,6 +7,7 @@ import { cepService } from "@/backend/services/cep";
 import { toast } from "sonner";
 import { Input } from "../ui/forms/fields";
 import { useFormContext } from "react-hook-form";
+import { mask } from "@/utils/mask";
 
 type IProps = {
   title: string;
@@ -16,7 +17,7 @@ export default function AddressForm({ title }: IProps) {
   const methods = useFormContext();
 
   const zipChange = _.debounce(async (val: string) => {
-    if (val.length > 7) {
+    if (val.length > 8) {
       const response = await cepService.search(val);
 
       if (!response.success) {
@@ -42,6 +43,7 @@ export default function AddressForm({ title }: IProps) {
           label="CEP"
           className="max-w-md col-span-12"
           onValueChange={zipChange}
+          mask={mask.cep}
         />
         <Input name="address.country" label="País" className="col-span-4" />
         <Input name="address.state" label="Estado" className="col-span-2" />

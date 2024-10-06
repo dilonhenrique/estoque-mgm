@@ -8,6 +8,7 @@ import { customerService } from "@/backend/services/customers";
 import { customerAction } from "@/backend/actions/customers";
 import { customerSchema } from "@/utils/validation/schema/customer";
 import { DatePicker, Form, Input } from "../ui/forms/fields";
+import { mask } from "@/utils/mask";
 
 type Props = {
   customer?: Customer;
@@ -38,7 +39,7 @@ export default function CustomerForm({ customer }: Props) {
     >
       <Input name="name" label="Nome do cliente" isRequired />
       <Input name="email" label="E-mail do cliente" />
-      <Input name="phone" label="Telefone do cliente" />
+      <Input name="phone" label="Telefone do cliente" mask={mask.phone} />
       <DatePicker
         name="birthday"
         label="Aniversário do cliente"

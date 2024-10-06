@@ -8,6 +8,7 @@ import { supplierService } from "@/backend/services/suppliers";
 import { supplierSchema } from "@/utils/validation/schema/supplier";
 import { supplierAction } from "@/backend/actions/suppliers";
 import { Form, Input } from "../ui/forms/fields";
+import { mask } from "@/utils/mask";
 
 type Props = {
   supplier?: Supplier;
@@ -42,10 +43,19 @@ export default function SupplierForm({ supplier }: Props) {
         isRequired
         className="w-full"
       />
-      {/* TODO: mask */}
-      <Input name="cnpj" label="CNPJ do fornecedor" className="w-full" />{" "}
+      <Input
+        name="cnpj"
+        label="CNPJ do fornecedor"
+        className="w-full"
+        mask={mask.cnpj}
+      />
       <Input name="email" label="E-mail do fornecedor" className="w-full" />
-      <Input name="phone" label="Telefone do fornecedor" className="w-full" />
+      <Input
+        name="phone"
+        label="Telefone do fornecedor"
+        className="w-full"
+        mask={mask.phone}
+      />
       <div className="w-full flex justify-end gap-4">
         {supplier && (
           <FormButton

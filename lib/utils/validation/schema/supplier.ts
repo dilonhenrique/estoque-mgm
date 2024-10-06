@@ -8,12 +8,9 @@ const create = z.object({
   email: z.string().email({ message: "E-mail inválido" }).optional().nullable(),
   cnpj: z
     .string()
-    .optional()
-    .refine(validation.cnpj, "CNPJ inválido")
+    .refine((val) => validation.cnpj(val, true), "CNPJ inválido")
     .transform(sanitizeStringToOnlyNumber),
-  // .or(z.literal(""))
-  // .transform((val) => (val === "" ? undefined : val)),
-  phone: z.string().optional(),
+  phone: z.string().optional().transform(sanitizeStringToOnlyNumber),
   address: addressSchema.optional(),
 });
 

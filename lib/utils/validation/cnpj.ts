@@ -1,11 +1,12 @@
 // https://solucao.dev
 
-export default function cnpjValidation(cnpj?: string) {
-  if (!cnpj) return false;
-  
+export default function cnpjValidation(cnpj?: string, isOptional = false) {
+  if (!cnpj) return isOptional;
+
   cnpj = cnpj.replace(/[^\d]+/g, "");
 
   if (cnpj.length != 14) return false;
+  if (cnpj === "00000000000000") return false;
 
   var tamanhoTotal = cnpj.length - 2;
   var cnpjSemDigitos = cnpj.substring(0, tamanhoTotal);

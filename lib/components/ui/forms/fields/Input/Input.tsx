@@ -6,6 +6,7 @@ import {
   InputProps,
   InputUncontrolledProps,
 } from "./Input.type";
+import { IMaskInputProps, IMaskMixin, IMaskMixinProps } from "react-imask";
 
 export default function Input(props: InputProps) {
   const { name, ...rest } = props;
@@ -36,7 +37,7 @@ function Controlled({ name, control, ...rest }: InputControlledProps) {
     <Controller
       name={name}
       control={control}
-      render={({ field: { disabled, ...field } }) => (
+      render={({ field: { disabled, ref, ...field } }) => (
         <Uncontrolled {...field} isDisabled={disabled} {...rest} />
       )}
     />
@@ -47,11 +48,22 @@ const Uncontrolled = forwardRef((props: InputUncontrolledProps, ref) => {
   const { variant, labelPlacement } = globalConfig.input;
 
   return (
-    <NInput
-      ref={ref}
+    //@ts-ignore
+    <MaskedInput
+      inputRef={ref}
       variant={variant}
       labelPlacement={labelPlacement}
       {...props}
     />
   );
+});
+
+const MaskedInput = IMaskMixin<
+  HTMLInputElement,
+  IMaskMixinProps<HTMLInputElement>
+>((props) => {
+  const { inputRef, ...rest } = props;
+
+  // @ts-ignore
+  return <NInput ref={inputRef} {...rest} />;
 });

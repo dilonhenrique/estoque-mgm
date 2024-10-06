@@ -1,7 +1,9 @@
 import { InputProps as NInputProps } from "@nextui-org/react";
 import { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+import { IMaskMixinProps } from "react-imask";
 
-export type InputUncontrolledProps = NInputProps;
+export type InputUncontrolledProps = NInputProps &
+  IMaskMixinProps<HTMLInputElement>;
 
 export type InputControlledProps<
   TFieldValues extends FieldValues = FieldValues,
