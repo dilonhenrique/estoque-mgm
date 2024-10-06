@@ -55,7 +55,7 @@ export default async function update(id: string, payload: Payload) {
 type Payload = {
   name?: string;
   service_id?: string;
-  customer_id?: string;
+  customer_id?: string | null;
   scheduled_for?: Date | null;
   confirmed_by_customer?: boolean;
   products: ProductPayload[];

@@ -89,7 +89,7 @@ export default async function update(id: string, payload: Payload) {
 }
 
 type Payload = {
-  supplier_id?: string;
+  supplier_id?: string | null;
   products: ProductPayload[];
 };
 

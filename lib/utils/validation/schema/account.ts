@@ -10,7 +10,7 @@ export const accountSchema = z
     document_type: z.nativeEnum(DocType, { message: "Deve ser CPF ou CNPJ" }),
     document: z
       .string({ message: "Obrigatório" })
-      .transform(sanitizeStringToOnlyNumber),
+      .transform((val) => sanitizeStringToOnlyNumber(val)),
   })
   .refine(
     ({ document_type, document }) => {

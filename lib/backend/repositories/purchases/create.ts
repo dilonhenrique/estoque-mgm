@@ -51,7 +51,7 @@ export default async function create(payload: Payload) {
 
 type Payload = {
   account_id: string;
-  supplier_id?: string;
+  supplier_id?: string | null;
   products: ProductPayload[];
 };
 

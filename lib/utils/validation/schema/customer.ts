@@ -4,7 +4,7 @@ import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringT
 
 const create = z.object({
   name: z.string({ message: "Obrigatório" }),
-  email: z.string().email({ message: "E-mail inválido" }).optional().nullable(),
+  email: z.string().email({ message: "E-mail inválido" }).optional(),
   img_url: z.string().optional(),
   birthday: z.coerce.date({ message: "Data inválida" }).optional(),
   phone: z.string().optional().transform(sanitizeStringToOnlyNumber),

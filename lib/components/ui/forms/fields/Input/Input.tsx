@@ -6,7 +6,7 @@ import {
   InputProps,
   InputUncontrolledProps,
 } from "./Input.type";
-import { IMaskInputProps, IMaskMixin, IMaskMixinProps } from "react-imask";
+import { IMaskMixin, IMaskMixinProps } from "react-imask";
 
 export default function Input(props: InputProps) {
   const { name, ...rest } = props;

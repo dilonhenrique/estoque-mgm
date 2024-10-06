@@ -37,7 +37,7 @@ type Payload = {
   name: string;
   account_id: string;
   service_id?: string;
-  customer_id?: string;
+  customer_id?: string | null;
   created_by: string;
   scheduled_for?: Date;
   confirmed_by_customer?: boolean;
