@@ -1,12 +1,14 @@
 import { z } from "zod";
 
 const create = z.object({
-  name: z.string(),
+  name: z.string({ message: "Obrigatório" }),
   products: z
     .array(
       z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
+        qty: z.coerce.number({ message: "Obrigatório" }),
+        id: z
+          .string({ message: "Obrigatório" })
+          .uuid({ message: "Id inválido" }),
       })
     )
     .optional(),

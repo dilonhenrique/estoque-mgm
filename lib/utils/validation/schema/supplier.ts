@@ -4,21 +4,15 @@ import { addressSchema } from "./address";
 import { sanitizeStringToOnlyNumber } from "@/utils/parser/other/sanitizeStringToOnlyNumber";
 
 const create = z.object({
-  name: z.string(),
-  email: z
-    .string()
-    .email()
-    .optional()
-    .nullable()
-    .or(z.literal(""))
-    .transform((val) => (val === "" || val === null ? undefined : val)),
+  name: z.string({ message: "Obrigatório" }),
+  email: z.string().email({ message: "E-mail inválido" }).optional().nullable(),
   cnpj: z
     .string()
-    .refine(validation.cnpj, "invalid_cnpj")
     .optional()
-    .transform(sanitizeStringToOnlyNumber)
-    .or(z.literal(""))
-    .transform((val) => (val === "" ? undefined : val)),
+    .refine(validation.cnpj, "CNPJ inválido")
+    .transform(sanitizeStringToOnlyNumber),
+  // .or(z.literal(""))
+  // .transform((val) => (val === "" ? undefined : val)),
   phone: z.string().optional(),
   address: addressSchema.optional(),
 });

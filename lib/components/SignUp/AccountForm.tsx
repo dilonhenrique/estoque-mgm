@@ -29,7 +29,7 @@ export default function AccountForm({ title }: IProps) {
           name="account.document_type"
           label="Tipo de documento"
           items={Object.values(DocType).map((value) => ({ value }))}
-          defaultSelectedKeys={[DocType.CPF]}
+          // defaultSelectedKeys={[DocType.CPF]}
           className="col-span-4"
         >
           {(item) => <SelectItem key={item.value}>{item.value}</SelectItem>}

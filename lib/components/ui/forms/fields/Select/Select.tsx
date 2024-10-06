@@ -1,11 +1,13 @@
 import { globalConfig } from "@/utils/consts/global.config";
 import { Select as NSelect } from "@nextui-org/react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, get, useFormContext } from "react-hook-form";
 import {
   SelectControlledProps,
   SelectProps,
   SelectUncontrolledProps,
 } from "./Select.type";
+import { isArray } from "lodash";
+import { useMemo } from "react";
 
 export default function Select<T extends object>(props: SelectProps<T>) {
   const { name, ...rest } = props;
@@ -40,6 +42,11 @@ function Controlled<T extends object>({
   control,
   ...rest
 }: SelectControlledProps<T>) {
+  function getSelectedKey(value: any) {
+    if (value === undefined) return undefined;
+    return isArray(value) ? value : [value];
+  }
+
   return (
     <Controller
       name={name}
@@ -49,6 +56,7 @@ function Controlled<T extends object>({
           {...field}
           selectRef={ref}
           isDisabled={disabled}
+          selectedKeys={getSelectedKey(field.value)}
           {...rest}
         />
       )}

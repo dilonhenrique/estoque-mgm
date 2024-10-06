@@ -3,6 +3,8 @@ import { useFormCustom } from "../ui/forms/fields/Form/useFormCustom";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { parseErrorSchema } from "@/utils/formResolver/zodResolver";
+import { clearEmptyString } from "@/utils/parser/other/clearEmptyString";
+import { AnyObject } from "@/types/types";
 
 const stepToName = new Map([
   [1, "account"],
@@ -11,7 +13,9 @@ const stepToName = new Map([
 ]);
 const steps = Array.from({ length: stepToName.size }, (_, i) => i + 1);
 
-export function useSignUpValidate() {
+type Props = AnyObject;
+
+export function useSignUpValidate(defaultValues: Props) {
   const router = useRouter();
 
   const [validSteps, setValidSteps] = useState<number[]>([]);
@@ -20,6 +24,7 @@ export function useSignUpValidate() {
   const methods = useFormCustom({
     schema: signupSchema,
     useFormProps: { shouldUnregister: false },
+    defaultValues,
   });
 
   function addValidStep(step: number) {
@@ -62,7 +67,8 @@ export function useSignUpValidate() {
     const activeSchema = signupSchema.pick({ [activeKey]: true } as any);
 
     const data = methods.getValues();
-    const validation = activeSchema.safeParse(data);
+    const cleanData = clearEmptyString(data);
+    const validation = activeSchema.safeParse(cleanData);
 
     if (validation.success) {
       addValidStep(step);

@@ -1,20 +1,14 @@
 import { object, z } from "zod";
 
 const create = z.object({
-  name: z.string(),
-  unit: z.string(),
-  stock: z.coerce.number(),
-  minStock: z.coerce.number().optional(),
+  name: z.string({ message: "Obrigatório" }),
+  unit: z.string({ message: "Obrigatório" }),
+  stock: z.coerce.number({ message: "Obrigatório" }),
+  minStock: z.coerce.number({ message: "Número inválido" }).optional(),
   code: z.string().optional(),
   img_url: z.string().optional(),
   category: object({
-    id: z
-      .string()
-      .uuid()
-      .optional()
-      .nullable()
-      .or(z.literal(""))
-      .transform((val) => (val === "" || val === null ? undefined : val)),
+    id: z.string().uuid({ message: "Id inválido" }).optional().nullable(),
     name: z.string().optional(),
   }),
 });

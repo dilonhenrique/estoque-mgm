@@ -43,14 +43,14 @@ export default function ProductSelector({
   }, [isViewOnly, refreshItems]);
 
   useEffect(() => {
-    setSelectedProducts(
-      selectedProducts.map((selected) => {
+    setSelectedProducts((current) =>
+      current.map((selected) => {
         const prod =
           allProducts.find((prod) => prod.id === selected.id) ?? selected;
         return { ...prod, qty: selected.qty };
       })
     );
-  }, [allProducts, selectedProducts]);
+  }, [allProducts]);
 
   useEffect(() => {
     if (initialLoad) {

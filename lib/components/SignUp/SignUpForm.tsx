@@ -31,8 +31,12 @@ type TabTitleProps = {
 
 export default function SignUpForm({ defaultUserValues = {} }: Props) {
   const router = useRouter();
-  const { validateStep, validSteps, disabledKeys, methods } =
-    useSignUpValidate();
+  const { validateStep, validSteps, disabledKeys, methods } = useSignUpValidate(
+    {
+      account: { document_type: "CPF" },
+      user: defaultUserValues,
+    }
+  );
 
   const [active, _setActive] = useState(1);
   function setActive(val: number) {
@@ -73,9 +77,6 @@ export default function SignUpForm({ defaultUserValues = {} }: Props) {
       <Form
         className="w-full gap-4 flex flex-col"
         action={submitAction}
-        defaultValues={{
-          user: defaultUserValues,
-        }}
         onSuccess={(res) => {
           toast.success(res.message);
           router.push("/auth/login");

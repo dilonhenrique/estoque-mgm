@@ -1,25 +1,19 @@
 import { object, z } from "zod";
 
 export const purchaseSchema = z.object({
-  // supplier_id: z.string().uuid().optional(),
-  // labeled_supplier_id: z.string().optional(),
   supplier: object({
-    id: z
-      .string()
-      .uuid()
-      .optional()
-      .nullable()
-      .or(z.literal(""))
-      .transform((val) => (val === "" || val === null ? undefined : val)),
+    id: z.string().uuid({ message: "Id inválido" }).optional().nullable(),
     name: z.string().optional(),
   }),
   items: z
     .array(
       z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
-        cost: z.coerce.number().optional(),
+        qty: z.coerce.number({ message: "Obrigatório" }),
+        id: z
+          .string({ message: "Obrigatório" })
+          .uuid({ message: "Id inválido" }),
+        cost: z.coerce.number({ message: "Número inválido" }).optional(),
       })
     )
-    .min(1),
+    .min(1, "Obrigatório pelo menos 1 produto"),
 });

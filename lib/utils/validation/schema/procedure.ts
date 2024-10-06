@@ -1,39 +1,23 @@
 import { object, z } from "zod";
 
 const create = z.object({
-  name: z.string(),
-  // service_id: z.string().uuid().optional(),
+  name: z.string({ message: "Obrigatório" }),
   service: object({
-    id: z
-      .string()
-      .uuid()
-      .optional()
-      .nullable()
-      .or(z.literal(""))
-      .transform((val) => (val === "" || val === null ? undefined : val)),
+    id: z.string().uuid({ message: "Id inválido" }).optional().nullable(),
   }),
-  // customer_id: z.string().uuid().optional(),
-  // labeled_customer_id: z.string().optional(),
   customer: object({
-    id: z
-      .string()
-      .uuid()
-      .optional()
-      .nullable()
-      .or(z.literal(""))
-      .transform((val) => (val === "" || val === null ? undefined : val)),
+    id: z.string().uuid({ message: "Id inválido" }).optional().nullable(),
     name: z.string().optional(),
   }),
-  scheduled_for: z.coerce.date().optional(),
+  scheduled_for: z.coerce.date({ message: "Data inválida" }).optional(),
   confirmed_by_customer: z.boolean(),
-  // .literal("confirmed")
-  // .optional()
-  // .transform((val) => val === "confirmed"),
   products: z
     .array(
       z.object({
-        qty: z.coerce.number(),
-        id: z.string().uuid(),
+        qty: z.coerce.number({ message: "Obrigatório" }),
+        id: z
+          .string({ message: "Obrigatório" })
+          .uuid({ message: "Id inválido" }),
       })
     )
     .optional(),
